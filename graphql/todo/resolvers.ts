@@ -1,5 +1,5 @@
-import {todoMutations} from "../graphql/mutations";
-import {todoQueries} from "../graphql/queries";
+import {todoMutations} from "./mutations";
+import {todoQueries} from "./queries";
 
 export const resolvers = {
   Query:{

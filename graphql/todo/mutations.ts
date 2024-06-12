@@ -1,5 +1,5 @@
-import todoItems from "../mongoose/todo/model";
-import {TodoItem} from "../mongoose/todo/schema";
+import todoItems from "../../mongoose/todo/model";
+import {TodoItem} from "../../mongoose/todo/schema";
 
 interface todoInterface{
   id:number;

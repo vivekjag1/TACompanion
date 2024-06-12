@@ -1,4 +1,4 @@
-import todoItems from "../mongoose/todo/model";
+import todoItems from "../../mongoose/todo/model";
 
 export const todoQueries ={
   findAllTodoItems: async (_:any) =>{
