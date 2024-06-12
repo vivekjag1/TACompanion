@@ -1,4 +1,5 @@
-import {Schema, InferSchemaType} from "mongoose";
+import {Schema, InferSchemaType, Types} from "mongoose";
+import type {CourseItem} from "../course/schema";
 export const TodoSchema:Schema = new Schema<TodoItem>({
   id:{
     type: Number,
@@ -8,9 +9,9 @@ export const TodoSchema:Schema = new Schema<TodoItem>({
     type: String,
     required: true
   },
-  course: {
+  courseCode: {
     type: String,
-    required: true
+    required: false
   },
   role:{
     type:String,

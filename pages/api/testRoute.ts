@@ -7,7 +7,7 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
   const seed = {
     id:-1,
     title:"dummy",
-    course: "dummy",
+    courseCode: "CS100x",
     role: "ta",
     status:"in progress"
   };
