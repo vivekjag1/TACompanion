@@ -4,7 +4,7 @@ import {TodoItem} from "../../mongoose/todo/schema";
 interface todoInterface{
   id:number;
   title:string;
-  course:string;
+  courseCode:string;
   role:string;
   status:string;
 }
@@ -22,7 +22,7 @@ export const todoMutations= {
       const newTodo: TodoItem = {
         id: params.id,
         title: params.title,
-        course: params.course,
+        course: params.courseCode,
         role: params.role,
         status: params.status,
       }
@@ -33,15 +33,15 @@ export const todoMutations= {
     }
   },
   changeValue: async(_:any, params: updateInterface) => {
-    if ((await todoItems.find({id: params.id})).length === 0) { //cant change a value if it doesnt exist
+    if ((await todoItems.find({id: params.id})).length === 0) { //cant change a value if it doesn't exist
       return null;
     }
     switch (params.newAttribute) {
       case "title": {
         return await todoItems.findOneAndUpdate({id: params.id}, {title: params.attrValue});
       }
-      case "course": {
-        return await todoItems.findOneAndUpdate({id: params.id}, {course: params.attrValue});
+      case "courseCode": {
+        return await todoItems.findOneAndUpdate({id: params.id}, {courseCode: params.attrValue});
       }
       case "role": {
         return await todoItems.findOneAndUpdate({id: params.id}, {role: params.attrValue});

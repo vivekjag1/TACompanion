@@ -4,7 +4,7 @@ export const typeDefs = gql`
   type Todo @cacheControl(maxAge: 86400){
       id:Int
       title:String
-      course:String 
+      courseCode:String 
       role:String 
       status:String
   }
@@ -15,7 +15,7 @@ export const typeDefs = gql`
       fetchTodosByCourse: [Todo]
   }
   type Mutation{
-      addTodo(id:Int, title:String, course:String, role:String, status:String): Todo
+      addTodo(id:Int, title:String, courseCode:String, role:String, status:String): Todo
       changeValue(id:Int, newAttribute:String, attrValue:String): Todo
       deleteTodo(id:Int):Todo
   }
