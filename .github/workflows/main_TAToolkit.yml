@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_4746188fa2574c7bb4bfdbd3751af8c9 }}/vivekjag1/tatoolkit:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_4746188fa2574c7bb4bfdbd3751af8c9 }}/tatoolkit:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -48,4 +48,4 @@ jobs:
         app-name: 'TAToolkit'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_b1e8d8739ac1409dbc009684aa9779cc }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_4746188fa2574c7bb4bfdbd3751af8c9 }}/vivekjag1/tatoolkit:${{ github.sha }}'
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_4746188fa2574c7bb4bfdbd3751af8c9 }}/tatoolkit:${{ github.sha }}'
