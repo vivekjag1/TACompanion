@@ -1,4 +1,3 @@
-import QuadImage from "../public/wpi-full-quad.jpg";
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,7 +20,6 @@ const Home: NextPage = (props: InferGetStaticPropsType<typeof getStaticProps>) =
             <Image src={park} alt = "park"/>
           </div>
         </div>
-        <Image src={QuadImage} alt="WPI Quad" className="w-full h-screen z-0" />
         <div className="absolute flex items-center justify-center inset-0 bg-gradient-to-b from-blue-500 to-blue-900 opacity-40 z-10" />
       </div>
       <div className="absolute inset-0 flex flex-col justify-center items-center z-20">
