@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import lib from "../public/library-full.jpg";
 import park from "../public/park-better.jpg"
-
 const Home: NextPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     //the entire hero section should link to the todolist section
@@ -47,23 +46,15 @@ const Home: NextPage = (props: InferGetStaticPropsType<typeof getStaticProps>) =
             Click Anywhere to Get Started
           </h1>
         </div>
-
       </div>
-
-
     </Link>
-
     </>
-
-
   );
 };
-
 // This page should be rendered statically, but there are no props so just return nothing in place of the props.
 export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {},
   };
 };
-
 export default Home;
