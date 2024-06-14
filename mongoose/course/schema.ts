@@ -17,7 +17,7 @@ export const courseSchema:Schema = new Schema<CourseItem>({
     required:true
   },
   meetingTime:{
-    type:Number,
+    type:String,
     required:true
   }
 });
