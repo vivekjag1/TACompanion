@@ -9,7 +9,7 @@ const Home: NextPage = (props: InferGetStaticPropsType<typeof getStaticProps>) =
   return (
     //the entire hero section should link to the todolist section
 
-
+//force vercel redeploy
     <Link href="/todo">
       <div className="bg-white relative w-full h-screen overflow-hidden">
         <div className = "grid grid-cols-1 md:grid-cols-2">
