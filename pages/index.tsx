@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import lib from "../public/lib.jpg";
 import park from "../public/park.jpg"
-
+//test deployment
 const Home: NextPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     //the entire hero section should link to the todolist section
