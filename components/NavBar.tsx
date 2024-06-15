@@ -62,7 +62,7 @@ const NavBar = () =>{
       iconControl.start("close");
 
     }
-  }, [open]);
+  }, [containerControls, iconControl, open]);
 
 
   return(
