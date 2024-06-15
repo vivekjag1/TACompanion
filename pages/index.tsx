@@ -1,8 +1,8 @@
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import lib from "../public/lib.jpg";
-import park from "../public/park.jpg"
+import lib from "../public/lib-full.jpg";
+import park from "../public/park-full.jpg"
 //test deployment
 const Home: NextPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
@@ -14,10 +14,10 @@ const Home: NextPage = (props: InferGetStaticPropsType<typeof getStaticProps>) =
       <div className="bg-white relative w-full h-screen overflow-hidden">
         <div className = "grid grid-cols-1 md:grid-cols-2">
           <div className="relative h-screen">
-            <Image src={lib} alt={"library"}/>
+            <Image src={lib} alt={"library"} className="h-screen"/>
           </div>
           <div className = "relative h-screen">
-            <Image src={park} alt = "park"/>
+            <Image src={park} alt = "park" className="h-screen"/>
           </div>
         </div>
         <div className="absolute flex items-center justify-center inset-0 bg-gradient-to-b from-blue-500 to-blue-900 opacity-40 z-10" />
