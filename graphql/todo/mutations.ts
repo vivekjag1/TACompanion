@@ -7,6 +7,7 @@ interface todoInterface{
   courseCode:string;
   role:string;
   status:string;
+  description:string;
 }
 interface updateInterface{
   id:number;
@@ -25,6 +26,7 @@ export const todoMutations= {
         course: params.courseCode,
         role: params.role,
         status: params.status,
+        description: params.description
       }
       await todoItems.insertMany(newTodo);
       return newTodo;

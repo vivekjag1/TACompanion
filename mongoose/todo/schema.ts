@@ -20,6 +20,10 @@ export const TodoSchema:Schema = new Schema<TodoItem>({
   status:{
     type:String,
     required:true
+  },
+  description:{
+    type:String,
+    required: true
   }
 });
 

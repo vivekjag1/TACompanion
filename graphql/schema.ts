@@ -7,6 +7,7 @@ export const typeDefs = gql`
       courseCode:String 
       role:String 
       status:String
+      description:String
   }
   type Query{
       findAllTodoItems:[Todo]
@@ -15,7 +16,7 @@ export const typeDefs = gql`
       fetchTodosByCourse: [Todo]
   }
   type Mutation{
-      addTodo(id:Int, title:String, courseCode:String, role:String, status:String): Todo
+      addTodo(id:Int, title:String, courseCode:String, role:String, status:String, description:String): Todo
       changeValue(id:Int, newAttribute:String, attrValue:String): Todo
       deleteTodo(id:Int):Todo
   }
