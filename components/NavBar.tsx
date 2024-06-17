@@ -76,16 +76,16 @@ const NavBar = () =>{
 
       </div>
       <div className="flex flex-col gap-3 flex-grow">
-        <NavItem name="TODO items" page="/todo">
+        <NavItem name="TODO items" page="/todo" open = {open}>
           <NoteAltIcon/>
         </NavItem>
-        <NavItem name="Hours" page="/hours">
+        <NavItem name="Hours" page="/hours" open = {open}>
           <AccessTimeIcon/>
         </NavItem>
-        <NavItem name="Courses" page="/courses">
+        <NavItem name="Courses" page="/courses" open = {open}>
           <SchoolIcon/>
         </NavItem>
-        <NavItem name="Links" page="/links">
+        <NavItem name="Links" page="/links" open = {open}>
           <LinkIcon/>
         </NavItem>
         {/*This is a placeholder that will eventually have sign out/sign in when i get around to it!*/}
