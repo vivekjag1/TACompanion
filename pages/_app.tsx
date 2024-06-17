@@ -5,9 +5,7 @@ import NavBar from "@/components/NavBar";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-
   const isHero = () => router.pathname === "/";
-
   return(
     <>
       {!isHero() && <NavBar/>}
