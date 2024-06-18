@@ -9,6 +9,12 @@ export const typeDefs = gql`
       status:String
       description:String
   }
+  input updateInterface{
+      id:Int
+      newAttribute:String
+      attrValue:String
+  }
+  
   type Query{
       findAllTodoItems:[Todo]
       fetchTodoByID:Todo

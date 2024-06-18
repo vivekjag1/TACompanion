@@ -34,22 +34,23 @@ export const todoMutations= {
       return null;
     }
   },
-  changeValue: async(_:any, params: updateInterface) => {
-    if ((await todoItems.find({id: params.id})).length === 0) { //cant change a value if it doesn't exist
+  changeValue: async(_:any, id:number, newAttribute:string, attrValue:string) => {
+    // console.log(params);
+    if ((await todoItems.find({id: id})).length === 0) { //cant change a value if it doesn't exist
       return null;
     }
-    switch (params.newAttribute) {
+    switch (newAttribute) {
       case "title": {
-        return await todoItems.findOneAndUpdate({id: params.id}, {title: params.attrValue});
+        return await todoItems.findOneAndUpdate({id: id}, {title: attrValue});
       }
       case "courseCode": {
-        return await todoItems.findOneAndUpdate({id: params.id}, {courseCode: params.attrValue});
+        return await todoItems.findOneAndUpdate({id: id}, {courseCode: attrValue});
       }
       case "role": {
-        return await todoItems.findOneAndUpdate({id: params.id}, {role: params.attrValue});
+        return await todoItems.findOneAndUpdate({id: id}, {role: attrValue});
       }
       case "status": {
-        return await todoItems.findOneAndUpdate({id: params.id}, {status: params.attrValue});
+        return await todoItems.findOneAndUpdate({id: id}, {status: attrValue});
       }
     }
   },
