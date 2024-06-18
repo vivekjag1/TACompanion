@@ -1,4 +1,3 @@
-import TodoCard from "@/components/TodoCard";
 import client from "../graphql/client";
 import { gql } from 'graphql-tag';
 import {useEffect, useState} from "react";
@@ -16,7 +15,6 @@ import Modal from "@mui/material/Modal";
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 import {Button, CardContent, Typography} from "@mui/material";
-// import {CreateTodoModal} from "@/components/CreateTodoModal";
 interface updateInterface{
   id:number;
   newAttribute:string;
@@ -26,13 +24,6 @@ const Home = () =>{
   const[open, setOpen] = useState<boolean>(false);
   const setClose = () => setOpen(false);
 
-
-
-  interface updateInterface{
-    id:number;
-    newAttribute:string;
-    attrValue:string;
-  }
   const [todoItems, setTodoItems] = useState<TodoItem[]>([]);
   const [updated, setUpdated] = useState<boolean>(false);
   const todoData  = gql `
@@ -66,10 +57,6 @@ const Home = () =>{
     backgroundColor: 'lightgray',
     borderRadius:"1rem"
   }
-
-
-
-
   useEffect(() =>{
 
   },[updated]);
@@ -96,12 +83,11 @@ const Home = () =>{
     }
     const test = await fetch();
     return test;
-
   }
   const cardtemplate = (data:TodoItem) =>{
     return(
 
-      <div className = "hover:shadow-2xl">
+      <div>
         <div className = "text-center font-bold text-lg">{data.title as string}</div>
         <div className = "text-center">{`Description: ${data.description as string}`}</div>
         <div className = "text-center">{`Course: ${data.courseCode as string}`}</div>
@@ -115,18 +101,11 @@ const Home = () =>{
     setUpdated(true);
     mutateTodo(updatedCard[0].id, "status", updatedCard[0].status).then();
   }
-  const mycardSettings:CardSettingsModel = {
-    contentField: "description",
-    headerField : "title",
-    template :cardtemplate,
-  };
 
   const handleOpen = () =>{
     console.log("I am a button");
     setOpen(true);
-    // return(
-    //   // <CreateTodoModal/>
-    // )
+
   }
 
   const handleDeleteAll = () =>{
@@ -159,9 +138,9 @@ const Home = () =>{
         <h1 className="text-4xl font-mono font-bold text-black text-center">
           Your Todo Items
         </h1>
-        <div className=" mt-5 flex flex-row items-center justify-center">
-          <Button variant = "contained" style = {{backgroundColor:"blue"}} className = "mr-5" onClick = {handleOpen}>New Todo Item </Button>
-          <Button variant = "contained" style = {{backgroundColor:"red"}} className = "ml-5"onClick = {handleDeleteAll}>Delete All </Button>
+        <div className=" mt-5 flex flex-row items-center justify-center space-x-5">
+          <Button variant = "contained" style = {{backgroundColor:"blue"}}  onClick = {handleOpen}>New Todo Item </Button>
+          <Button variant = "contained" style = {{backgroundColor:"red"}} onClick = {handleDeleteAll}>Delete All </Button>
         </div>
 
         <div className="bg-white  items-center justify-center h-screen overflow-hidden ml-20 p-5 ">

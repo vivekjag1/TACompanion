@@ -35,10 +35,10 @@ const Home: NextPage = (props: InferGetStaticPropsType<typeof getStaticProps>) =
     <Link href="/todo" className = "md:hidden">
       <div className="flex flex-col h-screen w-screen">
         <div className="relative flex-1">
-          <Image src={lib} alt="library" layout="fill" objectFit="cover"/>
+          <Image src={lib} alt="library"  />
         </div>
         <div className="relative flex-1">
-          <Image src={park} alt="park" layout="fill" objectFit="cover"/>
+          <Image src={park} alt="park" />
         </div>
         <div
           className="absolute flex items-center justify-center inset-0 bg-gradient-to-b from-blue-500 to-blue-900 opacity-40 z-10"/>
