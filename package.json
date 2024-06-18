@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
+    "@syncfusion/ej2-react-kanban": "^26.1.35",
     "@types/mongoose": "^5.11.97",
     "framer-motion": "^11.2.10",
     "graphql": "^16.8.2",

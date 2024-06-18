@@ -3,7 +3,7 @@ import client from "../graphql/client";
 import { gql } from 'graphql-tag';
 import {useEffect, useState} from "react";
 import {TodoItem} from "@/mongoose/todo/schema";
-import { KanbanComponent, ColumnsDirective, ColumnDirective } from "@syncfusion/ej2-react-kanban";
+import { KanbanComponent, ColumnsDirective, ColumnDirective, CardSettingsModel } from "@syncfusion/ej2-react-kanban";
 
 import "../node_modules/@syncfusion/ej2-base/styles/bootstrap5.css";
 import '../node_modules/@syncfusion/ej2-buttons/styles/bootstrap5.css';
@@ -42,11 +42,30 @@ const Home = () =>{
       console.log(todoItems);
     }
     fetchData().then();
-  }, [todoItems, setTodoItems, todoData])
+  }, []);// eslint-disable-line
   const test = {
-    backgroundColor: 'lightgray'
+    backgroundColor: 'lightgray',
+    borderRadius:"1rem"
   }
 
+  const cardtemplate = (data:TodoItem) =>{
+    return(
+
+      <div className = "hover:shadow-2xl">
+      <div className = "text-center font-bold text-lg">{data.title as string}</div>
+      <div className = "text-center">{`Description: ${data.description as string}`}</div>
+        <div className = "text-center">{`Course: ${data.courseCode as string}`}</div>
+         <div className = "text-center" >{`Role: ${data.role as string}`}</div>
+      </div>
+    )
+  }
+
+  const mycardSettings:CardSettingsModel = {
+    contentField: "description",
+    headerField : "title",
+    template :cardtemplate,
+
+  };
   return (
     <div className = "h-screen bg-white overflow-hidden">
       <h1 className = "text-2xl font-mono text-black text-center">
@@ -54,7 +73,7 @@ const Home = () =>{
       </h1>
 
       <div className="bg-white  items-center justify-center h-screen overflow-hidden ml-20 p-5 ">
-        <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {{contentField: "description", headerField:"title"}} style = {test}>
+        <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {mycardSettings} style = {test} >
           <ColumnsDirective>
             <ColumnDirective headerText = "Not Started" keyField="notStarted"  />
             <ColumnDirective headerText = "In Progress" keyField="started"/>
