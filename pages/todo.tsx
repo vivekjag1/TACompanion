@@ -12,14 +12,9 @@ import '../node_modules/@syncfusion/ej2-inputs/styles/bootstrap5.css';
 import "../node_modules/@syncfusion/ej2-navigations/styles/bootstrap5.css";
 import "../node_modules/@syncfusion/ej2-popups/styles/bootstrap5.css";
 import "../node_modules/@syncfusion/ej2-react-kanban/styles/bootstrap5.css";
-import '../styles/index.module.css'
-import react from "react";
 import Modal from "@mui/material/Modal";
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
-
-
-
 import {Button, CardContent, Typography} from "@mui/material";
 // import {CreateTodoModal} from "@/components/CreateTodoModal";
 interface updateInterface{
@@ -28,11 +23,8 @@ interface updateInterface{
   attrValue:string;
 }
 const Home = () =>{
-
-
-
-    const[open, setOpen] = useState<boolean>(false);
-    const setClose = () => setOpen(false);
+  const[open, setOpen] = useState<boolean>(false);
+  const setClose = () => setOpen(false);
 
 
 
@@ -66,7 +58,7 @@ const Home = () =>{
         const{__typeName, ...rest}  = item;
         return rest;
       });
-        setTodoItems(cleanData);
+      setTodoItems(cleanData);
     }
     fetchData().then();
   }, []);// eslint-disable-line
@@ -110,10 +102,10 @@ const Home = () =>{
     return(
 
       <div className = "hover:shadow-2xl">
-      <div className = "text-center font-bold text-lg">{data.title as string}</div>
-      <div className = "text-center">{`Description: ${data.description as string}`}</div>
+        <div className = "text-center font-bold text-lg">{data.title as string}</div>
+        <div className = "text-center">{`Description: ${data.description as string}`}</div>
         <div className = "text-center">{`Course: ${data.courseCode as string}`}</div>
-         <div className = "text-center" >{`Role: ${data.role as string}`}</div>
+        <div className = "text-center" >{`Role: ${data.role as string}`}</div>
       </div>
     )
   }
@@ -142,54 +134,52 @@ const Home = () =>{
   }
   return (
     <>
-    <div>
-      <Modal
-        open={open}
-        onClose={setClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx = {{minWidth:275}}>
-          <Card>
-            <CardContent>
-              <Typography sx = {{fontSize:20}} component = "div">Hello World</Typography>
-            </CardContent>
+      <div className = "flex flex-row items-center justify-center">
+        <Modal
+          open={open}
+          onClose={setClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box  sx = {{maxWidth:'30rem', minHeight:"30rem"}}>
+            <Card>
+              <CardContent>
+                <Typography sx = {{fontSize:20}} component = "div">Hello World</Typography>
+              </CardContent>
+
+            </Card>
+          </Box>
+
+        </Modal>
 
 
-
-          </Card>
-        </Box>
-
-      </Modal>
-
-
-    </div>
-
-  <div className="    h-screen bg-white overflow-hidden">
-    <h1 className="text-4xl font-mono font-bold text-black text-center">
-      Your Todo Items
-    </h1>
-    <div className=" mt-5 flex flex-row items-center justify-center">
-        <Button variant = "contained" style = {{backgroundColor:"blue"}} className = "mr-5" onClick = {handleOpen}>New Todo Item </Button>
-        <Button variant = "contained" style = {{backgroundColor:"red"}} onClick = {handleDeleteAll}>Delete All </Button>
       </div>
 
-      <div className="bg-white  items-center justify-center h-screen overflow-hidden ml-20 p-5 ">
+      <div className=" flex flex-col justify-between h-screen bg-white overflow-hidden">
+        <h1 className="text-4xl font-mono font-bold text-black text-center">
+          Your Todo Items
+        </h1>
+        <div className=" mt-5 flex flex-row items-center justify-center">
+          <Button variant = "contained" style = {{backgroundColor:"blue"}} className = "mr-5" onClick = {handleOpen}>New Todo Item </Button>
+          <Button variant = "contained" style = {{backgroundColor:"red"}} className = "ml-5"onClick = {handleDeleteAll}>Delete All </Button>
+        </div>
 
-        <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {{
-          contentField: "description",
-          headerField : "title",
-          template :cardtemplate,
-        }}   dragStop ={updateCard} cssClass = "kanban-overview">
-          <ColumnsDirective>
-            <ColumnDirective headerText = "Not Started" keyField="notStarted"  />
-            <ColumnDirective headerText = "In Progress" keyField="started"/>
-            <ColumnDirective headerText = "In Review/Need Help" keyField="review"/>
-            <ColumnDirective headerText = "Done" keyField="done"/>
-          </ColumnsDirective>
-        </KanbanComponent>
+        <div className="bg-white  items-center justify-center h-screen overflow-hidden ml-20 p-5 ">
+
+          <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {{
+            contentField: "description",
+            headerField : "title",
+            template :cardtemplate,
+          }}   dragStop ={updateCard} cssClass = "kanban-overview">
+            <ColumnsDirective>
+              <ColumnDirective headerText = "Not Started" keyField="notStarted"  />
+              <ColumnDirective headerText = "In Progress" keyField="started"/>
+              <ColumnDirective headerText = "In Review/Need Help" keyField="review"/>
+              <ColumnDirective headerText = "Done" keyField="done"/>
+            </ColumnsDirective>
+          </KanbanComponent>
+        </div>
       </div>
-    </div>
     </>
   )
 };
