@@ -55,7 +55,7 @@ export const todoMutations= {
       }
     }
   },
-  deleteTodo: async (_:any, param:{idParam:number}) =>{
-    return await todoItems.deleteMany({id:param.idParam});
+  deleteTodo: async (_:any, id:number) =>{
+    return await todoItems.deleteMany({id:id});
   }
   }

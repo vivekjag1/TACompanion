@@ -4,7 +4,6 @@ import { gql } from 'graphql-tag';
 import {useEffect, useState} from "react";
 import {TodoItem} from "@/mongoose/todo/schema";
 import { KanbanComponent, ColumnsDirective, ColumnDirective, CardSettingsModel, DragEventArgs } from "@syncfusion/ej2-react-kanban";
-
 import "../node_modules/@syncfusion/ej2-base/styles/bootstrap5.css";
 import '../node_modules/@syncfusion/ej2-buttons/styles/bootstrap5.css';
 import "../node_modules/@syncfusion/ej2-layouts/styles/bootstrap5.css";
@@ -13,6 +12,7 @@ import '../node_modules/@syncfusion/ej2-inputs/styles/bootstrap5.css';
 import "../node_modules/@syncfusion/ej2-navigations/styles/bootstrap5.css";
 import "../node_modules/@syncfusion/ej2-popups/styles/bootstrap5.css";
 import "../node_modules/@syncfusion/ej2-react-kanban/styles/bootstrap5.css";
+import {Button} from "@mui/material";
 interface updateInterface{
   id:number;
   newAttribute:string;
@@ -26,7 +26,6 @@ const Home = () =>{
   }
   const [todoItems, setTodoItems] = useState<TodoItem[]>([]);
   const [updated, setUpdated] = useState<boolean>(false);
-  let updatedItems = new Map();
   const todoData  = gql `
       query {
           findAllTodoItems {
@@ -90,8 +89,6 @@ const Home = () =>{
     return test;
 
   }
-
-
   const cardtemplate = (data:TodoItem) =>{
     return(
 
@@ -103,25 +100,34 @@ const Home = () =>{
       </div>
     )
   }
-
   const updateCard =  (card:DragEventArgs ) =>{
     setUpdated(!updated);
     const updatedCard = card.data;
-    updatedItems.set(updatedCard[0].id, updatedCard[0]);
     setUpdated(true);
     mutateTodo(updatedCard[0].id, "status", updatedCard[0].status).then();
-
   }
   const mycardSettings:CardSettingsModel = {
     contentField: "description",
     headerField : "title",
     template :cardtemplate,
   };
+
+  const handleOpen = () =>{
+    console.log("I am a button");
+  }
+
+  const handleDeleteAll = () =>{
+    console.log("Deleting everything");
+  }
   return (
     <div className = "h-screen bg-white overflow-hidden">
-      <h1 className = "text-2xl font-mono text-black text-center">
+      <h1 className = "text-4xl font-mono font-bold text-black text-center">
         Your Todo Items
       </h1>
+      <div className = " mt-5 flex flex-row items-center justify-center">
+        <Button variant = "contained" style = {{backgroundColor:"blue"}} className = "mr-5" onClick = {handleOpen}>New Todo Item </Button>
+        <Button variant = "contained" style = {{backgroundColor:"red"}} onClick = {handleDeleteAll}>Delete All </Button>
+      </div>
 
       <div className="bg-white  items-center justify-center h-screen overflow-hidden ml-20 p-5 ">
 
@@ -137,5 +143,4 @@ const Home = () =>{
     </div>
   )
 };
-
 export default Home;
