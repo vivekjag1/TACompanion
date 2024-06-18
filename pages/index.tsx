@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import lib from "../public/lib-full.jpg";
 import park from "../public/park-full.jpg"
+
 //test deployment
 const Home: NextPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (

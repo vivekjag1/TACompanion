@@ -12,13 +12,30 @@ import '../node_modules/@syncfusion/ej2-inputs/styles/bootstrap5.css';
 import "../node_modules/@syncfusion/ej2-navigations/styles/bootstrap5.css";
 import "../node_modules/@syncfusion/ej2-popups/styles/bootstrap5.css";
 import "../node_modules/@syncfusion/ej2-react-kanban/styles/bootstrap5.css";
-import {Button} from "@mui/material";
+import '../styles/index.module.css'
+import react from "react";
+import Modal from "@mui/material/Modal";
+import Card from "@mui/material/Card";
+import Box from "@mui/material/Box";
+
+
+
+import {Button, CardContent, Typography} from "@mui/material";
+// import {CreateTodoModal} from "@/components/CreateTodoModal";
 interface updateInterface{
   id:number;
   newAttribute:string;
   attrValue:string;
 }
 const Home = () =>{
+
+
+
+    const[open, setOpen] = useState<boolean>(false);
+    const setClose = () => setOpen(false);
+
+
+
   interface updateInterface{
     id:number;
     newAttribute:string;
@@ -114,24 +131,56 @@ const Home = () =>{
 
   const handleOpen = () =>{
     console.log("I am a button");
+    setOpen(true);
+    // return(
+    //   // <CreateTodoModal/>
+    // )
   }
 
   const handleDeleteAll = () =>{
     console.log("Deleting everything");
   }
   return (
-    <div className = "h-screen bg-white overflow-hidden">
-      <h1 className = "text-4xl font-mono font-bold text-black text-center">
-        Your Todo Items
-      </h1>
-      <div className = " mt-5 flex flex-row items-center justify-center">
+    <>
+    <div>
+      <Modal
+        open={open}
+        onClose={setClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx = {{minWidth:275}}>
+          <Card>
+            <CardContent>
+              <Typography sx = {{fontSize:20}} component = "div">Hello World</Typography>
+            </CardContent>
+
+
+
+          </Card>
+        </Box>
+
+      </Modal>
+
+
+    </div>
+
+  <div className="    h-screen bg-white overflow-hidden">
+    <h1 className="text-4xl font-mono font-bold text-black text-center">
+      Your Todo Items
+    </h1>
+    <div className=" mt-5 flex flex-row items-center justify-center">
         <Button variant = "contained" style = {{backgroundColor:"blue"}} className = "mr-5" onClick = {handleOpen}>New Todo Item </Button>
         <Button variant = "contained" style = {{backgroundColor:"red"}} onClick = {handleDeleteAll}>Delete All </Button>
       </div>
 
       <div className="bg-white  items-center justify-center h-screen overflow-hidden ml-20 p-5 ">
 
-        <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {mycardSettings} style = {cardStyle}  dragStop ={updateCard} >
+        <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {{
+          contentField: "description",
+          headerField : "title",
+          template :cardtemplate,
+        }}   dragStop ={updateCard} cssClass = "kanban-overview">
           <ColumnsDirective>
             <ColumnDirective headerText = "Not Started" keyField="notStarted"  />
             <ColumnDirective headerText = "In Progress" keyField="started"/>
@@ -141,6 +190,7 @@ const Home = () =>{
         </KanbanComponent>
       </div>
     </div>
+    </>
   )
 };
 export default Home;
