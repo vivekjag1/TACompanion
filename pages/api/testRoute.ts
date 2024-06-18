@@ -10,7 +10,16 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
     title:"dummy",
     courseCode: "CS100x",
     role: "ta",
-    status:"in progress"
+    status:"done",
+    description: "I need to do stuff"
+  };
+  const seedTwo = {
+    id:-2,
+    title:"dummy2",
+    courseCode: "ECE100x",
+    role: "ta",
+    status:"done",
+    description: "I dont need to do stuff"
   };
 
   const seedCourse = {
@@ -21,7 +30,9 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
     meetingTime: "0 AM"
   }
   await todoItems.deleteMany({id:-1});
+  await todoItems.deleteMany({id:-2});
   await todoItems.insertMany(seed);
+  await todoItems.insertMany(seedTwo);
   await course.insertMany(seedCourse);
   res.status(200).json(seed);
 

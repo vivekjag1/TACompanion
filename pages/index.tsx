@@ -49,15 +49,9 @@ const Home: NextPage = (props: InferGetStaticPropsType<typeof getStaticProps>) =
             Click Anywhere to Get Started
           </h1>
         </div>
-
       </div>
-
-
     </Link>
-
     </>
-
-
   );
 };
 
