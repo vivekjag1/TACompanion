@@ -34,11 +34,11 @@ export const todoMutations= {
       return null;
     }
   },
-  changeValue: async(_:any, id:number, newAttribute:string, attrValue:string) => {
-    // console.log(params);
-    if ((await todoItems.find({id: id})).length === 0) { //cant change a value if it doesn't exist
+  changeValue: async(_:any, {id, newAttribute, attrValue}:updateInterface) => {
+    if ((await todoItems.find({id})).length === 0) {
       return null;
     }
+
     switch (newAttribute) {
       case "title": {
         return await todoItems.findOneAndUpdate({id: id}, {title: attrValue});
@@ -50,7 +50,8 @@ export const todoMutations= {
         return await todoItems.findOneAndUpdate({id: id}, {role: attrValue});
       }
       case "status": {
-        return await todoItems.findOneAndUpdate({id: id}, {status: attrValue});
+         const data = await todoItems.findOneAndUpdate({id: id}, {status: attrValue}, {new:true});
+        return data;
       }
     }
   },

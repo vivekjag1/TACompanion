@@ -25,10 +25,12 @@ const Home = () =>{
     attrValue:string;
   }
   const [todoItems, setTodoItems] = useState<TodoItem[]>([]);
+  const [updated, setUpdated] = useState<boolean>(false);
   let updatedItems = new Map();
   const todoData  = gql `
       query {
           findAllTodoItems {
+              id
               title
               courseCode
               description
@@ -38,55 +40,56 @@ const Home = () =>{
           }
       }
   `;
-//   useEffect(() =>{
-//     async function fetchData(){
-//       const data = await client.query({
-//         query:todoData
-//       });
-//
-//       const cleanData = data['data']['findAllTodoItems'].map((item:TodoItem) =>{
-//         const{_typeName, ...rest}  = item;
-//         return rest;
-//       });
-//
-//       setTodoItems(cleanData);
-//       console.log(todoItems);
-//     }
-//     fetchData().then();
-//   }, []);// eslint-disable-line
-//   const test = {
-//     backgroundColor: 'lightgray',
-//     borderRadius:"1rem"
-//   }
-//   useEffect(() =>{
-//     const updateTodo = gql `
-//       mutation updateStatus($id:Int, $newAttribute:String, $attrValue:String){
-//           changeValue(id:$id, newAttribute: $newAttribute, attrValue: $attrValue){
-//               courseCode
-//           }
-//       }
-//     `;
-//
-// const fetch = async () => {
-//   const {data} = await client.mutate({
-//     mutation: updateTodo,
-//     variables: {
-//       id: -1,
-//       newAttribute: "courseCode",
-//       attrValue: "ThisWorked"
-//     }
-//   });
-//   console.log(data);
-//   return data;
-// }
-//  fetch().then(console.log)
-// });
+  useEffect(() =>{
+    async function fetchData(){
+      const data = await client.query({
+        query:todoData
+      });
+
+      const cleanData = data['data']['findAllTodoItems'].map((item:TodoItem) =>{
+        const{__typeName, ...rest}  = item;
+        return rest;
+      });
+        setTodoItems(cleanData);
+    }
+    fetchData().then();
+  }, []);// eslint-disable-line
+  const cardStyle = {
+    backgroundColor: 'lightgray',
+    borderRadius:"1rem"
+  }
 
 
 
 
+  useEffect(() =>{
 
+  },[updated]);
+  const mutateTodo = async (id:number, newAttribute:string, value:string) =>{
+    const updateTodo = gql`
+        mutation updateTodo($id:Int, $newAttribute:String, $attrValue:String){
+            changeValue(id: $id, newAttribute: $newAttribute, attrValue: $attrValue){
+                id
+                status
+                courseCode
+            }
+        }
+    `;
+    const fetch = async() =>{
+      const data = await client.mutate({
+        mutation:updateTodo,
+        variables:{
+          id:id,
+          newAttribute: "status",
+          attrValue:value
+        }
+      });
+      return data;
+    }
+    const test = await fetch();
+    return test;
 
+  }
 
 
   const cardtemplate = (data:TodoItem) =>{
@@ -102,18 +105,18 @@ const Home = () =>{
   }
 
   const updateCard =  (card:DragEventArgs ) =>{
+    setUpdated(!updated);
     const updatedCard = card.data;
-    console.log("Updated", updatedCard);
     updatedItems.set(updatedCard[0].id, updatedCard[0]);
-    console.log(updatedItems);
+    setUpdated(true);
+    mutateTodo(updatedCard[0].id, "status", updatedCard[0].status).then();
+
   }
   const mycardSettings:CardSettingsModel = {
     contentField: "description",
     headerField : "title",
     template :cardtemplate,
-
   };
-
   return (
     <div className = "h-screen bg-white overflow-hidden">
       <h1 className = "text-2xl font-mono text-black text-center">
@@ -122,7 +125,7 @@ const Home = () =>{
 
       <div className="bg-white  items-center justify-center h-screen overflow-hidden ml-20 p-5 ">
 
-        <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {mycardSettings} style = {test}  dragStop ={updateCard} >
+        <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {mycardSettings} style = {cardStyle}  dragStop ={updateCard} >
           <ColumnsDirective>
             <ColumnDirective headerText = "Not Started" keyField="notStarted"  />
             <ColumnDirective headerText = "In Progress" keyField="started"/>
