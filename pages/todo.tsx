@@ -30,7 +30,6 @@ const Home = () =>{
           }
       }
   `;
-  let updatedTodos:TodoItem[] = [];
   useEffect(() =>{
     async function fetchData(){
       const data = await client.query({
@@ -147,7 +146,7 @@ const Home = () =>{
 
         <div className="bg-white  items-center justify-center h-screen  ml-20 p-5 ">
 
-          <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems.concat(updatedTodos)} cardSettings = {{
+          <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {{
             contentField: "description",
             headerField : "title",
             template :cardTemplate,
