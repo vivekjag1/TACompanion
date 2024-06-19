@@ -2,6 +2,7 @@ import client from "../graphql/client";
 import { gql } from 'graphql-tag';
 import {useEffect, useState} from "react";
 import {TodoItem} from "@/mongoose/todo/schema";
+import CustomModal from "../components/CustomModal";
 import { KanbanComponent, ColumnsDirective, ColumnDirective, CardSettingsModel, DragEventArgs } from "@syncfusion/ej2-react-kanban";
 import "../node_modules/@syncfusion/ej2-base/styles/bootstrap5.css";
 import '../node_modules/@syncfusion/ej2-buttons/styles/bootstrap5.css';
@@ -23,7 +24,6 @@ interface updateInterface{
 const Home = () =>{
   const[open, setOpen] = useState<boolean>(false);
   const setClose = () => setOpen(false);
-
   const [todoItems, setTodoItems] = useState<TodoItem[]>([]);
   const [updated, setUpdated] = useState<boolean>(false);
   const todoData  = gql `
@@ -50,8 +50,9 @@ const Home = () =>{
         return rest;
       });
       setTodoItems(cleanData);
+      return cleanData;
     }
-    fetchData().then();
+    fetchData().then(console.log);
   }, []);// eslint-disable-line
   const cardStyle = {
     backgroundColor: 'lightgray',
@@ -103,7 +104,6 @@ const Home = () =>{
   }
 
   const handleOpen = () =>{
-    console.log("I am a button");
     setOpen(true);
 
   }
@@ -111,30 +111,42 @@ const Home = () =>{
   const handleDeleteAll = () =>{
     console.log("Deleting everything");
   }
+
+  const fetchLastTodoID = () =>{
+    return todoItems.length;
+  }
   return (
     <>
-      <div className = "flex flex-row items-center justify-center">
-        <Modal
-          open={open}
-          onClose={setClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box  sx = {{maxWidth:'30rem', minHeight:"30rem"}}>
-            <Card>
-              <CardContent>
-                <Typography sx = {{fontSize:20}} component = "div">Hello World</Typography>
-              </CardContent>
+      <div className = "flex items-center justify-center  ">
+        <CustomModal open = {open} handleClose = {() => {
+          setUpdated(!updated);
+          setOpen(false);
+        setUpdated(true)}}
+                     lastTodoID={fetchLastTodoID()}/>
 
-            </Card>
-          </Box>
 
-        </Modal>
+
+        {/*<Modal*/}
+        {/*  open={open}*/}
+        {/*  onClose={setClose}*/}
+        {/*  aria-labelledby="modal-modal-title"*/}
+        {/*  aria-describedby="modal-modal-description"*/}
+        {/*>*/}
+        {/*  <Box  sx = {{maxWidth:'30rem', minHeight:"30rem"}}>*/}
+        {/*    <Card>*/}
+        {/*      <CardContent>*/}
+        {/*        <Typography sx = {{fontSize:20}} component = "div">Hello World</Typography>*/}
+        {/*      </CardContent>*/}
+
+        {/*    </Card>*/}
+        {/*  </Box>*/}
+
+        {/*</Modal>*/}
 
 
       </div>
 
-      <div className=" flex flex-col justify-between h-screen bg-white overflow-hidden">
+      <div className=" flex flex-col justify-between h-screen bg-white ">
         <h1 className="text-4xl font-mono font-bold text-black text-center">
           Your Todo Items
         </h1>
@@ -143,7 +155,7 @@ const Home = () =>{
           <Button variant = "contained" style = {{backgroundColor:"red"}} onClick = {handleDeleteAll}>Delete All </Button>
         </div>
 
-        <div className="bg-white  items-center justify-center h-screen overflow-hidden ml-20 p-5 ">
+        <div className="bg-white  items-center justify-center h-screen  ml-20 p-5 ">
 
           <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {{
             contentField: "description",
