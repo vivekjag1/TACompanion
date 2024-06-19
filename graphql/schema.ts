@@ -25,5 +25,6 @@ export const typeDefs = gql`
       addTodo(id:Int, title:String, courseCode:String, role:String, status:String, description:String): Todo
       changeValue(id:Int, newAttribute:String, attrValue:String): Todo
       deleteTodo(id:Int):Todo
+      deleteAll:Todo
   }
 `;

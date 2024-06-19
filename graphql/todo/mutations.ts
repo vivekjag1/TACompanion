@@ -15,10 +15,10 @@ interface updateInterface{
   attrValue:string;
 }
 export const todoMutations= {
-  addTodo: async (_:any, {id, title, courseCode, role, status, description}:todoInterface)=> {
+  addTodo: async (_: any, {id, title, courseCode, role, status, description}: todoInterface) => {
     console.log(courseCode);
 
-    if ((await todoItems.find({id:id})).length != 0){ //do not create a todolist item that already exists
+    if ((await todoItems.find({id: id})).length != 0) { //do not create a todolist item that already exists
       return null;
     }
     try {
@@ -37,7 +37,7 @@ export const todoMutations= {
       return null;
     }
   },
-  changeValue: async(_:any, {id, newAttribute, attrValue}:updateInterface) => {
+  changeValue: async (_: any, {id, newAttribute, attrValue}: updateInterface) => {
     if ((await todoItems.find({id})).length === 0) {
       return null;
     }
@@ -53,12 +53,16 @@ export const todoMutations= {
         return await todoItems.findOneAndUpdate({id: id}, {role: attrValue});
       }
       case "status": {
-         const data = await todoItems.findOneAndUpdate({id: id}, {status: attrValue}, {new:true});
+        const data = await todoItems.findOneAndUpdate({id: id}, {status: attrValue}, {new: true});
         return data;
       }
     }
   },
-  deleteTodo: async (_:any, id:number) =>{
-    return await todoItems.deleteMany({id:id});
+  deleteTodo: async (_: any, id: number) => {
+    return await todoItems.deleteMany({id: id});
+  },
+  deleteAll: async (_: any) => {
+    return await todoItems.deleteMany({});
+
   }
-  }
+}

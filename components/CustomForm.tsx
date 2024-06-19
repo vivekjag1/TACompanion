@@ -5,10 +5,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {styled} from "@mui/system";
 import {useState} from "react";
+import {TodoItem} from "@/mongoose/todo/schema";
 
 interface formProps{
   handleClose: () => void;
   lastTodoID:number;
+  updateTodos: (newItem: TodoItem) => void;
+
 }
 
 
@@ -31,6 +34,16 @@ export const CustomForm = (props:formProps) =>{
     e.preventDefault();
     console.log(title, description, role, course);
     props.handleClose();
+
+    const newItem:TodoItem = {
+      id:props.lastTodoID,
+      title:title,
+      courseCode: course,
+      role: role,
+      status:"inProgress",
+      description: description
+    };
+    props.updateTodos(newItem);
 
     //graphql logic to make a todo item
     const makeTodo  = async () => {
