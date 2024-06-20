@@ -32,11 +32,23 @@ export const AddCard = (props:addProps)=>{
     <>
       {adding? (
         <form onSubmit = {handleSubmit}>
+
+
+
           <textarea
             onChange = {(e)=>setText(e.target.value)}
             autoFocus
             placeholder="Add a new todo..."
             className = "w-full rounded border border-blue-500 bg-blue-400/20 p-3 text-sm text-neutral-500 placeholder-black-300 focus:outline-o"/>
+
+
+
+
+
+
+
+
+
           <div className = "mt-1.5 flex items-center justify-end gap-1.5">
             <button type = "button" onClick={() => setAdding(false)}
                     className = "px-3 py-1.5 text-xs text-black transition-colors hover:text-red-500">

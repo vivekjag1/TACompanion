@@ -8,6 +8,14 @@ export const typeDefs = gql`
       role:String 
       status:String
       description:String
+  } 
+  input TodoInput {
+      id:Int
+      title:String
+      courseCode:String 
+      role:String 
+      status:String
+      description:String
   }
   input updateInterface{
       id:Int
@@ -26,5 +34,6 @@ export const typeDefs = gql`
       changeValue(id:Int, newAttribute:String, attrValue:String): Todo
       deleteTodo(id:Int):Todo
       deleteAll:Todo
+      addManyTodos(toAdd:[TodoInput!]):Boolean
   }
 `;

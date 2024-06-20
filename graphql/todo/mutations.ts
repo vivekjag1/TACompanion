@@ -64,5 +64,23 @@ export const todoMutations= {
   deleteAll: async (_: any) => {
     return await todoItems.deleteMany({});
 
+  },
+  addManyTodos: async(_:any, toAdd: TodoItem[]) =>{
+    // @ts-ignore
+    console.log("hello", toAdd['toAdd']);
+    try{
+      // @ts-ignore
+      await todoItems.insertMany(toAdd['toAdd']);
+      return true;
+    }
+    catch(err){
+      console.log(err);
+      return false;
+    }
+
   }
+
+
+
+
 }

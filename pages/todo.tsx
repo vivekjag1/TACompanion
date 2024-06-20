@@ -3,12 +3,12 @@ import { gql } from 'graphql-tag';
 import {useEffect, useState} from "react";
 import {TodoItem} from "@/mongoose/todo/schema";
 import CustomModal from "../components/CustomModal";
-// import { KanbanComponent, ColumnsDirective, ColumnDirective, CardSettingsModel, DragEventArgs } from "@syncfusion/ej2-react-kanban";
 import {Kanban} from "../components/Kanban"
-import {Button} from "@mui/material";
+
 const Home = () =>{
   const[open, setOpen] = useState<boolean>(false);
   const [todoItemArray, setTodoItemArray] = useState<TodoItem[]>([]);
+  const [hasChanges, setHasChanges] = useState<boolean>(false);
   const todoData  = gql `
       query {
           findAllTodoItems {
@@ -27,14 +27,19 @@ const Home = () =>{
       const data = await client.query({
         query:todoData
       });
+      console.log("the data is", data);
       const cleanData = data['data']['findAllTodoItems'].map((item:TodoItem) =>{
         const{__typeName, ...rest}  = item;
         return rest;
       });
+      console.log("the cleaned data is ", cleanData);
+      setTodoItemArray(cleanData);
+      console.log("just set to clean", todoItemArray);
+
       const cachedArray:TodoItem[] = [];
       cleanData.map((item:TodoItem)=>{
         todoItemArray.push( item);
-        cachedArray.push(item);
+        // cachedArray.push(item);
 
 
       });
@@ -91,22 +96,7 @@ const Home = () =>{
 
 
 
-  const handleDeleteAll = () =>{
-    const deleteQuery = gql`
-      mutation deleteEverything{
-          deleteAll {
-              id 
-          }
-      }
-    `;
-    const executeMutation = async () =>{
-      await client.mutate({
-        mutation: deleteQuery
-      });
-    }
-    executeMutation().then();
-    location.reload();
-  }
+
 
   const addNewTodo = (newTodo:TodoItem) =>{
     const cachedArray = [];
@@ -116,29 +106,17 @@ const Home = () =>{
 
   }
 
-  useEffect(()=>{
-    console.log("todo map is now", todoItemArray);
-    setTodoItemArray(todoItemArray);
-  }, [todoItemArray]);
+
+
+
 
 
   return (
-    <>
-      <div className = "flex items-center justify-center   ">
-        <CustomModal updateTodos={addNewTodo} open = {open} handleClose = {() => {
 
-          setOpen(false);
-
-        }}
-                     lastTodoID={todoItemArray.length}/>
-
-      </div>
       <div className = "flex ml-20 items-center justify-center">
-        <Kanban cards={todoItemArray}/>
+        <Kanban cards={todoItemArray} />
       </div>
 
-
-    </>
   )
 };
 export default Home;

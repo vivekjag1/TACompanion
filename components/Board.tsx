@@ -1,10 +1,11 @@
-import {useState} from "react";
+import {SetStateAction, useState} from "react";
 import {TodoItem} from "../mongoose/todo/schema";
 import {Column} from "./Column";
 
 
 interface BoardProps{
   cards:TodoItem[];
+
 }
 export const Board = (props:BoardProps) =>{
   const [cardsMap, setCardsMap] = useState<TodoItem[]>(props.cards);
@@ -24,21 +25,24 @@ export const Board = (props:BoardProps) =>{
         headingColor = "text-yellow-500"
         cards = {cardsMap}
         setCards = {setCardsMap}
-        />
+
+/>
       <Column
         title="Review/Need Help"
         column = "review"
         headingColor = "text-orange-500"
         cards = {cardsMap}
         setCards = {setCardsMap}
-        />
+
+      />
        <Column
         title="Done"
         column = "done"
         headingColor = "text-green-500"
         cards = {cardsMap}
         setCards = {setCardsMap}
-        />
+
+       />
 
 
 

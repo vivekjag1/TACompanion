@@ -3,12 +3,15 @@ import {SetStateAction, useEffect, useState} from "react";
 import {Card} from "../components/Card";
 import {CustomDragIndicator} from "@/components/CustomDragIndicator";
 import {AddCard} from "../components/AddCard";
+import {gql} from "graphql-tag";
+import client from "@/graphql/client";
 interface columnProps{
   title:string;
   headingColor:string;
   column:string;
   cards: TodoItem[];
   setCards: React.Dispatch<SetStateAction<TodoItem[]>>;
+
 }
 export const Column = (props:columnProps) =>{
   const [hover, setHover] = useState<boolean>(false);
@@ -43,13 +46,9 @@ export const Column = (props:columnProps) =>{
     copy = copy.filter((card) => card.id !== +cardID);
     copy.push(cardToMove);
     props.setCards(copy);
-
-
-
-
-
-
-
+    console.log("drag done", props.cards);
+    makeTodo().then();
+    console.log("finished maketodo");
 
 
 
@@ -64,6 +63,43 @@ export const Column = (props:columnProps) =>{
 
   }
 
+
+  const handleDeleteAll = () =>{
+    const deleteQuery = gql`
+        mutation deleteEverything{
+            deleteAll {
+                id
+            }
+        }
+    `;
+    const executeMutation = async () =>{
+      await client.mutate({
+        mutation: deleteQuery
+      });
+    }
+    executeMutation().then();
+  }
+
+
+  const makeTodo = async() =>{
+    handleDeleteAll();
+    console.log("inside maketodo");
+    const removeField = () =>{
+      return props.cards.map(({ ['__typename']: _, ...rest }) => rest);
+    }
+    const createTodo = gql `
+        mutation makeManyTodos($toAdd: [TodoInput!]){
+            addManyTodos(toAdd: $toAdd)
+        }
+    `;
+    const data = await client.mutate({
+      mutation: createTodo,
+      variables: {
+        toAdd: removeField()
+      }
+    });
+    return props.cards;
+  };
 
 
   const fetchIndicators = () =>{
