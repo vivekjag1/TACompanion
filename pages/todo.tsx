@@ -15,8 +15,7 @@ import "../node_modules/@syncfusion/ej2-react-kanban/styles/bootstrap5.css";
 import {Button} from "@mui/material";
 const Home = () =>{
   const[open, setOpen] = useState<boolean>(false);
-  const [todoItems, setTodoItems] = useState<TodoItem[]>([]);
-  const [updated, setUpdated] = useState<boolean>(false);
+  const [todoMap, setTodoMap] = useState<Map<number, TodoItem>>(new Map());
   const todoData  = gql `
       query {
           findAllTodoItems {
@@ -35,23 +34,28 @@ const Home = () =>{
       const data = await client.query({
         query:todoData
       });
-
       const cleanData = data['data']['findAllTodoItems'].map((item:TodoItem) =>{
         const{__typeName, ...rest}  = item;
         return rest;
       });
-      setTodoItems(cleanData);
+      const cachedMap = new Map();
+      cleanData.map((item:TodoItem)=>{
+        cachedMap.set(item.id as number, item);
+      });
+      setTodoMap(cachedMap);
       return cleanData;
     }
     fetchData().then(console.log);
-  }, [updated]);// eslint-disable-line
+
+  }, []);// eslint-disable-line
+
+
   const cardStyle = {
     backgroundColor: 'lightgray',
     borderRadius:"1rem"
   }
-  useEffect(() =>{
 
-  },[updated]);
+
   const mutateTodo = async (id:number, newAttribute:string, value:string) =>{
     const updateTodo = gql`
         mutation updateTodo($id:Int, $newAttribute:String, $attrValue:String){
@@ -85,9 +89,9 @@ const Home = () =>{
     )
   }
   const updateCard =  (card:DragEventArgs ) =>{
-    setUpdated(!updated);
+
     const updatedCard = card.data;
-    setUpdated(true);
+
     mutateTodo(updatedCard[0].id, "status", updatedCard[0].status).then();
   }
 
@@ -112,27 +116,27 @@ const Home = () =>{
   }
 
   const addNewTodo = (newTodo:TodoItem) =>{
-    // console.log("updated todo", newTodo);
-    // setUpdated(false);
-    // const newArr:TodoItem[] = [];
-    // updatedTodos.push(newTodo);
-    // todoItems.push(newTodo);
-    // const union = newArr.concat(todoItems);
-    // setTodoItems(union);
-    // setUpdated(true);
+    const cachedMap = new Map(todoMap);
+    cachedMap.set(newTodo.id as number, newTodo);
+    setTodoMap(cachedMap);
+    console.log("added the todo, map is now", todoMap);
+
   }
 
+  useEffect(()=>{
+    console.log("todo map is now", todoMap);
+  }, [todoMap]);
 
 
   return (
     <>
       <div className = "flex items-center justify-center  ">
         <CustomModal updateTodos={addNewTodo} open = {open} handleClose = {() => {
-          setUpdated(!updated);
+
           setOpen(false);
-        setUpdated(true);
+
         }}
-                     lastTodoID={todoItems.length}/>
+                     lastTodoID={todoMap.size}/>
       </div>
 
       <div className=" flex flex-col justify-between h-screen bg-white ">
@@ -146,7 +150,7 @@ const Home = () =>{
 
         <div className="bg-white  items-center justify-center h-screen  ml-20 p-5 ">
 
-          <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {{
+          <KanbanComponent id = "kanban"  keyField = "status" dataSource = {Array.from(todoMap.values())} cardSettings = {{
             contentField: "description",
             headerField : "title",
             template :cardTemplate,
