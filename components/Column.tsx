@@ -80,6 +80,7 @@ export const Column = (props:columnProps) =>{
       </div>
       <div onDragOver = {handleDragOver} onDragLeave = {handleDragLeave} onDrop = {handleDragEnd} className = {`h-full w-full transition-colors ${hover? "bg-gray-200":"bg-white"}`}>
         {filteredTodos.map((todo:TodoItem) =>{
+          // eslint-disable-next-line react/jsx-key
           return <Card id = {todo.id as number} title = {todo.title as string} column = {todo.status as string} handleDragStart = {handleDragStart}/>
         })}
         <CustomDragIndicator beforeID = {-1} column = {props.column}/>
