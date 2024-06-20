@@ -10,7 +10,7 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
     title:"dummy",
     courseCode: "CS100x",
     role: "ta",
-    status:"done",
+    status:"notStarted",
     description: "I need to do stuff"
   };
   const seedTwo = {
@@ -18,7 +18,7 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
     title:"dummy2",
     courseCode: "ECE100x",
     role: "ta",
-    status:"done",
+    status:"notStarted",
     description: "I dont need to do stuff"
   };
 
