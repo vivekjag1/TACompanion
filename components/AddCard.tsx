@@ -14,11 +14,10 @@ export const AddCard = (props:addProps)=>{
   const [role, setRole] = useState<string>("");
   const [description, setDescription] = useState<string>("")
   const [course, setCourse] = useState<string>("");
-  const [newID, setNewID] = useState<number>(props.cards.length);
   const sendToBackend = (card: TodoItem) =>{
     const createTodo = gql `
-        mutation addTodo( $id:Int, $title:String, $courseCode:String, $role:String, $status:String, $description:String ){
-            addTodo( id:$id, title:$title, courseCode: $courseCode, role:$role, status: $status, description: $description){
+        mutation addTodo(  $title:String, $courseCode:String, $role:String, $status:String, $description:String ){
+            addTodo( title:$title, courseCode: $courseCode, role:$role, status: $status, description: $description){
                 id
                 title
                 courseCode
@@ -26,12 +25,10 @@ export const AddCard = (props:addProps)=>{
         }
     `;
 
-    console.log("old ID is", newID);
     const executeQuery = async () =>{
       const data = await client.mutate({
         mutation: createTodo,
         variables: {
-          id: newID +2,
           title:card.title,
           courseCode: card.courseCode,
           role: card.role,
@@ -39,13 +36,9 @@ export const AddCard = (props:addProps)=>{
           description: card.description
         }
       });
-      console.log("just set with", data['data']['addTodo'].id);
       card.id = data['data']['addTodo'].id;
-       setNewID(data['data']['addTodo'].id);
-      console.log("new id is",  newID);
       return data['data']['addTodo'].id;
     }
-    console.log("query time!");
     executeQuery().then(console.log);
   }
   const [adding, setAdding] = useState<boolean>(false);

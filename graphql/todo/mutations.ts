@@ -19,7 +19,6 @@ export const todoMutations= {
     const findDocs = await todoItems.countDocuments({})
     const newId = findDocs + 1;
     if ((await todoItems.find({id: newId})).length != 0) {//do not create a todolist item that already exists
-      console.log("womp");
       return null;
     }
     try {
@@ -31,7 +30,6 @@ export const todoMutations= {
         status: status,
         description: description
       }
-      console.log("the new todos id is", newTodo.id);
       await todoItems.create(newTodo);
       return newTodo;
     } catch (error) {
