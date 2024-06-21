@@ -15,29 +15,30 @@ interface updateInterface{
   attrValue:string;
 }
 export const todoMutations= {
-  addTodo: async (_:any, {id, title, courseCode, role, status, description}:todoInterface)=> {
-    console.log(courseCode);
-
-    if ((await todoItems.find({id:id})).length != 0){ //do not create a todolist item that already exists
+  addTodo: async (_: any, { title, courseCode, role, status, description}: todoInterface) => {
+    console.log("inside todo", title, courseCode, role, status, description);
+    const newId = (await todoItems.countDocuments({})) + 1;
+    console.log("newID", newId);
+    if ((await todoItems.find({id: newId})).length != 0) { //do not create a todolist item that already exists
       return null;
     }
     try {
       const newTodo: TodoItem = {
-        id: id,
+        id: newId,
         title: title,
         courseCode: courseCode,
         role: role,
         status: status,
         description: description
       }
-      await todoItems.insertMany(newTodo);
+      await todoItems.create(newTodo);
       return newTodo;
     } catch (error) {
       console.log("inside catch");
       return null;
     }
   },
-  changeValue: async(_:any, {id, newAttribute, attrValue}:updateInterface) => {
+  changeValue: async (_: any, {id, newAttribute, attrValue}: updateInterface) => {
     if ((await todoItems.find({id})).length === 0) {
       return null;
     }
@@ -53,12 +54,38 @@ export const todoMutations= {
         return await todoItems.findOneAndUpdate({id: id}, {role: attrValue});
       }
       case "status": {
-         const data = await todoItems.findOneAndUpdate({id: id}, {status: attrValue}, {new:true});
+        const data = await todoItems.findOneAndUpdate({id: id}, {status: attrValue}, {new: true});
         return data;
       }
     }
   },
-  deleteTodo: async (_:any, id:number) =>{
-    return await todoItems.deleteMany({id:id});
+  deleteTodo: async (_: any, id: number) => {
+    // @ts-ignore
+    console.log("id is", id['id']);
+    //@ts-ignore
+    return await todoItems.deleteMany({id: id['id']});
+  },
+  deleteAll: async (_: any) => {
+
+    return await todoItems.deleteMany({});
+
+  },
+  addManyTodos: async(_:any, toAdd: TodoItem[]) =>{
+    // @ts-ignore
+    console.log("hello", toAdd['toAdd']);
+    try{
+      // @ts-ignore
+      await todoItems.insertMany(toAdd['toAdd']);
+      return true;
+    }
+    catch(err){
+      console.log(err);
+      return false;
+    }
+
   }
-  }
+
+
+
+
+}

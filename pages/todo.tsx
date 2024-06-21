@@ -3,29 +3,12 @@ import { gql } from 'graphql-tag';
 import {useEffect, useState} from "react";
 import {TodoItem} from "@/mongoose/todo/schema";
 import CustomModal from "../components/CustomModal";
-import { KanbanComponent, ColumnsDirective, ColumnDirective, CardSettingsModel, DragEventArgs } from "@syncfusion/ej2-react-kanban";
-import "../node_modules/@syncfusion/ej2-base/styles/bootstrap5.css";
-import '../node_modules/@syncfusion/ej2-buttons/styles/bootstrap5.css';
-import "../node_modules/@syncfusion/ej2-layouts/styles/bootstrap5.css";
-import '../node_modules/@syncfusion/ej2-dropdowns/styles/bootstrap5.css';
-import '../node_modules/@syncfusion/ej2-inputs/styles/bootstrap5.css';
-import "../node_modules/@syncfusion/ej2-navigations/styles/bootstrap5.css";
-import "../node_modules/@syncfusion/ej2-popups/styles/bootstrap5.css";
-import "../node_modules/@syncfusion/ej2-react-kanban/styles/bootstrap5.css";
-import Modal from "@mui/material/Modal";
-import Card from "@mui/material/Card";
-import Box from "@mui/material/Box";
-import {Button, CardContent, Typography} from "@mui/material";
-interface updateInterface{
-  id:number;
-  newAttribute:string;
-  attrValue:string;
-}
+import {Kanban} from "../components/Kanban"
+
 const Home = () =>{
   const[open, setOpen] = useState<boolean>(false);
-  const setClose = () => setOpen(false);
-  const [todoItems, setTodoItems] = useState<TodoItem[]>([]);
-  const [updated, setUpdated] = useState<boolean>(false);
+  const [todoItemArray, setTodoItemArray] = useState<TodoItem[]>([]);
+  const [hasChanges, setHasChanges] = useState<boolean>(false);
   const todoData  = gql `
       query {
           findAllTodoItems {
@@ -37,30 +20,45 @@ const Home = () =>{
               role
               __typename
           }
-      }
+      } 
   `;
   useEffect(() =>{
     async function fetchData(){
       const data = await client.query({
         query:todoData
       });
-
+      console.log("the data is", data);
       const cleanData = data['data']['findAllTodoItems'].map((item:TodoItem) =>{
         const{__typeName, ...rest}  = item;
         return rest;
       });
-      setTodoItems(cleanData);
+      console.log("the cleaned data is ", cleanData);
+      setTodoItemArray(cleanData);
+      console.log("just set to clean", todoItemArray);
+
+      const cachedArray:TodoItem[] = [];
+      cleanData.map((item:TodoItem)=>{
+        todoItemArray.push( item);
+        // cachedArray.push(item);
+
+
+      });
+      console.log("before UE", todoItemArray);
+      setTodoItemArray(cachedArray);
+      console.log("after UE", todoItemArray);
       return cleanData;
     }
     fetchData().then(console.log);
+
   }, []);// eslint-disable-line
+
+
   const cardStyle = {
     backgroundColor: 'lightgray',
     borderRadius:"1rem"
   }
-  useEffect(() =>{
 
-  },[updated]);
+
   const mutateTodo = async (id:number, newAttribute:string, value:string) =>{
     const updateTodo = gql`
         mutation updateTodo($id:Int, $newAttribute:String, $attrValue:String){
@@ -72,7 +70,7 @@ const Home = () =>{
         }
     `;
     const fetch = async() =>{
-      const data = await client.mutate({
+      return await client.mutate({
         mutation:updateTodo,
         variables:{
           id:id,
@@ -80,14 +78,11 @@ const Home = () =>{
           attrValue:value
         }
       });
-      return data;
     }
-    const test = await fetch();
-    return test;
+    return await fetch();
   }
-  const cardtemplate = (data:TodoItem) =>{
+  const cardTemplate = (data:TodoItem) =>{
     return(
-
       <div>
         <div className = "text-center font-bold text-lg">{data.title as string}</div>
         <div className = "text-center">{`Description: ${data.description as string}`}</div>
@@ -96,82 +91,36 @@ const Home = () =>{
       </div>
     )
   }
-  const updateCard =  (card:DragEventArgs ) =>{
-    setUpdated(!updated);
-    const updatedCard = card.data;
-    setUpdated(true);
-    mutateTodo(updatedCard[0].id, "status", updatedCard[0].status).then();
+
+
+
+
+
+
+
+  const addNewTodo = (newTodo:TodoItem) =>{
+    const cachedArray = [];
+    cachedArray.push(newTodo);
+    setTodoItemArray(cachedArray);
+    console.log("added the todo, map is now", todoItemArray);
+
   }
 
-  const handleOpen = () =>{
-    setOpen(true);
 
-  }
 
-  const handleDeleteAll = () =>{
-    console.log("Deleting everything");
-  }
 
-  const fetchLastTodoID = () =>{
-    return todoItems.length;
-  }
+
+
   return (
-    <>
-      <div className = "flex items-center justify-center  ">
-        <CustomModal open = {open} handleClose = {() => {
-          setUpdated(!updated);
-          setOpen(false);
-        setUpdated(true)}}
-                     lastTodoID={fetchLastTodoID()}/>
 
+      <div className = "flex flex-col ml-20 justify-center overflow-hidden  ">
+        <h1 className = " top-0 mb-5 text-5xl text-black font-mono text-center">Your Todo Items </h1>
+        <div>
+          <Kanban cards={todoItemArray}  />
 
-
-        {/*<Modal*/}
-        {/*  open={open}*/}
-        {/*  onClose={setClose}*/}
-        {/*  aria-labelledby="modal-modal-title"*/}
-        {/*  aria-describedby="modal-modal-description"*/}
-        {/*>*/}
-        {/*  <Box  sx = {{maxWidth:'30rem', minHeight:"30rem"}}>*/}
-        {/*    <Card>*/}
-        {/*      <CardContent>*/}
-        {/*        <Typography sx = {{fontSize:20}} component = "div">Hello World</Typography>*/}
-        {/*      </CardContent>*/}
-
-        {/*    </Card>*/}
-        {/*  </Box>*/}
-
-        {/*</Modal>*/}
-
-
-      </div>
-
-      <div className=" flex flex-col justify-between h-screen bg-white ">
-        <h1 className="text-4xl font-mono font-bold text-black text-center">
-          Your Todo Items
-        </h1>
-        <div className=" mt-5 flex flex-row items-center justify-center space-x-5">
-          <Button variant = "contained" style = {{backgroundColor:"blue"}}  onClick = {handleOpen}>New Todo Item </Button>
-          <Button variant = "contained" style = {{backgroundColor:"red"}} onClick = {handleDeleteAll}>Delete All </Button>
-        </div>
-
-        <div className="bg-white  items-center justify-center h-screen  ml-20 p-5 ">
-
-          <KanbanComponent id = "kanban" keyField = "status" dataSource = {todoItems} cardSettings = {{
-            contentField: "description",
-            headerField : "title",
-            template :cardtemplate,
-          }}   dragStop ={updateCard} cssClass = "kanban-overview">
-            <ColumnsDirective>
-              <ColumnDirective headerText = "Not Started" keyField="notStarted"  />
-              <ColumnDirective headerText = "In Progress" keyField="started"/>
-              <ColumnDirective headerText = "In Review/Need Help" keyField="review"/>
-              <ColumnDirective headerText = "Done" keyField="done"/>
-            </ColumnsDirective>
-          </KanbanComponent>
         </div>
       </div>
-    </>
+
   )
 };
 export default Home;
