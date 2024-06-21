@@ -20,8 +20,8 @@ export const AddCard = (props:addProps)=>{
   const sendToBackend = (card: TodoItem) =>{
     console.log("backend", card);
     const createTodo = gql `
-        mutation addTodo( $title:String, $courseCode:String, $role:String, $status:String, $description:String ){
-            addTodo( title:$title, courseCode: $courseCode, role:$role, status: $status, description: $description){
+        mutation addTodo( $id:Int, $title:String, $courseCode:String, $role:String, $status:String, $description:String ){
+            addTodo( id:$id, title:$title, courseCode: $courseCode, role:$role, status: $status, description: $description){
                 id
                 title
                 courseCode
@@ -32,6 +32,7 @@ export const AddCard = (props:addProps)=>{
       const data = await client.mutate({
         mutation: createTodo,
         variables: {
+          id:props.cards.length +1,
           title:card.title,
           courseCode: card.courseCode,
           role: card.role,
@@ -53,7 +54,7 @@ export const AddCard = (props:addProps)=>{
     console.log("numAdded is", numAdded);
     e.preventDefault();
     const createdTodo = {
-      id:props.cards.length + 1,
+      id:props.cards.length + 2 + numAdded,
       title:title,
       courseCode: course,
       role: role,

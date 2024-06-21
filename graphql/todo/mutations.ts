@@ -15,16 +15,19 @@ interface updateInterface{
   attrValue:string;
 }
 export const todoMutations= {
-  addTodo: async (_: any, { title, courseCode, role, status, description}: todoInterface) => {
-    console.log("inside todo", title, courseCode, role, status, description);
-    const newId = (await todoItems.countDocuments({})) + 1;
-    console.log("newID", newId);
-    if ((await todoItems.find({id: newId})).length != 0) { //do not create a todolist item that already exists
+  addTodo: async (_: any, { id, title, courseCode, role, status, description}: todoInterface) => {
+    console.log("inside todo", id, title, courseCode, role, status, description);
+    const findDocs = await todoItems.countDocuments({})
+    const newId = findDocs + 1;
+
+
+    if ((await todoItems.find({id: findDocs})).length != 0) {//do not create a todolist item that already exists
+console.log("womp womp");
       return null;
     }
     try {
       const newTodo: TodoItem = {
-        id: newId,
+        id: id,
         title: title,
         courseCode: courseCode,
         role: role,
