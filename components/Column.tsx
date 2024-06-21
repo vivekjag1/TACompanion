@@ -116,7 +116,7 @@ export const Column = (props:columnProps) =>{
       <div onDragOver = {handleDragOver} onDragLeave = {handleDragLeave} onDrop = {handleDragEnd} className = {`h-full w-full transition-colors ${hover? "bg-gray-200":"bg-white"}`}>
         {filteredTodos.map((todo:TodoItem) =>{
           // eslint-disable-next-line react/jsx-key
-          return <Card id = {todo.id as number} title = {todo.title as string} columnColor = {color} column = {todo.status as string}  role = {todo.role as string} description = {todo.description as string} course = {todo.courseCode as string}handleDragStart = {handleDragStart}/>
+          return <Card cards = {props.cards} id = {todo.id as number} title = {todo.title as string} setCards={props.setCards} columnColor = {color} column = {todo.status as string}  role = {todo.role as string} description = {todo.description as string} course = {todo.courseCode as string}handleDragStart = {handleDragStart}/>
         })}
         <CustomDragIndicator beforeID = {-1} column = {props.column}/>
         <AddCard column={props.column} setCards={props.setCards} cards={props.cards} lastItemAdded={props.cards.length}/>

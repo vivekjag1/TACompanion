@@ -60,9 +60,13 @@ export const todoMutations= {
     }
   },
   deleteTodo: async (_: any, id: number) => {
-    return await todoItems.deleteMany({id: id});
+    // @ts-ignore
+    console.log("id is", id['id']);
+    //@ts-ignore
+    return await todoItems.deleteMany({id: id['id']});
   },
   deleteAll: async (_: any) => {
+
     return await todoItems.deleteMany({});
 
   },
