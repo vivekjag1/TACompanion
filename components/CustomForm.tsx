@@ -1,20 +1,14 @@
 import client from "../graphql/client";
 import { gql } from 'graphql-tag';
-
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import {styled} from "@mui/system";
 import {useState} from "react";
 import {TodoItem} from "@/mongoose/todo/schema";
-
 interface formProps{
   handleClose: () => void;
   lastTodoID:number;
   updateTodos: (newItem: TodoItem) => void;
-
 }
-
-
 export const CustomForm = (props:formProps) =>{
 
   const [title, setTitle] = useState<string>("");
@@ -30,9 +24,7 @@ export const CustomForm = (props:formProps) =>{
   }
 
   const handleSubmit  =(e: React.SyntheticEvent) =>{
-    console.log("course is", course);
     e.preventDefault();
-    console.log(title, description, role, course);
     props.handleClose();
 
     const newItem:TodoItem = {

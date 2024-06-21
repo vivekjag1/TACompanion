@@ -1,7 +1,6 @@
 import {FormEvent, SetStateAction, useState} from "react";
 import {TodoItem} from "@/mongoose/todo/schema";
 import AddIcon from '@mui/icons-material/Add';
-import {Card} from "@mui/material";
 import {gql} from "graphql-tag";
 import client from "@/graphql/client";
 interface addProps{
@@ -9,18 +8,15 @@ interface addProps{
   setCards: React.Dispatch<SetStateAction<TodoItem[]>>;
   cards:TodoItem[];
   lastItemAdded: number;
-
 }
 export const AddCard = (props:addProps)=>{
   const [title, setTitle] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [description, setDescription] = useState<string>("")
-  const [course, setCourse] = useState<string>("")
-
+  const [course, setCourse] = useState<string>("");
   const sendToBackend = (card: TodoItem) =>{
-    console.log("backend", card);
     const createTodo = gql `
-        mutation addTodo( $title:String, $courseCode:String, $role:String, $status:String, $description:String ){
+        mutation addTodo(  $title:String, $courseCode:String, $role:String, $status:String, $description:String ){
             addTodo( title:$title, courseCode: $courseCode, role:$role, status: $status, description: $description){
                 id
                 title
@@ -28,6 +24,7 @@ export const AddCard = (props:addProps)=>{
             }
         }
     `;
+
     const executeQuery = async () =>{
       const data = await client.mutate({
         mutation: createTodo,
@@ -39,21 +36,18 @@ export const AddCard = (props:addProps)=>{
           description: card.description
         }
       });
-      return data;
+      card.id = data['data']['addTodo'].id;
+      return data['data']['addTodo'].id;
     }
-    executeQuery().then();
-
+    executeQuery().then(console.log);
   }
-
-
   const [adding, setAdding] = useState<boolean>(false);
   const [numAdded, setNumAdded] = useState<number>(0);
   const handleSubmit = (e:FormEvent<HTMLFormElement>) =>{
     setNumAdded(numAdded+1);
-    console.log("numAdded is", numAdded);
     e.preventDefault();
     const createdTodo = {
-      id:props.cards.length + 1,
+      id:props.cards.length + 2 + numAdded,
       title:title,
       courseCode: course,
       role: role,
@@ -92,8 +86,6 @@ export const AddCard = (props:addProps)=>{
               placeholder="Role"
               className="w-full rounded border border-blue-500 bg-blue-400/20 p-3 text-sm text-neutral-500 placeholder-black-300 focus:outline-o"/>
           </div>
-
-
           <div className="mt-1.5 flex items-center justify-end gap-1.5">
             <button type="button" onClick={() => setAdding(false)}
                     className="px-3 py-1.5 text-xs text-black transition-colors hover:text-red-500">
@@ -105,9 +97,6 @@ export const AddCard = (props:addProps)=>{
             </button>
           </div>
         </form>
-
-
-
       ): <button  onClick={() => setAdding(true)} className = "flex w-full items-center gap-1.5 px-3 py-1.5 text-xs text-black transition-colors hover:text-gray">
         <span>Add Todo</span>
         <AddIcon/>
@@ -117,8 +106,4 @@ export const AddCard = (props:addProps)=>{
 
     </>
   )
-
-
-
-
 }

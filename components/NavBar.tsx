@@ -51,7 +51,6 @@ const NavBar = () =>{
   const iconControl = useAnimationControls();
 
   useEffect(() =>{
-    console.log("useEffect running!");
     if(open){
       containerControls.start("open");
       iconControl.start("open");

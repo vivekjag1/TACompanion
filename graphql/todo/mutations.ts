@@ -15,12 +15,12 @@ interface updateInterface{
   attrValue:string;
 }
 export const todoMutations= {
-  addTodo: async (_: any, { title, courseCode, role, status, description}: todoInterface) => {
-    console.log("inside todo", title, courseCode, role, status, description);
-    const newId = (await todoItems.countDocuments({})) + 1;
-    console.log("newID", newId);
-    if ((await todoItems.find({id: newId})).length != 0) { //do not create a todolist item that already exists
-      return null;
+  addTodo: async (_: any, { id, title, courseCode, role, status, description}: todoInterface) => {
+    const findDocs = await todoItems.countDocuments({})
+    let newId = findDocs + 1;
+    while ((await todoItems.find({id: newId})).length != 0) {//do not create a todolist item that already exists
+      newId++;
+
     }
     try {
       const newTodo: TodoItem = {
@@ -34,7 +34,6 @@ export const todoMutations= {
       await todoItems.create(newTodo);
       return newTodo;
     } catch (error) {
-      console.log("inside catch");
       return null;
     }
   },
@@ -61,7 +60,6 @@ export const todoMutations= {
   },
   deleteTodo: async (_: any, id: number) => {
     // @ts-ignore
-    console.log("id is", id['id']);
     //@ts-ignore
     return await todoItems.deleteMany({id: id['id']});
   },
@@ -72,7 +70,6 @@ export const todoMutations= {
   },
   addManyTodos: async(_:any, toAdd: TodoItem[]) =>{
     // @ts-ignore
-    console.log("hello", toAdd['toAdd']);
     try{
       // @ts-ignore
       await todoItems.insertMany(toAdd['toAdd']);
