@@ -20,6 +20,9 @@ export const Column = (props:columnProps) =>{
     console.log("filter", filteredTodos);
   }, [filteredTodos]);
 
+  const index = props.headingColor.indexOf("-");
+  const color = props.headingColor.substring(index + 1);
+
 
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, title:string, id:number, col:string) =>{
@@ -47,7 +50,7 @@ export const Column = (props:columnProps) =>{
     copy.push(cardToMove);
     props.setCards(copy);
     console.log("drag done", props.cards);
-    makeTodo().then();
+    updateTodo(cardToMove).then();
     console.log("finished maketodo");
 
 
@@ -64,42 +67,38 @@ export const Column = (props:columnProps) =>{
   }
 
 
-  const handleDeleteAll = () =>{
-    const deleteQuery = gql`
-        mutation deleteEverything{
-            deleteAll {
-                id
-            }
-        }
-    `;
-    const executeMutation = async () =>{
-      await client.mutate({
-        mutation: deleteQuery
-      });
-    }
-    executeMutation().then();
-  }
 
+  const updateTodo = async(card: TodoItem) =>{
 
-  const makeTodo = async() =>{
-    handleDeleteAll();
-    console.log("inside maketodo");
-    const removeField = () =>{
-      return props.cards.map(({ ['__typename']: _, ...rest }) => rest);
-    }
     const createTodo = gql `
-        mutation makeManyTodos($toAdd: [TodoInput!]){
-            addManyTodos(toAdd: $toAdd)
+        mutation changeValue($id:Int, $newAttribute:String, $attrValue:String ){
+            changeValue(id:$id, newAttribute:$newAttribute, attrValue: $attrValue){
+                id 
+                title
+                courseCode
+            }
         }
     `;
     const data = await client.mutate({
       mutation: createTodo,
       variables: {
-        toAdd: removeField()
+        id:card.id,
+        newAttribute: "status",
+        attrValue: props.column
       }
     });
     return props.cards;
   };
+
+
+
+
+
+
+
+
+
+
 
 
   const fetchIndicators = () =>{
@@ -117,7 +116,7 @@ export const Column = (props:columnProps) =>{
       <div onDragOver = {handleDragOver} onDragLeave = {handleDragLeave} onDrop = {handleDragEnd} className = {`h-full w-full transition-colors ${hover? "bg-gray-200":"bg-white"}`}>
         {filteredTodos.map((todo:TodoItem) =>{
           // eslint-disable-next-line react/jsx-key
-          return <Card id = {todo.id as number} title = {todo.title as string} column = {todo.status as string} handleDragStart = {handleDragStart}/>
+          return <Card id = {todo.id as number} title = {todo.title as string} columnColor = {color} column = {todo.status as string}  role = {todo.role as string} description = {todo.description as string} course = {todo.courseCode as string}handleDragStart = {handleDragStart}/>
         })}
         <CustomDragIndicator beforeID = {-1} column = {props.column}/>
         <AddCard column={props.column} setCards={props.setCards} cards={props.cards} lastItemAdded={props.cards.length}/>

@@ -113,8 +113,12 @@ const Home = () =>{
 
   return (
 
-      <div className = "flex ml-20 items-center justify-center">
-        <Kanban cards={todoItemArray} />
+      <div className = "flex flex-col ml-20 justify-center overflow-hidden  ">
+        <h1 className = " top-0 mb-5 text-5xl text-black font-mono text-center">Your Todo Items </h1>
+        <div>
+          <Kanban cards={todoItemArray}  />
+
+        </div>
       </div>
 
   )

@@ -11,7 +11,7 @@ export const Board = (props:BoardProps) =>{
   const [cardsMap, setCardsMap] = useState<TodoItem[]>(props.cards);
 
   return (
-    <div className = "flex h-full  justify-center w-full gap-3 overflow-scroll p-12">
+    <div className = "flex h-full  justify-center w-full gap-3  p-12">
       <Column
         title="Not Started"
         column = "notStarted"
