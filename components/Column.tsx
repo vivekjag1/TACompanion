@@ -17,7 +17,6 @@ export const Column = (props:columnProps) =>{
   const [hover, setHover] = useState<boolean>(false);
   const filteredTodos = props.cards.filter((card)=> card.status === props.column);
   useEffect(()=>{
-    console.log("filter", filteredTodos);
   }, [filteredTodos]);
 
   const index = props.headingColor.indexOf("-");
@@ -27,7 +26,6 @@ export const Column = (props:columnProps) =>{
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, title:string, id:number, col:string) =>{
     e!.dataTransfer!.setData("cardID", String(id));
-    console.log("e is", e);
   }
 
   const handleDragOver = (e:React.DragEvent<HTMLDivElement>) =>{
@@ -49,27 +47,9 @@ export const Column = (props:columnProps) =>{
     copy = copy.filter((card) => card.id !== +cardID);
     copy.push(cardToMove);
     props.setCards(copy);
-    console.log("drag done", props.cards);
     updateTodo(cardToMove).then();
-    console.log("finished maketodo");
-
-
-
   }
-  const highlightIndicator = (e:React.DragEvent<HTMLDivElement>) =>{
-    const indicators = getIndicators();
-    console.log(indicators);
-  }
-
-  const getIndicators = () =>{
-    return Array.from(document.querySelectorAll(`[data-column="${props.column}"]`));
-
-  }
-
-
-
   const updateTodo = async(card: TodoItem) =>{
-
     const createTodo = gql `
         mutation changeValue($id:Int, $newAttribute:String, $attrValue:String ){
             changeValue(id:$id, newAttribute:$newAttribute, attrValue: $attrValue){
@@ -89,22 +69,6 @@ export const Column = (props:columnProps) =>{
     });
     return props.cards;
   };
-
-
-
-
-
-
-
-
-
-
-
-
-  const fetchIndicators = () =>{
-    return Array.from(document.querySelectorAll(`[data-column="${props.column}"`));
-  }
-
   return(
     <div className = "w-[20rem] shrink-0">
       <div className = "mb-3 flex items-center justify-between">

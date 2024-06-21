@@ -15,12 +15,8 @@ interface cardProps{
   handleDragStart:(e: React.DragEvent<HTMLDivElement>, title: string, id: number, column: string) =>void;
   setCards: React.Dispatch<SetStateAction<TodoItem[]>>;
   cards: TodoItem[]
-
 }
-
-
 export const Card = (props:cardProps) =>{
-  console.log(` border-${props.columnColor}`);
   const deleteQuery = async() => {
     const deleteItem = gql `
         mutation deleteTodo($id: Int){
@@ -39,34 +35,23 @@ export const Card = (props:cardProps) =>{
       return execute;
     }
     await runQuery();
-
   }
   const handleDeleteTodo = async() => {
     const filtered = props.cards.filter((item) => item.id !== props.id);
     props.setCards(filtered);
     await deleteQuery();
-
-
   }
-
-
-
-
-  const test = `relative cursor-grab rounded border border-${props.columnColor} bg-white p-3 active:cursor-grabbing text-sm text-black text-center`
-
+  const classNameString = `relative cursor-grab rounded border border-${props.columnColor} bg-white p-3 active:cursor-grabbing text-sm text-black text-center`
   return(
     <>
       <CustomDragIndicator beforeID = {props.id} column = {props.column}/>
-      <div draggable={true} onDragStart = {(e)=>props.handleDragStart(e, props.title, props.id, props.column)} className = {test}>
-
+      <div draggable={true} onDragStart = {(e)=>props.handleDragStart(e, props.title, props.id, props.column)} className = {classNameString}>
         <p className = "mb-1.5  ">{`Title: ${props.title}`}</p>
         <p className = "mb-1.5">{`Course: ${props.course}`}</p>
         <p className = "mb-1.5"  >{`Role: ${props.role}`}</p>
         <p className = "mb-1.5" >{`Description: ${props.description}`}</p>
         <DeleteIcon className = "absolute right-0 bottom-0" onClick={handleDeleteTodo}/>
-
       </div>
     </>
   )
-
 }
