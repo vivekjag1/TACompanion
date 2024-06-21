@@ -17,9 +17,10 @@ interface updateInterface{
 export const todoMutations= {
   addTodo: async (_: any, { id, title, courseCode, role, status, description}: todoInterface) => {
     const findDocs = await todoItems.countDocuments({})
-    const newId = findDocs + 1;
-    if ((await todoItems.find({id: newId})).length != 0) {//do not create a todolist item that already exists
-      return null;
+    let newId = findDocs + 1;
+    while ((await todoItems.find({id: newId})).length != 0) {//do not create a todolist item that already exists
+      newId++;
+
     }
     try {
       const newTodo: TodoItem = {
