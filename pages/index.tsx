@@ -11,7 +11,7 @@ const Home: NextPage = (props: InferGetStaticPropsType<typeof getStaticProps>) =
 
 //force vercel redeploy
     <>
-    <Link href="/todo" className="hidden md:flex">
+    <Link href="/api/auth/login" className="hidden md:flex">
       <div className="bg-white relative w-full h-screen overflow-hidden">
         <div className = "grid grid-cols-1 md:grid-cols-2">
           <div className="relative h-screen">
