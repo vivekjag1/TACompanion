@@ -8,6 +8,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import SchoolIcon from '@mui/icons-material/School';
 import LinkIcon from '@mui/icons-material/Link';
 import PersonIcon from '@mui/icons-material/Person';
+import Link from "next/link"; 
 const animation = {
   close : {
     width: "5rem",
@@ -89,7 +90,10 @@ const NavBar = () =>{
         </NavItem>
         {/*This is a placeholder that will eventually have sign out/sign in when i get around to it!*/}
         <div className="absolute bottom-0 items-center justify-center cursor-pointer mt-auto">
-          <PersonIcon/>
+          <Link href = "/api/auth/logout">
+            <PersonIcon/>
+
+          </Link>
         </div>
 
       </div>
