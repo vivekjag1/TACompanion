@@ -3,6 +3,7 @@ import {TodoItem} from "../../mongoose/todo/schema";
 
 interface todoInterface{
   id:number;
+  name:string;
   title:string;
   courseCode:string;
   role:string;
@@ -15,7 +16,7 @@ interface updateInterface{
   attrValue:string;
 }
 export const todoMutations= {
-  addTodo: async (_: any, { id, title, courseCode, role, status, description}: todoInterface) => {
+  addTodo: async (_: any, { id, name, title, courseCode, role, status, description}: todoInterface) => {
     const findDocs = await todoItems.countDocuments({})
     let newId = findDocs + 1;
     while ((await todoItems.find({id: newId})).length != 0) {//do not create a todolist item that already exists
@@ -25,6 +26,7 @@ export const todoMutations= {
     try {
       const newTodo: TodoItem = {
         id: newId,
+        name:name,
         title: title,
         courseCode: courseCode,
         role: role,

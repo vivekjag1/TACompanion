@@ -3,6 +3,8 @@ import {TodoItem} from "@/mongoose/todo/schema";
 import AddIcon from '@mui/icons-material/Add';
 import {gql} from "graphql-tag";
 import client from "@/graphql/client";
+import { useUser } from '@auth0/nextjs-auth0/client';
+
 interface addProps{
   column:string;
   setCards: React.Dispatch<SetStateAction<TodoItem[]>>;
@@ -10,14 +12,16 @@ interface addProps{
   lastItemAdded: number;
 }
 export const AddCard = (props:addProps)=>{
+  const { user, error, isLoading } = useUser();
+
   const [title, setTitle] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [description, setDescription] = useState<string>("")
   const [course, setCourse] = useState<string>("");
   const sendToBackend = (card: TodoItem) =>{
     const createTodo = gql `
-        mutation addTodo(  $title:String, $courseCode:String, $role:String, $status:String, $description:String ){
-            addTodo( title:$title, courseCode: $courseCode, role:$role, status: $status, description: $description){
+        mutation addTodo(  $name:String, $title:String, $courseCode:String, $role:String, $status:String, $description:String ){
+            addTodo( name:$name, title:$title, courseCode: $courseCode, role:$role, status: $status, description: $description){
                 id
                 title
                 courseCode
@@ -29,6 +33,7 @@ export const AddCard = (props:addProps)=>{
       const data = await client.mutate({
         mutation: createTodo,
         variables: {
+          name: user?.name,
           title:card.title,
           courseCode: card.courseCode,
           role: card.role,
