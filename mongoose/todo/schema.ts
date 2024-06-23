@@ -5,6 +5,7 @@ export const TodoSchema:Schema = new Schema<TodoItem>({
     type: Number,
     required: true
   },
+
   title:{
     type: String,
     required: true

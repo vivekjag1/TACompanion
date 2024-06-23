@@ -3,8 +3,24 @@ import { gql } from 'graphql-tag';
 import {useEffect, useState} from "react";
 import {TodoItem} from "@/mongoose/todo/schema";
 import {Kanban} from "../components/Kanban"
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { useRouter } from 'next/router';
+import {withAuthenticationRequired} from "@auth0/auth0-react"
+
 const Home = () =>{
+  const { user, error, isLoading } = useUser();
+  const router = useRouter();
   const [todoItemArray, setTodoItemArray] = useState<TodoItem[]>([]);
+  const [verified, setVerified] = useState<boolean>(false);
+  useEffect(() =>{
+    if(!user && !isLoading){ //if the information is fetched but there is still no user object then move to login
+      router.push('/api/auth/login').then();
+    }
+    else{
+      setVerified(true);
+    }
+
+  })
   const todoData  = gql `
       query {
           findAllTodoItems {
