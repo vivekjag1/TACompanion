@@ -22,6 +22,7 @@
     "@syncfusion/ej2-react-kanban": "^26.1.35",
     "@types/mongoose": "^5.11.97",
     "apollo-server": "^3.13.0",
+    "axios": "^1.7.2",
     "framer-motion": "^11.2.10",
     "graphql": "^16.8.2",
     "graphql-tag": "^2.12.6",
