@@ -9,7 +9,6 @@ export const todoQueries ={
     return await todoItems.findOne({id:params.id});
   },
   fetchTodosByName: async (_:any, params:{name:string})=>{
-    console.log("email", params.name);
     return await todoItems.find({name:params.name});
   },
   fetchTodosByRole: async (_:any, params: { role:string })=>{

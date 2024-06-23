@@ -5,27 +5,29 @@ import {TodoItem} from "@/mongoose/todo/schema";
 import {Kanban} from "../components/Kanban"
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useRouter } from 'next/router';
-import { useAuth0 } from '@auth0/auth0-react';
 
 const Home = () =>{
   let { user, error, isLoading } = useUser();
-
-
   const router = useRouter();
   const [todoItemArray, setTodoItemArray] = useState<TodoItem[]>([]);
-  const [verified, setVerified] = useState<boolean>(false);
+  const [hasFetched, setHasFetched] = useState<boolean>(false);
   const heading = `${user?.name}'s todo items`;
   const userName = user?.name;
-  useEffect(() =>{
+   useEffect(() =>{
     if(!user && !isLoading){ //if the information is fetched but there is still no user object then move to login
       router.push('/api/auth/login').then();
     }
-    else{
-      setVerified(true);
-      fetchData().then();
-    }
+   else{
+     if(hasFetched === false){
+       fetchData().then();
+     }
+     else{
+       return;
+     }
 
-  })
+    }
+     // eslint-disable-next-line
+  }, [user, isLoading, router, fetchData]);
   const todoData  = gql `
       query fetchTodoByEmail ($name:String){
           fetchTodosByName(name:$name) {
@@ -47,18 +49,17 @@ const Home = () =>{
         name:userName!,
       }
     });
-    console.log(data);
     const cleanData = data['data']['fetchTodosByName'].map((item:TodoItem) =>{
       const{__typeName, ...rest}  = item;
       return rest;
     });
-    console.log(user?.name);
     setTodoItemArray(cleanData);
     const cachedArray:TodoItem[] = [];
     cleanData.map((item:TodoItem)=>{
       todoItemArray.push( item);
     });
     setTodoItemArray(cachedArray);
+    setHasFetched(true);
     return cleanData;
   }
   return (
