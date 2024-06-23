@@ -3,9 +3,7 @@ import axios from 'axios';
 import {Resend} from "resend";
 
 
-export const config = {
-  runtime:'edge',
-}
+
 export default async function handler(req:NextApiRequest, res:NextApiResponse){
   const resend = new Resend(process.env.RESEND_KEY);
   const token = await fetchManagementToken();
