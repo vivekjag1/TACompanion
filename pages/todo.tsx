@@ -5,13 +5,17 @@ import {TodoItem} from "@/mongoose/todo/schema";
 import {Kanban} from "../components/Kanban"
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useRouter } from 'next/router';
-import {withAuthenticationRequired} from "@auth0/auth0-react"
+import { useAuth0 } from '@auth0/auth0-react';
 
 const Home = () =>{
-  const { user, error, isLoading } = useUser();
+  let { user, error, isLoading } = useUser();
+
+
   const router = useRouter();
   const [todoItemArray, setTodoItemArray] = useState<TodoItem[]>([]);
   const [verified, setVerified] = useState<boolean>(false);
+  const heading = `${user?.name}'s todo items`;
+  const userName = user?.name;
   useEffect(() =>{
     if(!user && !isLoading){ //if the information is fetched but there is still no user object then move to login
       router.push('/api/auth/login').then();
@@ -22,8 +26,8 @@ const Home = () =>{
 
   })
   const todoData  = gql `
-      query {
-          findAllTodoItems {
+      query fetchTodoByEmail ($name:String){
+          fetchTodosByName(name:$name) {
               id
               title
               courseCode
@@ -37,12 +41,17 @@ const Home = () =>{
   useEffect(() =>{
     async function fetchData(){
       const data = await client.query({
-        query:todoData
+        query:todoData,
+        variables:{
+          name:userName!,
+        }
       });
-      const cleanData = data['data']['findAllTodoItems'].map((item:TodoItem) =>{
+      console.log(data);
+      const cleanData = data['data']['fetchTodosByName'].map((item:TodoItem) =>{
         const{__typeName, ...rest}  = item;
         return rest;
       });
+      console.log(user?.name);
       setTodoItemArray(cleanData);
       const cachedArray:TodoItem[] = [];
       cleanData.map((item:TodoItem)=>{
@@ -55,7 +64,7 @@ const Home = () =>{
   }, []);// eslint-disable-line
   return (
       <div className = "flex flex-col ml-20 justify-center overflow-hidden  ">
-        <h1 className = " top-0 mb-5 text-5xl text-black font-mono text-center">Your Todo Items </h1>
+        <h1 className = " top-0 mb-5 text-5xl text-black font-mono text-center">{heading}</h1>
         <div>
           <Kanban cards={todoItemArray}  />
         </div>

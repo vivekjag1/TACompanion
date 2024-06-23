@@ -5,7 +5,10 @@ export const TodoSchema:Schema = new Schema<TodoItem>({
     type: Number,
     required: true
   },
-
+  name:{
+    type:String,
+    required: true
+  },
   title:{
     type: String,
     required: true
