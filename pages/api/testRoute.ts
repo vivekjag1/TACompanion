@@ -2,6 +2,7 @@ import {NextApiResponse, NextApiRequest} from "next";
 import dbConnect from "../../middleware/db-connect";
 import todoItems from "../../mongoose/todo/model";
 import course from "../../mongoose/course/model";
+//adding stuff to force redeploy
 //this route should only be called during development for the purpose of testing the mongodb, rest, and graphql apis
 export default async function handler(req:NextApiRequest, res:NextApiResponse){
   await dbConnect();
