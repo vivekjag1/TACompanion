@@ -22,6 +22,7 @@ const Home = () =>{
     }
     else{
       setVerified(true);
+      fetchData().then();
     }
 
   })
@@ -38,30 +39,28 @@ const Home = () =>{
           }
       } 
   `;
-  useEffect(() =>{
-    async function fetchData(){
-      const data = await client.query({
-        query:todoData,
-        variables:{
-          name:userName!,
-        }
-      });
-      console.log(data);
-      const cleanData = data['data']['fetchTodosByName'].map((item:TodoItem) =>{
-        const{__typeName, ...rest}  = item;
-        return rest;
-      });
-      console.log(user?.name);
-      setTodoItemArray(cleanData);
-      const cachedArray:TodoItem[] = [];
-      cleanData.map((item:TodoItem)=>{
-        todoItemArray.push( item);
-      });
-      setTodoItemArray(cachedArray);
-      return cleanData;
-    }
-    fetchData().then(console.log);
-  }, []);// eslint-disable-line
+
+  async function fetchData(){
+    const data = await client.query({
+      query:todoData,
+      variables:{
+        name:userName!,
+      }
+    });
+    console.log(data);
+    const cleanData = data['data']['fetchTodosByName'].map((item:TodoItem) =>{
+      const{__typeName, ...rest}  = item;
+      return rest;
+    });
+    console.log(user?.name);
+    setTodoItemArray(cleanData);
+    const cachedArray:TodoItem[] = [];
+    cleanData.map((item:TodoItem)=>{
+      todoItemArray.push( item);
+    });
+    setTodoItemArray(cachedArray);
+    return cleanData;
+  }
   return (
       <div className = "flex flex-col ml-20 justify-center overflow-hidden  ">
         <h1 className = " top-0 mb-5 text-5xl text-black font-mono text-center">{heading}</h1>
