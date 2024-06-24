@@ -15,7 +15,7 @@ const Home = () =>{
   const heading = `${user?.name}'s todo items`;
   const userName = user?.name;
    useEffect(() =>{
-    if(!user && !isLoading){ //if the information is fetched but there is still no user object then move to login
+    if(!user && !isLoading){ //if the information is fetched but there is still no user object then move to l
       router.push('/api/auth/login').then();
     }
    else{
