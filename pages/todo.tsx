@@ -19,8 +19,9 @@ const Home = () =>{
       router.push('/api/auth/login').then();
     }
    else{
-     if(hasFetched === false){
-       fetchData().then();
+     if(!hasFetched){
+       console.log("fetching data");
+       fetchData().then(console.log);
      }
      else{
        return;
