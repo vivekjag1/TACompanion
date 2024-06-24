@@ -15,22 +15,17 @@ const Home = () =>{
   const heading = `${user?.name}'s todo items`;
   const userName = user?.name;
    useEffect(() =>{
-     const getData = async() =>{
-       if(!user && !isLoading){ //if the information is fetched but there is still no user object then move to l
-         router.push('/api/auth/login').then();
-       }
-       else{
-         if(!hasFetched){
-           console.log("fetching data");
-           const data = await fetchData();
-           console.log(data);
-         }
-         else{
-           return;
-         }
-
-       }
-       getData().then();
+    if(!user && !isLoading){ //if the information is fetched but there is still no user object then move to l
+      router.push('/api/auth/login').then();
+    }
+   else{
+     if(!hasFetched){
+       console.log("fetching data");
+       fetchData().then(console.log);
+     }
+     else{
+       return;
+     }
 
     }
      // eslint-disable-next-line
