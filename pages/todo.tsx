@@ -30,7 +30,7 @@ const Home = () =>{
      // eslint-disable-next-line
   }, [user, isLoading, router, fetchData]);
   const todoData  = gql `
-      query fetchTodoByEmail ($name:String){
+      query fetchTodoByName ($name:String){
           fetchTodosByName(name:$name) {
               id
               title
