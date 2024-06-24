@@ -28,8 +28,7 @@ const Home = () =>{
      }
 
     }
-     // eslint-disable-next-line
-  }, [user, isLoading, router, fetchData]);
+  }, [user, isLoading, router, fetchData, hasFetched]);
   const todoData  = gql `
       query fetchTodoByName ($name:String){
           fetchTodosByName(name:$name) {
