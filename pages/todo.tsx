@@ -1,4 +1,3 @@
-"use client";
 import client from "../graphql/client";
 import { gql } from 'graphql-tag';
 import {useEffect, useState} from "react";

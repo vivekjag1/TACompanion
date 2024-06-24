@@ -10,6 +10,12 @@ export const typeDefs = gql`
       status:String
       description:String
   } 
+  type hours @cacheControl(maxAge: 86400){
+      courseCode:String
+      description:String 
+      timeIn:Int, 
+      timeOut: Int,
+  }
   input TodoInput {
       id:Int
       email:String
