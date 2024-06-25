@@ -19,10 +19,7 @@ export const courseSchema:Schema = new Schema<CourseItem>({
   meetingTime:{
     type:String,
     required:true
-  },
-  name:{
-    type:String,
-    required: true
   }
+
 });
 export declare type CourseItem = InferSchemaType<typeof courseSchema>

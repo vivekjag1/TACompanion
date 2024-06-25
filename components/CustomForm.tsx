@@ -22,6 +22,8 @@ interface formProps{
   handleClose: () => void;
   setHours:(hour: HoursType) => void;
   startTime:string;
+  userName: string | null | undefined;
+
 
 }
 export const CustomForm = (props:formProps) =>{
@@ -48,6 +50,7 @@ export const CustomForm = (props:formProps) =>{
       description:description,
       start:startTime,
       end:endTime,
+      name: props.userName
     }
     props.setHours(newHours);
     console.log(newHours);

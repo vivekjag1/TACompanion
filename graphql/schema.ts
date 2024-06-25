@@ -11,6 +11,7 @@ export const typeDefs = gql`
       description:String
   } 
   type Hours @cacheControl(maxAge: 86400){
+      id:Int
       title:String
       courseCode:String
       description:String 
@@ -57,5 +58,6 @@ export const typeDefs = gql`
       deleteTodo(id:Int):Todo
       deleteAll:Todo
       addManyTodos(toAdd:[TodoInput!]):Boolean
+      addHour(title:String, courseCode:String, description:String, start:String, end:String, name:String):Hours
   }
 `;

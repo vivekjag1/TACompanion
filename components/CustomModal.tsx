@@ -15,6 +15,7 @@ interface ModalProps{
   handleClose: () => void;
   startTime: Date;
   setHours:(hour: HoursType) => void;
+  userName: string | null | undefined;
 }
 const CustomModal = (props:ModalProps):JSX.Element =>{
   console.log("as string", props.startTime.toLocaleTimeString());
@@ -26,7 +27,7 @@ const CustomModal = (props:ModalProps):JSX.Element =>{
             <DialogTitle className="text-3xl" >Log Your Hours</DialogTitle>
             <DialogDescription className = "text-lg text-center font-black">Log meetings, office hours, and grading</DialogDescription>
           </DialogHeader>
-          <CustomForm handleClose={props.handleClose} setHours = {props.setHours} startTime = {props.startTime.toLocaleTimeString()}/>
+          <CustomForm handleClose={props.handleClose} setHours = {props.setHours} startTime = {props.startTime.toLocaleTimeString()} userName = {props.userName}/>
           <DialogFooter>
             <button onClick={props.handleClose}>Close</button>
           </DialogFooter>

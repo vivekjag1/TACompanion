@@ -1,5 +1,10 @@
 import {Schema, InferSchemaType} from "mongoose";
 export const hoursSchema:Schema = new Schema<HoursType>({
+  id: {
+    type:Number,
+    required: true,
+  },
+
   title:{
     type:String,
     required:true
@@ -20,5 +25,9 @@ export const hoursSchema:Schema = new Schema<HoursType>({
     type:String,
     required:true
   },
+  name:{
+    type:String,
+    required: true
+  }
 });
 export declare type HoursType = InferSchemaType<typeof hoursSchema>
