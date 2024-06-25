@@ -97,8 +97,9 @@ export const todoMutations= {
       return false;
     }
   },
-  addHour: async(_:any, {id, title, courseCode, description, start, end, name} :hoursInterface) =>{
+  addHour: async(_:any, { title, courseCode, description, start, end, name} :hoursInterface) =>{
     try{
+      console.log("end is" ,end);
       let newID:number = (await hours.countDocuments({})) + 1;
       while ((await hours.find({id:newID})).length != 0){
         newID++;
