@@ -1,3 +1,4 @@
+
 import {useState} from "react";
 import Fullcalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -12,21 +13,48 @@ const Hours = () =>{
   const [open, setOpen] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [hours, setHours] = useState<HoursType[]>([]);
+  const [date, setDate] = useState<string>("");
   const handleClick = (arg:DateClickArg) =>{
-    const calander = arg.view.calendar;
     setOpen(true);
-    calander.addEvent({
-      title: "Office Hours",
-      start: moment('2024-06-24T10:00:00').format(),
-      end: moment('2024-06-24T10:00:00').format(),
-      color:'blue'
-    })
-   console.log(arg.date);
+    const index = arg.dateStr.indexOf("T");
+    const date = arg.dateStr.substring(0, index);
+    setDate(date);
     setStartTime(arg.date);
+    console.log(arg.dateStr);
+  }
+
+  const addHours = (hour:HoursType) =>{
+    console.log("the hour is", startTime);
+    console.log("the h", hour.end);
+
+    const end = new Date(date.concat("T").concat(hour.end as string).concat(':00'))
+
+    const addToCalendar  = {
+      title: hour.title,
+      start : moment(startTime).format(),
+      end: moment(end).format(),
+      color: (() =>{
+        if(hour.type as string === "office hours"){
+          return 'blue';
+        }
+        else if (hour.type as string === "meeting"){
+          return 'green';
+        }
+        else{
+          return 'red';
+        }
+      })
+    }
+
+    setHours(prev => [...prev, addToCalendar]);
+
+    //add graphql logic here
+
+
   }
   return(
     <>
-    <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={setHours}/>
+    <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours}/>
     <div className = " items-center justify-center ml-[8rem] mr-[8rem]">
       <Fullcalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

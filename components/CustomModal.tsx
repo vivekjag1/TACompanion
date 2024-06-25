@@ -14,7 +14,7 @@ interface ModalProps{
   open:boolean;
   handleClose: () => void;
   startTime: Date;
-  setHours: React.Dispatch<SetStateAction<HoursType[]>>
+  setHours:(hour: HoursType) => void;
 }
 const CustomModal = (props:ModalProps):JSX.Element =>{
   console.log("as string", props.startTime.toLocaleTimeString());

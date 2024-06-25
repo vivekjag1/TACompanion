@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 interface formProps{
   handleClose: () => void;
-  setHours: React.Dispatch<SetStateAction<HoursType[]>>;
+  setHours:(hour: HoursType) => void;
   startTime:string;
 
 }
@@ -43,12 +43,13 @@ export const CustomForm = (props:formProps) =>{
   const handleSubmit  =(e: React.SyntheticEvent) =>{
     e.preventDefault();
     const newHours:HoursType = {
+      title: type,
       courseCode:course,
       description:description,
-      timeIn:startTime,
-      timeOut:endTime,
+      start:startTime,
+      end:endTime,
     }
-    props.setHours((prev)=>[...prev, newHours]);
+    props.setHours(newHours);
     console.log(newHours);
     props.handleClose();
   };
