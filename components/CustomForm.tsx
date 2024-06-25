@@ -1,48 +1,57 @@
 import client from "../graphql/client";
 import { gql } from 'graphql-tag';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import {useState} from "react";
-import MenuItem from '@mui/material/MenuItem';
+import { Button } from "@/components/ui/button"
+import {SetStateAction, useState} from "react";
+import { Label } from "@/components/ui/label"
+import type {HoursType} from "../mongoose/timeWorked/schema"
+import {toast, useToast} from "@/components/ui/use-toast"
+import moment from 'moment-timezone';
+moment.tz.setDefault('America/New_York');
 
-
-
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 interface formProps{
   handleClose: () => void;
-
+  setHours: React.Dispatch<SetStateAction<HoursType[]>>;
+  startTime:string;
 
 }
 export const CustomForm = (props:formProps) =>{
-
-  const [title, setTitle] = useState<string>("");
+  console.log("start", props.startTime);
+  const {toast} = useToast();
+  const [description, setDescription] = useState<string>("");
   const [type, setType] = useState<string>("");
-  const [role, setRole] = useState<string>("");
+  const [startTime, setStartTime] = useState<string>(props.startTime);
+  const [endTime, setEndTime] = useState<string>("");
   const [course, setCourse] = useState<string>("");
-
-  const handleClear = () =>{
-    setTitle("");
+  // @ts-ignore
+  const handleClear = (e:MouseEvent<HTMLButtonElement, MouseEvent>) =>{
+    e.preventDefault();
+    console.log("inside handle close")
+    setDescription("");
     setType("");
-    setRole("");
-    setCourse("");
+      setCourse("");
   }
-
   const handleSubmit  =(e: React.SyntheticEvent) =>{
     e.preventDefault();
+    const newHours:HoursType = {
+      courseCode:course,
+      description:description,
+      timeIn:startTime,
+      timeOut:endTime,
+    }
+    props.setHours((prev)=>[...prev, newHours]);
+    console.log(newHours);
     props.handleClose();
-
-
   };
-
-  const customStyles = {
-    marginBottom:"1rem",
-    width:"25rem",
-    font:"black"
-
-
-  }
-
-
-
   return (
     <form onSubmit={handleSubmit} style = {{
       display:"flex",
@@ -50,32 +59,45 @@ export const CustomForm = (props:formProps) =>{
       justifyContent:"center",
       alignItems:"center",
       padding:"2rem",
-
     }}>
-      <h1 className="text-3xl font-mono font-black mb-5">Log hours</h1>
-      <TextField
-        select
-        label="Type of Work"
-        value={type}
-        onChange={(e) => setType(e.target.value)}
-        variant="filled"
-        fullWidth
-        required
-        sx={customStyles}
-        className="bg-gray-50"
-      >
-        <MenuItem value = {"Office Hours"}>Office Hours</MenuItem>
-        <MenuItem value = {"Meeting"}>Meeting</MenuItem>
-        <MenuItem value = {"Grading"}>Grading</MenuItem>
-      </TextField>
-      <TextField label = "Title" className = "bg-gray-50" fullWidth variant="filled" required sx = {customStyles} value={title} onChange={(e) => setTitle(e.target.value)}/>
-      <TextField label = "Course" className = "bg-gray-50" variant="filled" required sx = {customStyles} value = {course} onChange={(e) => setCourse(e.target.value)}/>
+      <Select value={type} onValueChange={(value) => setType(value)}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Select a type"/>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value = "office hours">Office Hours</SelectItem>
+            <SelectItem value = "meeting">Meeting</SelectItem>
+            <SelectItem value = "Grading">Grading</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+      <Input value={course} className="mt-5" placeholder="Enter Course Code" onChange={(e)=>setCourse(e.target.value)}/>
+      <Textarea value={description} className="mt-5" placeholder="Add a description" onChange={(e)=>setDescription(e.target.value)}/>
+      <Label className="text-left mt-5 w-full"> Start Time (EDT)
+      <Input
+        className="mt-5 w-full"
+        value = {startTime}
 
+      />
+      </Label>
 
-
+      <Label className="text-left mt-5 w-full"> End Time (EDT)
+        <Input
+          type="time"
+          className="mt-5 w-full"
+          value={endTime}
+          onChange={(e)=>setEndTime(e.target.value)}
+        />
+      </Label>
       <div className = "flex flex-row px-5">
-        <Button variant = "contained"  sx = {{margin:"2rem", backgroundColor:"red"}} onClick = {handleClear}>Clear</Button>
-        <Button variant = "contained" type = "submit" sx = {{margin:"2rem"}} onClick = {handleSubmit}>Submit</Button>
+        <Button  variant="destructive" className="m-[2rem] w-[7rem]"  onClick = {(e) => handleClear(e)}>Clear</Button>
+        <Button  variant="default" className="m-[2rem] w-[7rem] "  type = "submit" onClick={() =>{
+          toast({
+            title: `Added ${type}`,
+            description: `In at ${startTime} out at ${endTime}`
+          });
+        }}>Submit</Button>
       </div>
     </form>
   )

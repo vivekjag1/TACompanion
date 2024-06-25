@@ -1,5 +1,9 @@
 import {Schema, InferSchemaType} from "mongoose";
 export const hoursSchema:Schema = new Schema<HoursType>({
+  title:{
+    type:String,
+    required:true
+  },
   courseCode:{
     type:String,
     required: true
@@ -8,12 +12,12 @@ export const hoursSchema:Schema = new Schema<HoursType>({
     type:String,
     required: true
   },
-  timeIn:{
-    type: Number,
+  start:{
+    type: String,
     required:true
   },
-  timeOut:{
-    type:Number,
+  end:{
+    type:String,
     required:true
   },
 });
