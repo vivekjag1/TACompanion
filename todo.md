@@ -1,5 +1,5 @@
 ## Todo
 
 Hours page
-1. Re-do custom modal and form to work better and look better 
-2. Integrate backend
+1. Add react-toast upon modal submission 
+2. Integrate backend with user

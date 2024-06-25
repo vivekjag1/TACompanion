@@ -1,4 +1,3 @@
-
 import {useState} from "react";
 import Fullcalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -10,6 +9,7 @@ import CustomModal from "@/components/CustomModal";
 import type {HoursType} from "@/mongoose/timeWorked/schema";
 moment.tz.setDefault('America/New_York');
 const Hours = () =>{
+
   const [open, setOpen] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [hours, setHours] = useState<HoursType[]>([]);
@@ -20,15 +20,9 @@ const Hours = () =>{
     const date = arg.dateStr.substring(0, index);
     setDate(date);
     setStartTime(arg.date);
-    console.log(arg.dateStr);
   }
-
   const addHours = (hour:HoursType) =>{
-    console.log("the hour is", startTime);
-    console.log("the h", hour.end);
-
     const end = new Date(date.concat("T").concat(hour.end as string).concat(':00'))
-
     const addToCalendar  = {
       title: hour.title,
       start : moment(startTime).format(),
@@ -45,10 +39,9 @@ const Hours = () =>{
         }
       })
     }
-
     setHours(prev => [...prev, addToCalendar]);
-
     //add graphql logic here
+
 
 
   }

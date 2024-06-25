@@ -10,11 +10,21 @@ export const typeDefs = gql`
       status:String
       description:String
   } 
-  type hours @cacheControl(maxAge: 86400){
+  type Hours @cacheControl(maxAge: 86400){
+      title:String
       courseCode:String
       description:String 
-      timeIn:Int, 
-      timeOut: Int,
+      start:String
+      end: String
+      name:String
+  }
+  input HoursInput{
+      title:String
+      courseCode:String
+      description:String
+      start:String
+      end: String
+      name:String
   }
   input TodoInput {
       id:Int
@@ -37,6 +47,9 @@ export const typeDefs = gql`
       fetchTodoByID:Todo
       fetchTodosByRole:[Todo]
       fetchTodosByCourse: [Todo]
+      fetchAllHours:[Hours]
+      fetchHoursByName(name:String):[Hours]
+      
   }
   type Mutation{
       addTodo( name:String, email:String, title:String, courseCode:String, role:String, status:String, description:String): Todo
