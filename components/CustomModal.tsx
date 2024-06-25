@@ -5,13 +5,13 @@ import {TodoItem} from "@/mongoose/todo/schema";
 interface ModalProps{
   open:boolean;
   handleClose: () => void;
-  lastTodoID:number;
-  updateTodos: (newItem: TodoItem) => void;
+  startTime: Date
+
 }
 const CustomModal = (props:ModalProps):JSX.Element =>{
   return(
     <Dialog open = {props.open} onClose={props.handleClose}>
-      <CustomForm handleClose = {props.handleClose} lastTodoID={props.lastTodoID} updateTodos={props.updateTodos}/>
+      <CustomForm handleClose = {props.handleClose}  />
 
     </Dialog>
   )
