@@ -10,6 +10,23 @@ export const typeDefs = gql`
       status:String
       description:String
   } 
+  type Hours @cacheControl(maxAge: 86400){
+      id:Int
+      title:String
+      courseCode:String
+      description:String 
+      start:String
+      end: String
+      name:String
+  }
+  input HoursInput{
+      title:String
+      courseCode:String
+      description:String
+      start:String
+      end: String
+      name:String
+  }
   input TodoInput {
       id:Int
       email:String
@@ -31,6 +48,9 @@ export const typeDefs = gql`
       fetchTodoByID:Todo
       fetchTodosByRole:[Todo]
       fetchTodosByCourse: [Todo]
+      fetchAllHours:[Hours]
+      fetchHoursByName(name:String):[Hours]
+      
   }
   type Mutation{
       addTodo( name:String, email:String, title:String, courseCode:String, role:String, status:String, description:String): Todo
@@ -38,5 +58,6 @@ export const typeDefs = gql`
       deleteTodo(id:Int):Todo
       deleteAll:Todo
       addManyTodos(toAdd:[TodoInput!]):Boolean
+      addHour(title:String, courseCode:String, description:String, start:String, end:String, name:String):Hours
   }
 `;

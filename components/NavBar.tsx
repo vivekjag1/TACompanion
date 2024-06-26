@@ -62,7 +62,7 @@ const NavBar = () =>{
 
   return(
     <motion.nav variants={animation} animate={containerControls} initial="close"
-                className="bg-black fkex flex-col  z-10 gap-20 p-5 fixed top-0 left-0 h-screen shadow-neutral-600 rounded-tr-xl rounded-br-xl">
+                className="bg-black fkex flex-col  z-10 gap-20 p-5 fixed top-0 left-0 h-screen shadow-neutral-600 rounded-tr-xl rounded-br-xl ">
       <div className="flex flex-row w-full justify-between place-items-center">
         {open && <motion.p variants={textAnimation} className=" whitespace-nowrap flex items-center text-2xl text-white font-mono font-bold">TA Companion</motion.p> }
         <button className="p-1 rounded-full flex" onClick={changeState}>

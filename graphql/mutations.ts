@@ -1,5 +1,7 @@
-import todoItems from "../../mongoose/todo/model";
-import {TodoItem} from "../../mongoose/todo/schema";
+import todoItems from "../mongoose/todo/model";
+import {TodoItem} from "../mongoose/todo/schema";
+import hours from "../mongoose/timeWorked/model";
+import {HoursType} from "@/mongoose/timeWorked/schema";
 
 interface todoInterface{
   id:number;
@@ -10,6 +12,19 @@ interface todoInterface{
   status:string;
   description:string;
 }
+
+interface hoursInterface{
+  id:number;
+  title:string;
+  courseCode:string;
+  description:string;
+  start:string;
+  end:string;
+  name:string;
+}
+
+
+
 interface updateInterface{
   id:number;
   newAttribute:string;
@@ -81,10 +96,28 @@ export const todoMutations= {
       console.log(err);
       return false;
     }
-
+  },
+  addHour: async(_:any, { title, courseCode, description, start, end, name} :hoursInterface) =>{
+    try{
+      let newID:number = (await hours.countDocuments({})) + 1;
+      while ((await hours.find({id:newID})).length != 0){
+        newID++;
+      }
+      const newHour:HoursType = {
+        id: newID,
+        title: title,
+        courseCode: courseCode,
+        description:description,
+        start:start,
+        end:end,
+        name:name,
+      }
+      await hours.create(newHour);
+      return newHour;
+    }
+    catch(err){
+      console.error(err);
+      return null;
+    }
   }
-
-
-
-
 }

@@ -1,4 +1,3 @@
-"use client";
 import client from "../graphql/client";
 import { gql } from 'graphql-tag';
 import {useEffect, useState} from "react";
@@ -20,7 +19,6 @@ const Home = () =>{
     }
    else{
      if(!hasFetched){
-       console.log("fetching data");
        fetchData().then(console.log);
      }
      else{
@@ -44,6 +42,7 @@ const Home = () =>{
   `;
 
   async function fetchData(){
+    if(userName == undefined) return;
     const data = await client.query({
       query:todoData,
       variables:{
