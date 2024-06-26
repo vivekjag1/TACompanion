@@ -18,7 +18,6 @@ interface ModalProps{
   userName: string | null | undefined;
 }
 const CustomModal = (props:ModalProps):JSX.Element =>{
-  console.log("as string", props.startTime.toLocaleTimeString());
   return(
     <>
       <Dialog open={props.open} onOpenChange={(isOpen) => { if (!isOpen) props.handleClose(); else props.open = true }}>

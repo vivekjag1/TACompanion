@@ -11,11 +11,11 @@ import {useUser} from "@auth0/nextjs-auth0/client";
 import {gql} from "graphql-tag";
 import client from "../graphql/client";
 import {useRouter} from "next/router";
+import {EventDropArg} from "@fullcalendar/core";
 moment.tz.setDefault('America/New_York');
 const Hours = () =>{
   let { user, error, isLoading } = useUser();
   const router = useRouter();
-
   const userName = user?.name;
   const [open, setOpen] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<Date>(new Date());
@@ -34,14 +34,13 @@ const Hours = () =>{
         }
     }
     `;
-
   useEffect(() =>{
     if(!user && !isLoading){ //if the information is fetched but there is still no user object then move to l
       router.push('/api/auth/login').then();
     }
     else{
       if(!fetched){
-        console.log("fetching data");
+
         fetchData().then(console.log);
       }
       else{
@@ -50,28 +49,25 @@ const Hours = () =>{
 
     }
   }, [user, isLoading, router, fetched]);
-
-
   const fetchData = async () =>{
+    if(user == undefined) return;
     const data = await client.mutate({
       mutation: getHours,
       variables:{
         name: user?.name
       }
     });
-    console.log("the data is", data);
     const dataArr = data['data']['fetchHoursByName'];
     const newItems = dataArr.map((item:HoursType) =>{
-      console.log("the end is", item.end);
       const toRet = {
         title:item.title,
         start:item.start,
         end: item.end,
         color: (() =>{
-          if(item.type as string === "office hours"){
+          if(item.title as string === "office hours"){
             return 'blue';
           }
-          else if (item.type as string === "meeting"){
+          else if (item.title as string === "meeting"){
             return 'green';
           }
           else{
@@ -114,6 +110,7 @@ const Hours = () =>{
   const addHours = (hour:HoursType) =>{
     const end = new Date(date.concat("T").concat(hour.end as string).concat(':00'));
     const addToCalendar  = {
+      id:null,
       title: hour.title,
       start : moment(startTime).format(),
       end: moment(end).format(),
@@ -129,10 +126,7 @@ const Hours = () =>{
         }
       })
     }
-    console.log("I jave just added a thing with the end date as", addToCalendar.end);
-    setHours(prev => [...prev, addToCalendar]);
     //add graphql logic here to create an instance of the hours collection
-
     const executeMutation = async () =>{
       const data = await client.mutate({
         mutation: addHourMutation,
@@ -145,10 +139,24 @@ const Hours = () =>{
           name: user?.name
         }
       })
+      addToCalendar.id = data['data']['addHour'].id
+
       return data;
     }
+
+
+
+    setHours(prev => [...prev, addToCalendar]);
+
     executeMutation().then();
   }
+  console.log("hours is",hours);
+
+  let handleEventDrop = (info: EventDropArg) =>{
+    const { id } = info.event;
+    console.log(id);
+
+  };
   return(
     <>
     <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours} userName = {userName}/>
@@ -163,6 +171,7 @@ const Hours = () =>{
         dateClick = {handleClick}
         editable={true}
         events = {hours}
+        eventDrop={handleEventDrop}
       />
     </div>
     </>

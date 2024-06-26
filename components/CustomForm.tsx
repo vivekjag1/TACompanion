@@ -1,13 +1,10 @@
-import client from "../graphql/client";
-import { gql } from 'graphql-tag';
 import { Button } from "@/components/ui/button"
-import {SetStateAction, useState} from "react";
+import { useState} from "react";
 import { Label } from "@/components/ui/label"
 import type {HoursType} from "../mongoose/timeWorked/schema"
 import {toast, useToast} from "@/components/ui/use-toast"
 import moment from 'moment-timezone';
 moment.tz.setDefault('America/New_York');
-
 import {
   Select,
   SelectContent,
@@ -23,11 +20,8 @@ interface formProps{
   setHours:(hour: HoursType) => void;
   startTime:string;
   userName: string | null | undefined;
-
-
 }
 export const CustomForm = (props:formProps) =>{
-  console.log("start", props.startTime);
   const {toast} = useToast();
   const [description, setDescription] = useState<string>("");
   const [type, setType] = useState<string>("");
@@ -37,7 +31,6 @@ export const CustomForm = (props:formProps) =>{
   // @ts-ignore
   const handleClear = (e:MouseEvent<HTMLButtonElement, MouseEvent>) =>{
     e.preventDefault();
-    console.log("inside handle close")
     setDescription("");
     setType("");
       setCourse("");
@@ -53,7 +46,6 @@ export const CustomForm = (props:formProps) =>{
       name: props.userName
     }
     props.setHours(newHours);
-    console.log(newHours);
     props.handleClose();
   };
   return (
@@ -62,7 +54,7 @@ export const CustomForm = (props:formProps) =>{
       flexDirection:"column",
       justifyContent:"center",
       alignItems:"center",
-      padding:"2rem",
+
     }}>
       <Select value={type} onValueChange={(value) => setType(value)}>
         <SelectTrigger className="w-full">
