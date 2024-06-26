@@ -62,10 +62,11 @@ const Hours = () =>{
     console.log("the data is", data);
     const dataArr = data['data']['fetchHoursByName'];
     const newItems = dataArr.map((item:HoursType) =>{
+      console.log("the end is", item.end);
       const toRet = {
         title:item.title,
         start:item.start,
-        emd: item.end,
+        end: item.end,
         color: (() =>{
           if(item.type as string === "office hours"){
             return 'blue';
