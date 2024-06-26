@@ -1,4 +1,5 @@
-import todoItems from "../../mongoose/todo/model";
+import todoItems from "../mongoose/todo/model";
+import hours from "../mongoose/timeWorked/model";
 
 export const todoQueries ={
   findAllTodoItems: async (_:any) =>{
@@ -16,5 +17,12 @@ export const todoQueries ={
   },
   fetchTodosByCourse: async(_:any, params:{course:string})=>{
     return await todoItems.find({course:params.course});
+  },
+  fetchAllHours: async(_:any) =>{
+    return await hours.find({});
+  },
+  fetchHoursByName: async (_:any, params:{name:string}) =>{
+    return await hours.find({name: params.name});
   }
+
 }

@@ -14,22 +14,21 @@ const Home = () =>{
   const heading = `${user?.name}'s todo items`;
   const userName = user?.name;
    useEffect(() =>{
-    if(!user && !isLoading){ //if the information is fetched but there is still no user object then move to login
+    if(!user && !isLoading){ //if the information is fetched but there is still no user object then move to l
       router.push('/api/auth/login').then();
     }
    else{
-     if(hasFetched === false){
-       fetchData().then();
+     if(!hasFetched){
+       fetchData().then(console.log);
      }
      else{
        return;
      }
 
     }
-     // eslint-disable-next-line
-  }, [user, isLoading, router, fetchData]);
+  }, [user, isLoading, router, fetchData, hasFetched]);
   const todoData  = gql `
-      query fetchTodoByEmail ($name:String){
+      query fetchTodoByName ($name:String){
           fetchTodosByName(name:$name) {
               id
               title
@@ -43,6 +42,7 @@ const Home = () =>{
   `;
 
   async function fetchData(){
+    if(userName == undefined) return;
     const data = await client.query({
       query:todoData,
       variables:{
