@@ -100,6 +100,8 @@ const Hours = () =>{
       }
   `;
 
+
+
   const handleClick = (arg:DateClickArg) =>{
     setOpen(true);
     const index = arg.dateStr.indexOf("T");
@@ -147,7 +149,7 @@ const Hours = () =>{
       setAdding(false);
       return data;
     }
-    executeMutation().then();
+    executeMutation().then(fetchData).then();
   }
   const updateHoursMutation = gql`
       mutation updateHours($id:Int, $start:String, $end:String){
