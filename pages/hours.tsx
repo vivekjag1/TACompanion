@@ -12,6 +12,7 @@ import client from "../graphql/client";
 import { useRouter } from "next/router";
 import EventResizeArg from "@fullcalendar/react";
 import { EventChangeArg, EventDropArg } from "@fullcalendar/core";
+import {DocumentNode} from "graphql/language";
 moment.tz.setDefault('America/New_York');
 const Hours = () =>{
   let { user, error, isLoading } = useUser();
@@ -149,22 +150,7 @@ const Hours = () =>{
     }
     executeMutation().then();
   }
-
-  let handleEventDrop = (info: EventDropArg) => {
-    const {event} = info;
-
-    //first, get information out of the event argument
-    const eventTitle = event.title;
-    const eventID:number = +event.title.substring(event.title.length -2, event.title.length-1);
-    const eventStart:string = moment(event.start).format();
-    const eventEnd:string = moment(event.end).format();
-    console.log("event title is", eventTitle);
-
-
-
-
-    //now make graphql mutation
-    const updateHoursMutation = gql`
+  const updateHoursMutation = gql`
       mutation updateHours($id:Int, $start:String, $end:String){
           changeStartAndEnd(id:$id, start: $start, end: $end){
               id
@@ -172,54 +158,38 @@ const Hours = () =>{
               end
           }
       }
-    `;
+  `;
 
-    const changeHours = async () =>{
-      const data = await client.mutate({
-        mutation:updateHoursMutation,
-        variables:{
-          id: eventID,
-          start: eventStart,
-          end: eventEnd
-        }
-      });
-      return data;
-    }
-    changeHours().then();
+  let handleEventDrop = (info: EventDropArg) => {
+    const {event} = info;
+    const eventTitle = event.title;
+    const eventID:number = +event.title.substring(event.title.length -2, event.title.length-1);
+    const eventStart:string = moment(event.start).format();
+    const eventEnd:string = moment(event.end).format();
+    console.log("event title is", eventTitle);
+    updateHours(eventID, eventStart, eventEnd)
   }
   const handleEventResize = (arg:EventResizeDoneArg) =>{
     const eventID:number = +arg.event.title.substring(arg.event.title.length -2, arg.event.title.length-1);
-    const eventStart = arg.event.start!;
-    const eventEnd = arg.event.end!;
-
-    const allowExtend = gql `
-      mutation extendTime($id:Int, $start:String, $end:String){
-          changeStartAndEnd(id:$id, start: $start, end: $end){
-              id, 
-              start, 
-              end
-          }
-      }
-    `;
-    const changeHours = async () =>{
-      const data = await client.mutate({
-        mutation:allowExtend,
-        variables:{
-          id: eventID,
-          start: eventStart,
-          end: eventEnd
-        }
-      });
-      return data;
-    }
-    changeHours().then();
-
-
-
-
-
+    const eventStart = moment(arg.event.start!).format();
+    const eventEnd = moment(arg.event.end!).format();
+    updateHours(eventID, eventStart, eventEnd).then();
   }
 
+
+
+  const updateHours = async(id:number, start:string, end:string) =>{
+    const data = await client.mutate({
+      mutation:updateHoursMutation,
+      variables:{
+        id: id,
+        start: start,
+        end: end
+      }
+    });
+    return data;
+
+  }
   return(
     <>
     <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours} userName = {userName}/>
