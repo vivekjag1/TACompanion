@@ -125,7 +125,7 @@ const Hours = () =>{
           name: user?.name
         }
       });
-      let addToCalendar  = {
+      const addToCalendar  = {
         id:data['data']['addHour']['id'],
         title: `Type: ${(hour.title as string)}, Description: ${hour.description as string},  (ID: ${data['data']['addHour']['id']})`,
         start : moment(startTime).format(),
@@ -162,7 +162,7 @@ const Hours = () =>{
     const eventID:number = +event.title.substring(event.title.length -2, event.title.length-1);
     const eventStart:string = moment(event.start).format();
     const eventEnd:string = moment(event.end).format();
-    updateHours(eventID, eventStart, eventEnd)
+    updateHours(eventID, eventStart, eventEnd).then();
   }
   const handleEventResize = (arg:EventResizeDoneArg) =>{
     const eventID:number = +arg.event.title.substring(arg.event.title.length -2, arg.event.title.length-1);
@@ -170,9 +170,6 @@ const Hours = () =>{
     const eventEnd = moment(arg.event.end!).format();
     updateHours(eventID, eventStart, eventEnd).then();
   }
-
-
-
   const updateHours = async(id:number, start:string, end:string) =>{
     const data = await client.mutate({
       mutation:updateHoursMutation,
@@ -184,13 +181,6 @@ const Hours = () =>{
     });
     return data;
   }
-
-
-
-
-
-
-
   return(
     <>
     <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours} userName = {userName}/>
