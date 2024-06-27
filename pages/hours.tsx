@@ -127,7 +127,7 @@ const Hours = () =>{
       });
       let addToCalendar  = {
         id:data['data']['addHour']['id'],
-        title: `Type: ${(hour.title as string).substring(0, (hour.title as string).length - 8)}, Description: ${hour.description as string},  (ID: ${data['data']['addHour']['id']})`,
+        title: `Type: ${(hour.title as string)}, Description: ${hour.description as string},  (ID: ${data['data']['addHour']['id']})`,
         start : moment(startTime).format(),
         end: moment(end).format(),
         color: (() =>{
@@ -183,8 +183,14 @@ const Hours = () =>{
       }
     });
     return data;
-
   }
+
+
+
+
+
+
+
   return(
     <>
     <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours} userName = {userName}/>

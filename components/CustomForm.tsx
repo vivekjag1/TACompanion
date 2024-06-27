@@ -36,6 +36,10 @@ export const CustomForm = (props:formProps) =>{
   }
   const handleSubmit  =(e: React.SyntheticEvent) =>{
     e.preventDefault();
+    if(!description.length || !type.length || !startTime.length || !endTime.length||!course.length){
+      toast.error("Please enter all fields!");
+      return;
+    }
     const newHours:HoursType = {
       title: type,
       courseCode:course,
@@ -46,6 +50,7 @@ export const CustomForm = (props:formProps) =>{
     }
     props.setHours(newHours);
     props.handleClose();
+    toast.success("Your hours were added!");
   };
   return (
     <form onSubmit={handleSubmit} style = {{
@@ -87,9 +92,7 @@ export const CustomForm = (props:formProps) =>{
       </Label>
       <div className = "flex flex-row px-5">
         <Button  variant="destructive" className="m-[2rem] w-[7rem]"  onClick = {(e) => handleClear(e)}>Clear</Button>
-        <div onClick = {() => toast.success("Hours Added!")}>
         <Button  variant="default" className="m-[2rem] w-[7rem] "  type = "submit" >Submit</Button>
-        </div>
         </div>
     </form>
   )
