@@ -21,6 +21,7 @@ const Hours = () =>{
   const [hours, setHours] = useState<HoursType[]>([]);
   const [date, setDate] = useState<string>("");
   const [fetched, setFetched] = useState<boolean>(false);
+  const [adding, setAdding] = useState<boolean>(false);
   const getHours = gql`
      query getHoursByName($name:String){
           fetchHoursByName(name:$name){
@@ -59,7 +60,6 @@ const Hours = () =>{
     const dataArr = data['data']['fetchHoursByName'];
     const newItems = dataArr.map((item:HoursType) =>{
       const toRet = {
-
         //meeting - description ID:
         title: `Type: ${(item.title as string).substring(0, (item.title as string).length - 8)}, Description: ${item.description as string},  (ID: ${item.id as number})`,
 
@@ -110,6 +110,7 @@ const Hours = () =>{
 
 
   const addHours = (hour:HoursType) =>{
+    setAdding(true);
     const end = new Date(date.concat("T").concat(hour.end as string).concat(':00'));
 
     //add graphql logic here to create an instance of the hours collection
@@ -143,6 +144,7 @@ const Hours = () =>{
         })
       }
       setHours(prev => [...prev, addToCalendar]);
+      setAdding(false);
       return data;
     }
     executeMutation().then();
@@ -158,6 +160,8 @@ const Hours = () =>{
   `;
 
   let handleEventDrop = (info: EventDropArg) => {
+    if(adding) return;
+
     const {event} = info;
     const eventID:number = +event.title.substring(event.title.length -2, event.title.length-1);
     const eventStart:string = moment(event.start).format();
@@ -165,12 +169,15 @@ const Hours = () =>{
     updateHours(eventID, eventStart, eventEnd).then();
   }
   const handleEventResize = (arg:EventResizeDoneArg) =>{
+    if(adding) return;
+
     const eventID:number = +arg.event.title.substring(arg.event.title.length -2, arg.event.title.length-1);
     const eventStart = moment(arg.event.start!).format();
     const eventEnd = moment(arg.event.end!).format();
     updateHours(eventID, eventStart, eventEnd).then();
   }
   const updateHours = async(id:number, start:string, end:string) =>{
+    if(adding) return;
     const data = await client.mutate({
       mutation:updateHoursMutation,
       variables:{

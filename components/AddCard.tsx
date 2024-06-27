@@ -5,8 +5,6 @@ import {gql} from "graphql-tag";
 import client from "@/graphql/client";
 import { useUser } from '@auth0/nextjs-auth0/client';
 import{toast} from 'sonner';
-
-
 interface addProps{
   column:string;
   setCards: React.Dispatch<SetStateAction<TodoItem[]>>;
@@ -15,7 +13,6 @@ interface addProps{
 }
 export const AddCard = (props:addProps)=>{
   const { user, error, isLoading } = useUser();
-
   const [title, setTitle] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [description, setDescription] = useState<string>("")
@@ -30,7 +27,6 @@ export const AddCard = (props:addProps)=>{
             }
         }
     `;
-
     const executeQuery = async () =>{
       const data = await client.mutate({
         mutation: createTodo,
