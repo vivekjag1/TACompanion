@@ -50,10 +50,6 @@ export const AddCard = (props:addProps)=>{
   const handleSubmit = (e:FormEvent<HTMLFormElement>) =>{
 
     setNumAdded(numAdded+1);
-    if(!title.length || !course.length || !role.length || !description.length){
-      toast.error("You must fill out all fields!");
-      return;
-    }
 
     e.preventDefault();
 
