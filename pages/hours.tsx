@@ -1,17 +1,16 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import Fullcalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import { DateClickArg } from '@fullcalendar/interaction'; // Import the type
+import interactionPlugin, {DateClickArg, EventResizeDoneArg} from '@fullcalendar/interaction';
 import moment from 'moment-timezone';
 import CustomModal from "@/components/CustomModal";
-import type {HoursType} from "@/mongoose/timeWorked/schema";
-import {useUser} from "@auth0/nextjs-auth0/client";
-import {gql} from "graphql-tag";
+import type { HoursType } from "@/mongoose/timeWorked/schema";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { gql } from "graphql-tag";
 import client from "../graphql/client";
-import {useRouter} from "next/router";
-import {EventDropArg} from "@fullcalendar/core";
+import { useRouter } from "next/router";
+import { EventChangeArg, EventDropArg } from "@fullcalendar/core";
 moment.tz.setDefault('America/New_York');
 const Hours = () =>{
   let { user, error, isLoading } = useUser();
@@ -41,7 +40,7 @@ const Hours = () =>{
     else{
       if(!fetched){
 
-        fetchData().then(console.log);
+        fetchData().then();
       }
       else{
         return;
@@ -60,7 +59,10 @@ const Hours = () =>{
     const dataArr = data['data']['fetchHoursByName'];
     const newItems = dataArr.map((item:HoursType) =>{
       const toRet = {
-        title:item.title,
+
+        //meeting - description ID:
+        title: `Type: ${(item.title as string).substring(0, (item.title as string).length - 8)}, Description: ${item.description as string},  (ID: ${item.id as number})`,
+
         start:item.start,
         end: item.end,
         color: (() =>{
@@ -109,23 +111,7 @@ const Hours = () =>{
 
   const addHours = (hour:HoursType) =>{
     const end = new Date(date.concat("T").concat(hour.end as string).concat(':00'));
-    const addToCalendar  = {
-      id:null,
-      title: hour.title,
-      start : moment(startTime).format(),
-      end: moment(end).format(),
-      color: (() =>{
-        if(hour.type as string === "office hours"){
-          return 'blue';
-        }
-        else if (hour.type as string === "meeting"){
-          return 'green';
-        }
-        else{
-          return 'red';
-        }
-      })
-    }
+
     //add graphql logic here to create an instance of the hours collection
     const executeMutation = async () =>{
       const data = await client.mutate({
@@ -138,25 +124,67 @@ const Hours = () =>{
           end: moment(end).format(),
           name: user?.name
         }
-      })
-      addToCalendar.id = data['data']['addHour'].id
-
+      });
+      let addToCalendar  = {
+        id:data['data']['addHour']['id'],
+        title: `Type: ${hour.title as string} (ID: ${data['data']['addHour']['id']}), Description: ${data['data']['addHour']['description']}`,
+        start : moment(startTime).format(),
+        end: moment(end).format(),
+        color: (() =>{
+          if(hour.type as string === "office hours"){
+            return 'blue';
+          }
+          else if (hour.type as string === "meeting"){
+            return 'green';
+          }
+          else{
+            return 'red';
+          }
+        })
+      }
+      setHours(prev => [...prev, addToCalendar]);
       return data;
     }
-
-
-
-    setHours(prev => [...prev, addToCalendar]);
-
     executeMutation().then();
   }
-  console.log("hours is",hours);
+  const updateHoursMutation = gql`
+      mutation updateHours($id:Int, $start:String, $end:String){
+          changeStartAndEnd(id:$id, start: $start, end: $end){
+              id
+              start
+              end
+          }
+      }
+  `;
 
-  let handleEventDrop = (info: EventDropArg) =>{
-    const { id } = info.event;
-    console.log(id);
+  let handleEventDrop = (info: EventDropArg) => {
+    const {event} = info;
+    const eventID:number = +event.title.substring(event.title.length -2, event.title.length-1);
+    const eventStart:string = moment(event.start).format();
+    const eventEnd:string = moment(event.end).format();
+    updateHours(eventID, eventStart, eventEnd)
+  }
+  const handleEventResize = (arg:EventResizeDoneArg) =>{
+    const eventID:number = +arg.event.title.substring(arg.event.title.length -2, arg.event.title.length-1);
+    const eventStart = moment(arg.event.start!).format();
+    const eventEnd = moment(arg.event.end!).format();
+    updateHours(eventID, eventStart, eventEnd).then();
+  }
 
-  };
+
+
+  const updateHours = async(id:number, start:string, end:string) =>{
+    const data = await client.mutate({
+      mutation:updateHoursMutation,
+      variables:{
+        id: id,
+        start: start,
+        end: end
+      }
+    });
+    return data;
+
+  }
   return(
     <>
     <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours} userName = {userName}/>
@@ -171,7 +199,10 @@ const Hours = () =>{
         dateClick = {handleClick}
         editable={true}
         events = {hours}
-        eventDrop={handleEventDrop}
+        eventDrop = {handleEventDrop}
+        eventChange={(arg:EventChangeArg) => console.log(arg)}
+        eventResizableFromStart={true}
+        eventResize = {handleEventResize}
       />
     </div>
     </>

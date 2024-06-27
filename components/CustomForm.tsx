@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button"
 import { useState} from "react";
 import { Label } from "@/components/ui/label"
 import type {HoursType} from "../mongoose/timeWorked/schema"
-import {toast, useToast} from "@/components/ui/use-toast"
 import moment from 'moment-timezone';
 moment.tz.setDefault('America/New_York');
+import{toast} from 'sonner';
 import {
   Select,
   SelectContent,
@@ -22,7 +22,6 @@ interface formProps{
   userName: string | null | undefined;
 }
 export const CustomForm = (props:formProps) =>{
-  const {toast} = useToast();
   const [description, setDescription] = useState<string>("");
   const [type, setType] = useState<string>("");
   const [startTime, setStartTime] = useState<string>(props.startTime);
@@ -88,13 +87,10 @@ export const CustomForm = (props:formProps) =>{
       </Label>
       <div className = "flex flex-row px-5">
         <Button  variant="destructive" className="m-[2rem] w-[7rem]"  onClick = {(e) => handleClear(e)}>Clear</Button>
-        <Button  variant="default" className="m-[2rem] w-[7rem] "  type = "submit" onClick={() =>{
-          toast({
-            title: `Added ${type}`,
-            description: `In at ${startTime} out at ${endTime}`
-          });
-        }}>Submit</Button>
-      </div>
+        <div onClick = {() => toast.success("Hours Added!")}>
+        <Button  variant="default" className="m-[2rem] w-[7rem] "  type = "submit" >Submit</Button>
+        </div>
+        </div>
     </form>
   )
 }

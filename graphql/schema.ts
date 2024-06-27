@@ -59,5 +59,6 @@ export const typeDefs = gql`
       deleteAll:Todo
       addManyTodos(toAdd:[TodoInput!]):Boolean
       addHour(title:String, courseCode:String, description:String, start:String, end:String, name:String):Hours
+      changeStartAndEnd(id:Int, start:String, end:String):Hours
   }
 `;
