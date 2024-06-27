@@ -50,6 +50,7 @@ const Hours = () =>{
     }
   }, [user, isLoading, router, fetched]);
   const fetchData = async () =>{
+    console.log("fetching");
     if(user == undefined) return;
     const data = await client.mutate({
       mutation: getHours,
@@ -165,7 +166,7 @@ const Hours = () =>{
     if(adding) return;
 
     const {event} = info;
-    const eventID:number = +event.title.substring(event.title.length -2, event.title.length-1);
+    const eventID:number = +event.title.substring(event.title.length -3, event.title.length-1);
     const eventStart:string = moment(event.start).format();
     const eventEnd:string = moment(event.end).format();
     updateHours(eventID, eventStart, eventEnd).then();
@@ -173,7 +174,7 @@ const Hours = () =>{
   const handleEventResize = (arg:EventResizeDoneArg) =>{
     if(adding) return;
 
-    const eventID:number = +arg.event.title.substring(arg.event.title.length -2, arg.event.title.length-1);
+    const eventID:number = +arg.event.title.substring(arg.event.title.length -3, arg.event.title.length-1);
     const eventStart = moment(arg.event.start!).format();
     const eventEnd = moment(arg.event.end!).format();
     updateHours(eventID, eventStart, eventEnd).then();
