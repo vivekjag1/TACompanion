@@ -105,7 +105,7 @@ export const todoMutations= {
       }
       const newHour:HoursType = {
         id: newID,
-        title: title,
+        title: title.concat(` (ID: ${newID})`),
         courseCode: courseCode,
         description:description,
         start:start,
@@ -119,5 +119,9 @@ export const todoMutations= {
       console.error(err);
       return null;
     }
+  },
+  changeStartAndEnd: async (_:any, {id, start, end}:{id:number,  start:string, end:string}) =>{
+    console.log(id, start, end);
+    return await hours.findOneAndUpdate({id:id}, {start:start, end:end}, {new:true}) ;
   }
 }
