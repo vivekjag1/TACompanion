@@ -10,9 +10,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { gql } from "graphql-tag";
 import client from "../graphql/client";
 import { useRouter } from "next/router";
-import EventResizeArg from "@fullcalendar/react";
 import { EventChangeArg, EventDropArg } from "@fullcalendar/core";
-import {DocumentNode} from "graphql/language";
 moment.tz.setDefault('America/New_York');
 const Hours = () =>{
   let { user, error, isLoading } = useUser();
@@ -42,7 +40,7 @@ const Hours = () =>{
     else{
       if(!fetched){
 
-        fetchData().then(console.log);
+        fetchData().then();
       }
       else{
         return;
@@ -145,7 +143,6 @@ const Hours = () =>{
         })
       }
       setHours(prev => [...prev, addToCalendar]);
-      console.log("just added", addToCalendar.id);
       return data;
     }
     executeMutation().then();
@@ -162,11 +159,9 @@ const Hours = () =>{
 
   let handleEventDrop = (info: EventDropArg) => {
     const {event} = info;
-    const eventTitle = event.title;
     const eventID:number = +event.title.substring(event.title.length -2, event.title.length-1);
     const eventStart:string = moment(event.start).format();
     const eventEnd:string = moment(event.end).format();
-    console.log("event title is", eventTitle);
     updateHours(eventID, eventStart, eventEnd)
   }
   const handleEventResize = (arg:EventResizeDoneArg) =>{
