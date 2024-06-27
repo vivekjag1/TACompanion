@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import {gql} from "graphql-tag";
 import client from "@/graphql/client";
 import { useUser } from '@auth0/nextjs-auth0/client';
-
+import{toast} from 'sonner';
 interface addProps{
   column:string;
   setCards: React.Dispatch<SetStateAction<TodoItem[]>>;
@@ -13,7 +13,6 @@ interface addProps{
 }
 export const AddCard = (props:addProps)=>{
   const { user, error, isLoading } = useUser();
-
   const [title, setTitle] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [description, setDescription] = useState<string>("")
@@ -28,7 +27,6 @@ export const AddCard = (props:addProps)=>{
             }
         }
     `;
-
     const executeQuery = async () =>{
       const data = await client.mutate({
         mutation: createTodo,
@@ -48,9 +46,17 @@ export const AddCard = (props:addProps)=>{
   }
   const [adding, setAdding] = useState<boolean>(false);
   const [numAdded, setNumAdded] = useState<number>(0);
+
   const handleSubmit = (e:FormEvent<HTMLFormElement>) =>{
+
     setNumAdded(numAdded+1);
+    if(!title.length || !course.length || !role.length || !description.length){
+      toast.error("You must fill out all fields!");
+      return;
+    }
+
     e.preventDefault();
+
     const createdTodo = {
       id:props.cards.length + 2 + numAdded,
       title:title,
@@ -59,8 +65,14 @@ export const AddCard = (props:addProps)=>{
       status:props.column,
       description: description,
     }
+    toast.success("Task added!");
     props.setCards((prev)=>[...prev, createdTodo]);
     sendToBackend(createdTodo);
+    setTitle("");
+    setDescription("");
+    setCourse("");
+    setRole("");
+
     setAdding(false);
   }
   return(
