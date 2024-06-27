@@ -59,7 +59,9 @@ const Hours = () =>{
     const dataArr = data['data']['fetchHoursByName'];
     const newItems = dataArr.map((item:HoursType) =>{
       const toRet = {
-        title: `Type: ${(item.title as string).substring(0, (item.title as string).length-7)} (ID: ${item.id as number}), Description: ${item.description as string}`,
+
+        //meeting - description ID:
+        title: `Type: ${(item.title as string).substring(0, (item.title as string).length - 8)}, Description: ${item.description as string},  (ID: ${item.id as number})`,
 
         start:item.start,
         end: item.end,
@@ -123,8 +125,6 @@ const Hours = () =>{
           name: user?.name
         }
       });
-
-      console.log();
       let addToCalendar  = {
         id:data['data']['addHour']['id'],
         title: `Type: ${hour.title as string} (ID: ${data['data']['addHour']['id']}), Description: ${data['data']['addHour']['description']}`,
@@ -143,10 +143,10 @@ const Hours = () =>{
         })
       }
       setHours(prev => [...prev, addToCalendar]);
+      console.log("just added", addToCalendar.id);
       return data;
     }
     executeMutation().then();
-
   }
 
   let handleEventDrop = (info: EventDropArg) => {
@@ -157,6 +157,7 @@ const Hours = () =>{
     const eventID:number = +event.title.substring(event.title.length -2, event.title.length-1);
     const eventStart:string = moment(event.start).format();
     const eventEnd:string = moment(event.end).format();
+    console.log("event title is", eventTitle);
 
 
 
