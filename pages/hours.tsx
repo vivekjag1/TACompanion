@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Fullcalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
+import interactionPlugin, {DateClickArg, EventResizeDoneArg} from '@fullcalendar/interaction';
 import moment from 'moment-timezone';
 import CustomModal from "@/components/CustomModal";
 import type { HoursType } from "@/mongoose/timeWorked/schema";
@@ -10,6 +10,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { gql } from "graphql-tag";
 import client from "../graphql/client";
 import { useRouter } from "next/router";
+import EventResizeArg from "@fullcalendar/react";
 import { EventChangeArg, EventDropArg } from "@fullcalendar/core";
 moment.tz.setDefault('America/New_York');
 const Hours = () =>{
@@ -185,6 +186,35 @@ const Hours = () =>{
       return data;
     }
     changeHours().then();
+  }
+  const handleEventResize = (arg:EventResizeDoneArg) =>{
+    const eventID:number = +arg.event.title.substring(arg.event.title.length -2, arg.event.title.length-1);
+    const eventStart = arg.event.start!;
+    const eventEnd = arg.event.end!;
+
+    const allowExtend = gql `
+      mutation extendTime($id:Int, $start:String, $end:String){
+          changeStartAndEnd(id:$id, start: $start, end: $end){
+              id, 
+              start, 
+              end
+          }
+      }
+    `;
+    const changeHours = async () =>{
+      const data = await client.mutate({
+        mutation:allowExtend,
+        variables:{
+          id: eventID,
+          start: eventStart,
+          end: eventEnd
+        }
+      });
+      return data;
+    }
+    changeHours().then();
+
+
 
 
 
@@ -206,6 +236,8 @@ const Hours = () =>{
         events = {hours}
         eventDrop = {handleEventDrop}
         eventChange={(arg:EventChangeArg) => console.log(arg)}
+        eventResizableFromStart={true}
+        eventResize = {handleEventResize}
       />
     </div>
     </>
