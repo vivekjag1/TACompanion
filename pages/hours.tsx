@@ -11,7 +11,6 @@ import {gql} from "graphql-tag";
 import client from "../graphql/client";
 import {useRouter} from "next/router";
 import {EventDropArg} from "@fullcalendar/core";
-
 moment.tz.setDefault('America/New_York');
 const Hours = () => {
   let {user, error, isLoading} = useUser(); //hold auth0 hooks
@@ -101,12 +100,14 @@ const Hours = () => {
         }
       });
       const addToCalendar = {
+        id:hours.length +1,
         title: `Type: ${(hour.title as string)}, Description: ${hour.description as string},  (ID: ${data['data']['addHour']['id']})`,
         start: moment(startTime).format(),
         end: moment(end).format(),
         color: (hour.title as string).includes('office hours') ? 'green' : ((hour.title as string).includes('meeting') ? 'blue' : 'red')
       }
       console.log("staged for addition", addToCalendar);
+      console.log("hrs", hours);
       setHours(prev => [...prev, addToCalendar]);
       return addToCalendar;
     }
@@ -128,7 +129,29 @@ const Hours = () => {
     const eventID: number = +event.title.substring(event.title.length - 3, event.title.length - 1);
     const eventStart: string = moment(event.start).format();
     const eventEnd: string = moment(event.end).format();
-    updateHours(eventID, eventStart, eventEnd).then();
+    console.log("dragged" , event.title);
+    updateHours(eventID, eventStart, eventEnd).then(); //update actual item
+
+    //update state
+    const newData = hours.filter(hour =>{
+      return (hour.title != event.title)
+    });
+
+    const newItem ={
+      title:event.title,
+      start: eventStart,
+      end:eventEnd,
+      color: (event.title as string).includes('office hours') ? 'green' : ((event.title as string).includes('meeting') ? 'blue' : 'red')
+    };
+    newData.push(newItem);
+    setHours(newData);
+
+    //construct new item to set the state
+
+
+
+
+
   }
   const handleEventResize = (arg: EventResizeDoneArg) => {
     const eventID: number = +arg.event.title.substring(arg.event.title.length - 3, arg.event.title.length - 1);
