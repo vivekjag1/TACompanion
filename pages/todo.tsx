@@ -13,17 +13,17 @@ const Home = () =>{
   const [hasFetched, setHasFetched] = useState<boolean>(false);
   const heading = `${user?.name}'s todo items`;
   const userName = user?.name;
-   useEffect(() =>{
+  useEffect(() =>{
     if(!user && !isLoading){ //if the information is fetched but there is still no user object then move to l
       router.push('/api/auth/login').then();
     }
-   else{
-     if(!hasFetched){
-       fetchData().then(console.log);
-     }
-     else{
-       return;
-     }
+    else{
+      if(!hasFetched){
+        fetchData().then(console.log);
+      }
+      else{
+        return;
+      }
 
     }
   }, [user, isLoading, router, fetchData, hasFetched]);
@@ -38,7 +38,7 @@ const Home = () =>{
               role
               __typename
           }
-      } 
+      }
   `;
 
   async function fetchData(){
@@ -63,12 +63,12 @@ const Home = () =>{
     return cleanData;
   }
   return (
-      <div className = "flex flex-col ml-20 justify-center overflow-hidden  ">
-        <h1 className = " top-0 mb-5 text-5xl text-black font-mono text-center">{heading}</h1>
-        <div>
-          <Kanban cards={todoItemArray}  />
-        </div>
+    <div className = "flex flex-col ml-20 justify-center overflow-hidden  ">
+      <h1 className = " top-0 mb-5 text-5xl text-black font-mono text-center">{heading}</h1>
+      <div>
+        <Kanban cards={todoItemArray}  />
       </div>
+    </div>
 
   )
 };

@@ -22,6 +22,7 @@ export const todoQueries ={
     return await hours.find({});
   },
   fetchHoursByName: async (_:any, params:{name:string}) =>{
+    console.log("wtf");
     return await hours.find({name: params.name});
   }
 
