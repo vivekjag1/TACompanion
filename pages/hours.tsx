@@ -171,14 +171,28 @@ const Hours = () => {
     const title = arg.event.title;
     const eventID = +arg.event.title.substring(arg.event.title.indexOf('(') + 4, arg.event.title.indexOf(')'));
 
+      const getHourByID = gql `
+        query getHourByID($ID:Int){
+            fetchHoursByID(ID: $ID){
+                id 
+                title 
+                courseCode
+                description 
+                start 
+                end 
+                name 
+            }
+        }
+      `;
+      const data = await client.query({
+        query:getHourByID,
+        variables:{
+          ID: eventID
+        }
+      });
 
-
-
-
-
-
-
-    console.log(eventID);
+      const fetchedHour = data['data']['fetchHoursByID'];
+    console.log(fetchedHour);
 
     //TODO #2: CREATE A NEW MODAL WHICH ACCEPTS ALL OF THE FIELDS, AND ALLOW FOR THEM ALL TO BE EDITABLE
 

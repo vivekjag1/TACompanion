@@ -25,8 +25,9 @@ export const todoQueries ={
     console.log("wtf");
     return await hours.find({name: params.name});
   },
-  fetchHoursByID: async (_:any, ID:string) => {
-    return await hours.find({id:ID});
+  fetchHoursByID: async (_:any, params:{ID:number}) => {
+    console.log(params.ID);
+    return await hours.findOne({id:params.ID});
   }
 
 }
