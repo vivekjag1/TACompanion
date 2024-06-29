@@ -47,10 +47,10 @@ export const UpdateEventForm = (props:formProps) =>{
   // @ts-ignore
   const resetToDefault = (e:MouseEvent<HTMLButtonElement, MouseEvent>) =>{
     e.preventDefault();
-    setTitle(props.event.title as string);
+    setTitle(getType());
     setDescription(props.event.description as string);
-    setStartTime(props.event.start as string);
-    setEndTime(props.event.end as string);
+    setStartTime((props.event.start as string).substring(indexT + 1, indexDash));
+    setEndTime((props.event.end as string).substring(indexT + 1, indexDash));
     setCourse(props.event.courseCode as string);
   }
 
