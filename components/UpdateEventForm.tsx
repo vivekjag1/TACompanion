@@ -55,18 +55,17 @@ export const UpdateEventForm = (props:formProps) =>{
   const handleSubmit  = (e: React.SyntheticEvent) =>{
     e.preventDefault();
 
-    if(!description.length || !title.length || !startTime.length || !endTime.length||!course.length){
-      toast.error("Please enter all fields!");
-      return;
-    }
+    //TODO: need an object for state and another one for the backend since the state one has to work with react FC
     const newHours:HoursType = {
-      title: title,
+      title: `${title} (ID:${props.event.id})`,
       courseCode:course,
       description:description,
       start:startTime,
       end:endTime,
       name: props.event.name as string
     }
+
+    //TODO: update backend on form submission
     props.setHours(newHours);
     props.handleClose();
     toast.success("Your hours were updated!");
@@ -99,7 +98,6 @@ export const UpdateEventForm = (props:formProps) =>{
           className="mt-5 w-full"
           value = {startTime}
           onChange={(e)=>setStartTime(e.target.value)}
-
         />
       </Label>
 
