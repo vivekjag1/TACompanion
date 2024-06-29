@@ -50,6 +50,7 @@ export const typeDefs = gql`
       fetchTodosByCourse: [Todo]
       fetchAllHours:[Hours]
       fetchHoursByName(name:String):[Hours]
+      fetchHoursByID(ID:Int):Hours
       
   }
   type Mutation{
