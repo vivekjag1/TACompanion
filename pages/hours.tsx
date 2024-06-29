@@ -209,8 +209,19 @@ const Hours = () => {
   }
 
   const changeEvent = (hour:HoursType) =>{
-    const newHours = hours.filter((item) => item.title != hour.title);
-    newHours.push(hour);
+    console.log(hours);
+    const eventID =  (hour.title as string).substring((hour.title as string).indexOf('(') + 4, (hour.title as string).indexOf(')'));
+
+    const newHours = hours.filter((item) => !((item.title as string).includes(eventID)));
+
+    const addToState = {
+      id: +(eventID),
+      title: hour.title,
+      start: hour.start,
+      end: hour.end,
+      color:  (hour.title as string).includes('office hours') ? 'green' : ((hour.title as string).includes('meeting') ? 'blue' : 'red')
+ };
+    newHours.push(addToState);
     setHours(newHours);
 
 

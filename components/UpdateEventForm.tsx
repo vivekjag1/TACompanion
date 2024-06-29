@@ -35,10 +35,13 @@ export const UpdateEventForm = (props:formProps) =>{
       return 'meeting'
     }
   };
+  const indexTStart = (props.event.start as string).indexOf("T");
+  const indexTEnd = (props.event.end as string).indexOf("T");
+
   const[title, setTitle] = useState<string>(getType());
   const[description, setDescription] = useState<string>(props.event.description as string);
-  const [startTime, setStartTime] = useState<string>(props.event.start as string);
-  const [endTime, setEndTime] = useState<string>(props.event.end as string);
+  const [startTime, setStartTime] = useState<string>((props.event.start as string).substring(indexTStart + 1));
+  const [endTime, setEndTime] = useState<string>((props.event.end as string).substring(indexTEnd + 1));
   const [course, setCourse] = useState<string>(props.event.courseCode as string);
 
 
@@ -54,18 +57,33 @@ export const UpdateEventForm = (props:formProps) =>{
 
   const handleSubmit  = (e: React.SyntheticEvent) =>{
     e.preventDefault();
+    //2024-06-27T10:55:00-04:00
+
+    const indexT = (props.event.start as string).indexOf("T");
+    const date = (props.event.start as string).substring(0, indexT);
+    console.log("end is", date.concat("T").concat(endTime).concat(':00-04:00'));
+
+    console.log(startTime);
+    console.log(endTime);
 
     //TODO: need an object for state and another one for the backend since the state one has to work with react FC
+
+
+
     const newHours:HoursType = {
-      title: `${title} (ID:${props.event.id})`,
+      title: `Type: ${title}, Description: ${description},  (ID:${props.event.id})`,
       courseCode:course,
       description:description,
-      start:startTime,
-      end:endTime,
+      start:date.concat("T").concat(startTime).concat(':00-04:00'),
+      end:date.concat("T").concat(endTime).concat(':00-04:00'),
       name: props.event.name as string
     }
+    console.log("new hours is", newHours);
 
     //TODO: update backend on form submission
+
+
+
     props.setHours(newHours);
     props.handleClose();
     toast.success("Your hours were updated!");
@@ -101,7 +119,7 @@ export const UpdateEventForm = (props:formProps) =>{
         />
       </Label>
 
-      <Label className="text-left mt-5 w-full"> End Time (EDT) [Leave blank for no change]
+      <Label className="text-left mt-5 w-full"> Update End Time (EDT) [Leave blank for no change]
         <Input
           type="time"
           className="mt-5 w-full"
