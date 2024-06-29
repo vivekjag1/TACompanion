@@ -11,6 +11,7 @@ import {gql} from "graphql-tag";
 import client from "../graphql/client";
 import {useRouter} from "next/router";
 import {EventClickArg, EventDropArg} from "@fullcalendar/core";
+import EditEventModal from "@/components/EditEventModal";
 moment.tz.setDefault('America/New_York');
 const Hours = () => {
   let {user, error, isLoading} = useUser(); //hold auth0 hooks
@@ -19,6 +20,8 @@ const Hours = () => {
   const [startTime, setStartTime] = useState<Date>(new Date()); //start
   const [hours, setHours] = useState<HoursType[]>([]); //array of hours
   const [date, setDate] = useState<string>(""); //data clicked
+  const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
+  const [clickedHour, setClickedHour] = useState<HoursType>(hours[0]);
   //all the code related to getting the hours on an initial page reload
   const getHours = gql`
       query getHoursByName($name:String){
@@ -191,14 +194,25 @@ const Hours = () => {
         }
       });
 
-      const fetchedHour = data['data']['fetchHoursByID'];
+    const fetchedHour = data['data']['fetchHoursByID'];
     console.log(fetchedHour);
 
     //TODO #2: CREATE A NEW MODAL WHICH ACCEPTS ALL OF THE FIELDS, AND ALLOW FOR THEM ALL TO BE EDITABLE
+    setUpdateModalOpen(true);
+    setClickedHour(fetchedHour);
 
     //TODO #3: (INSIDE THE NEW FORM) SEND A REQUEST TO THE BACKEND TO UPDATE THE HOUR
 
     //TODO #4: UPDATE THE LOCAL STATE WITH THE NEW OBJECT
+
+
+  }
+
+  const changeEvent = (hour:HoursType) =>{
+    const newHours = hours.filter((item) => item.title != hour.title);
+    newHours.push(hour);
+    setHours(newHours);
+
 
 
   }
@@ -207,6 +221,7 @@ const Hours = () => {
       <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours}
                    userName={user?.name}/>
       <div className=" items-center justify-center ml-[8rem] mr-[8rem]">
+        <EditEventModal open={updateModalOpen} handleClose={() => setUpdateModalOpen(false)} event={clickedHour} setHours={changeEvent}/>
         <Fullcalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="timeGridWeek"
