@@ -20,9 +20,7 @@ interface formProps{
   setHours:(hour: HoursType) => void;
   event:HoursType
 }
-
 //TODO: need to refactor so that all the fields in the form START with information from the todo
-
 export const UpdateEventForm = (props:formProps) =>{
   const getType = () => {
     if((props.event.title as string).includes('office hours')){
@@ -35,13 +33,14 @@ export const UpdateEventForm = (props:formProps) =>{
       return 'meeting'
     }
   };
-  const indexTStart = (props.event.start as string).indexOf("T");
-  const indexTEnd = (props.event.end as string).indexOf("T");
+
+  const indexT = (props.event.start as string).indexOf("T");
+  const indexDash = (props.event.start as string).length -  9;
 
   const[title, setTitle] = useState<string>(getType());
   const[description, setDescription] = useState<string>(props.event.description as string);
-  const [startTime, setStartTime] = useState<string>((props.event.start as string).substring(indexTStart + 1));
-  const [endTime, setEndTime] = useState<string>((props.event.end as string).substring(indexTEnd + 1));
+  const [startTime, setStartTime] = useState<string>((props.event.start as string).substring(indexT + 1, indexDash));
+  const [endTime, setEndTime] = useState<string>((props.event.end as string).substring(indexT + 1, indexDash));
   const [course, setCourse] = useState<string>(props.event.courseCode as string);
 
 
@@ -60,13 +59,16 @@ export const UpdateEventForm = (props:formProps) =>{
     //2024-06-27T10:55:00-04:00
 
     const indexT = (props.event.start as string).indexOf("T");
+    const indexDash = (props.event.start as string).length -  9;
     const date = (props.event.start as string).substring(0, indexT);
-    console.log("end is", date.concat("T").concat(endTime).concat(':00-04:00'));
+    const end =  new Date(date.concat("T").concat(endTime).concat(':00-04:00'));
+    const start = new Date(date.concat("T").concat(startTime).concat(':00-04:00'));
 
-    console.log(startTime);
-    console.log(endTime);
 
-    //TODO: need an object for state and another one for the backend since the state one has to work with react FC
+    console.log("Start", (props.event.start as string).substring(indexT + 1, indexDash));
+    console.log("end", moment(end).format());
+
+    //TODO: need        an object for state and another one for the backend since the state one has to work with react FC
 
 
 
@@ -74,8 +76,10 @@ export const UpdateEventForm = (props:formProps) =>{
       title: `Type: ${title}, Description: ${description},  (ID:${props.event.id})`,
       courseCode:course,
       description:description,
-      start:date.concat("T").concat(startTime).concat(':00-04:00'),
-      end:date.concat("T").concat(endTime).concat(':00-04:00'),
+      start:moment(start).format(),
+      end:moment(end).format(),
+      // start:date.concat("T").concat(startTime).concat(':00-04:00'),
+      // end:date.concat("T").concat(endTime).concat(':00-04:00'),
       name: props.event.name as string
     }
     console.log("new hours is", newHours);
@@ -110,7 +114,7 @@ export const UpdateEventForm = (props:formProps) =>{
       </Select>
       <Input value={course} className="mt-5" placeholder="Enter Course Code" onChange={(e)=>setCourse(e.target.value)}/>
       <Textarea value={description} className="mt-5" placeholder="Add a description" onChange={(e)=>setDescription(e.target.value)}/>
-      <Label className="text-left mt-5 w-full"> Updated Start Time (EDT) [Leave blank for no change]
+      <Label className="text-left mt-5 w-full"> Updated Start Time (EDT)
         <Input
           type = "time"
           className="mt-5 w-full"
@@ -119,7 +123,7 @@ export const UpdateEventForm = (props:formProps) =>{
         />
       </Label>
 
-      <Label className="text-left mt-5 w-full"> Update End Time (EDT) [Leave blank for no change]
+      <Label className="text-left mt-5 w-full"> Update End Time (EDT)
         <Input
           type="time"
           className="mt-5 w-full"
