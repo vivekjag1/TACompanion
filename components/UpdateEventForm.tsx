@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { useState} from "react";
 import { Label } from "@/components/ui/label"
 import client from "../graphql/client"
-import type {HoursType} from "../mongoose/timeWorked/schema"
+import type {HoursType} from "@/mongoose/timeWorked/schema"
 import moment from 'moment-timezone';
 moment.tz.setDefault('America/New_York');
 import{toast} from 'sonner';
@@ -20,9 +20,8 @@ import gql from "graphql-tag";
 interface formProps{
   handleClose: () => void;
   setHours:(hour: HoursType, action:string) => void;
-  event:HoursType
+  event:HoursType;
 }
-//TODO: need to refactor so that all the fields in the form START with information from the todo
 export const UpdateEventForm = (props:formProps) =>{
   const getType = () => {
     if((props.event.title as string).includes('office hours')){
@@ -65,29 +64,15 @@ export const UpdateEventForm = (props:formProps) =>{
     const date = (props.event.start as string).substring(0, indexT);
     const end =  new Date(date.concat("T").concat(endTime).concat(':00-04:00'));
     const start = new Date(date.concat("T").concat(startTime).concat(':00-04:00'));
-
-
-    console.log("Start", (props.event.start as string).substring(indexT + 1, indexDash));
-    console.log("end", moment(end).format());
-
-    //TODO: need an object for state and another one for the backend since the state one has to work with react FC
-
-
-
     const newHours:HoursType = {
       title: `Type: ${title}, Description: ${description},  (ID:${props.event.id})`,
       courseCode:course,
       description:description,
       start:moment(start).format(),
       end:moment(end).format(),
-      // start:date.concat("T").concat(startTime).concat(':00-04:00'),
-      // end:date.concat("T").concat(endTime).concat(':00-04:00'),
       name: props.event.name as string
     }
     console.log("new hours is", newHours);
-
-    //TODO: update backend on form submission
-
     const changedHour:HoursType = {
       title: `${title} (ID: ${props.event.id as string})`,
       courseCode: course,
@@ -96,7 +81,6 @@ export const UpdateEventForm = (props:formProps) =>{
       end:moment(end).format(),
       name: props.event.name as string
     };
-
     const updateMutation = gql `
       mutation updateMutation($id:Int, $title:String, $courseCode:String, $description:String, $start:String, $end:String, $name:String){
           updateHourByID(id: $id, title: $title, courseCode: $courseCode, description: $description, start: $start, end: $end, name: $name){
@@ -133,7 +117,16 @@ export const UpdateEventForm = (props:formProps) =>{
 
   };
 
+
+
+
+
+
+
   const handleDelete = () => {
+
+
+
     //just delete the item from the backend
     const deleteMutation = gql `
       mutation deleteMutation($id:Int){
@@ -153,9 +146,21 @@ export const UpdateEventForm = (props:formProps) =>{
     runMutation().then();
     props.setHours({}, 'remove');
     toast.success("Deleted Event!");
+    props.handleClose();
+    return;
+
+
+
+
 
 
   }
+
+
+
+
+
+
   return (
     <form onSubmit={handleSubmit} style = {{
       display:"flex",
@@ -196,7 +201,7 @@ export const UpdateEventForm = (props:formProps) =>{
         />
       </Label>
       <div className = "flex flex-row px-5">
-        <Button  variant="destructive" className="m-[2rem] w-[7rem]"  onClick = {() => handleDelete()}>Delete </Button>
+        <Button  variant="destructive" className="m-[2rem] w-[7rem]" type="button" onClick = {handleDelete}>Delete </Button>
         <Button  variant="default" className="m-[2rem] w-[7rem] "  type = "submit" >Submit</Button>
       </div>
     </form>

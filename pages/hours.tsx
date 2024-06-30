@@ -65,7 +65,6 @@ const Hours = () => {
     console.log("hours set");
     return newItems;
   }
-
   //code related to ADDING another hour
   const addHourMutation = gql`
       mutation addHour($title:String, $courseCode:String, $description:String, $start:String, $end:String, $name:String){
@@ -136,12 +135,10 @@ const Hours = () => {
     const eventEnd: string = moment(event.end).format();
     console.log("dragged" , event.title);
     updateHours(eventID, eventStart, eventEnd).then(); //update actual item
-
     //update state
     const newData = hours.filter(hour =>{
       return (hour.title != event.title)
     });
-
     const newItem ={
       title:event.title,
       start: eventStart,
@@ -150,7 +147,6 @@ const Hours = () => {
     };
     newData.push(newItem);
     setHours(newData);
-    //construct new item to set the state
   }
   const handleEventResize = (arg: EventResizeDoneArg) => {
     const eventID: number = +arg.event.title.substring(arg.event.title.length - 3, arg.event.title.length - 1);
@@ -170,12 +166,8 @@ const Hours = () => {
     return data;
   }
   const handleEventClick = async(arg:EventClickArg) =>{
-    //TODO ITEMS
-
-    //TODO #1: GET THE OBJECT FROM THE BACKEND USING THE ID
     const title = arg.event.title;
     const eventID = +arg.event.title.substring(arg.event.title.indexOf('(') + 4, arg.event.title.indexOf(')'));
-
       const getHourByID = gql `
         query getHourByID($ID:Int){
             fetchHoursByID(ID: $ID){
@@ -195,19 +187,10 @@ const Hours = () => {
           ID: eventID
         }
       });
-
     const fetchedHour = data['data']['fetchHoursByID'];
     console.log(fetchedHour);
-
-    //TODO #2: CREATE A NEW MODAL WHICH ACCEPTS ALL OF THE FIELDS, AND ALLOW FOR THEM ALL TO BE EDITABLE
     setUpdateModalOpen(true);
     setClickedHour(fetchedHour);
-
-    //TODO #3: (INSIDE THE NEW FORM) SEND A REQUEST TO THE BACKEND TO UPDATE THE HOUR
-
-    //TODO #4: UPDATE THE LOCAL STATE WITH THE NEW OBJECT
-
-
   }
 
   const changeEvent = (hour:HoursType, action:string) =>{
@@ -228,7 +211,13 @@ const Hours = () => {
       setHours(newHours);
     }
     else{
-      fetchData().then(setHours);
+      const newItems = hours.filter((item) => !((item.title as string).includes(String(clickedHour.id as string))));
+      setHours(newItems);
+
+
+
+
+      // fetchData().then(setHours);
     }
   }
   return (
