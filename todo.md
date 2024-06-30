@@ -1,5 +1,5 @@
 ## Todo
 
 Hours page
-1. Add react-toast upon modal submission 
-2. Integrate backend with user
+1. update state when an event is deleted
+2. fix toast bug
