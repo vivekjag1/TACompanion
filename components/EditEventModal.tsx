@@ -17,7 +17,7 @@ interface ModalProps{
   handleClose: () => void;
   //the event itself that was clicked, and a function to update the state
   event:HoursType;
-  setHours:(hour: HoursType) => void;
+  setHours:(hour: HoursType, action:string) => void;
 }
 
 const EditEventModal = (props:ModalProps):JSX.Element =>{

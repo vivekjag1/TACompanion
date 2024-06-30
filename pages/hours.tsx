@@ -62,6 +62,7 @@ const Hours = () => {
       return toRet;
     });
     setHours(newItems);
+    console.log("hours set");
   }
 
   //code related to ADDING another hour
@@ -208,22 +209,30 @@ const Hours = () => {
 
   }
 
-  const changeEvent = (hour:HoursType) =>{
-    console.log(hours);
-    const eventID =  (hour.title as string).substring((hour.title as string).indexOf('(') + 4, (hour.title as string).indexOf(')'));
+  const changeEvent = (hour:HoursType, action:string) =>{
 
-    const newHours = hours.filter((item) => !((item.title as string).includes(eventID)));
+    if(action === "add"){
+      console.log(hours);
+      const eventID =  (hour.title as string).substring((hour.title as string).indexOf('(') + 4, (hour.title as string).indexOf(')'));
+      const newHours = hours.filter((item) => !((item.title as string).includes(eventID)));
+      const addToState = {
+        id: +(eventID),
+        title: hour.title,
+        start: hour.start,
+        end: hour.end,
+        color:  (hour.title as string).includes('office hours') ? 'green' : ((hour.title as string).includes('meeting') ? 'blue' : 'red')
+      };
+      console.log("pushing", addToState);
+      newHours.push(addToState);
+      setHours(newHours);
 
-    const addToState = {
-      id: +(eventID),
-      title: hour.title,
-      start: hour.start,
-      end: hour.end,
-      color:  (hour.title as string).includes('office hours') ? 'green' : ((hour.title as string).includes('meeting') ? 'blue' : 'red')
- };
-    newHours.push(addToState);
-    setHours(newHours);
 
+    }
+    else{
+      fetchData().then();
+
+
+    }
 
 
   }
