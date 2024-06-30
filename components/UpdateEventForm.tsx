@@ -72,7 +72,6 @@ export const UpdateEventForm = (props:formProps) =>{
       end:moment(end).format(),
       name: props.event.name as string
     }
-    console.log("new hours is", newHours);
     const changedHour:HoursType = {
       title: `${title} (ID: ${props.event.id as string})`,
       courseCode: course,

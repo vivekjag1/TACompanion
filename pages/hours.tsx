@@ -44,7 +44,6 @@ const Hours = () => {
   }, [user, isLoading]);
   const fetchData = async () => {
     if (user == undefined) return;
-    console.log("fetching"); //use in debugging
     const data = await client.query({
       query: getHours,
       variables: {
@@ -62,7 +61,7 @@ const Hours = () => {
       return toRet;
     });
     setHours(newItems);
-    console.log("hours set");
+
     return newItems;
   }
   //code related to ADDING another hour
@@ -110,8 +109,7 @@ const Hours = () => {
         end: moment(end).format(),
         color: (hour.title as string).includes('office hours') ? 'green' : ((hour.title as string).includes('meeting') ? 'blue' : 'red')
       }
-      console.log("staged for addition", addToCalendar);
-      console.log("hrs", hours);
+
       setHours(prev => [...prev, addToCalendar]);
       return addToCalendar;
     }
@@ -133,7 +131,6 @@ const Hours = () => {
     const eventID: number = +event.title.substring(event.title.length - 3, event.title.length - 1);
     const eventStart: string = moment(event.start).format();
     const eventEnd: string = moment(event.end).format();
-    console.log("dragged" , event.title);
     updateHours(eventID, eventStart, eventEnd).then(); //update actual item
     //update state
     const newData = hours.filter(hour =>{
@@ -188,7 +185,6 @@ const Hours = () => {
         }
       });
     const fetchedHour = data['data']['fetchHoursByID'];
-    console.log(fetchedHour);
     setUpdateModalOpen(true);
     setClickedHour(fetchedHour);
   }
@@ -196,7 +192,6 @@ const Hours = () => {
   const changeEvent = (hour:HoursType, action:string) =>{
 
     if(action === "add"){
-      console.log(hours);
       const eventID =  (hour.title as string).substring((hour.title as string).indexOf('(') + 4, (hour.title as string).indexOf(')'));
       const newHours = hours.filter((item) => !((item.title as string).includes(eventID)));
       const addToState = {
@@ -206,18 +201,12 @@ const Hours = () => {
         end: hour.end,
         color:  (hour.title as string).includes('office hours') ? 'green' : ((hour.title as string).includes('meeting') ? 'blue' : 'red')
       };
-      console.log("pushing", addToState);
       newHours.push(addToState);
       setHours(newHours);
     }
     else{
       const newItems = hours.filter((item) => !((item.title as string).includes(String(clickedHour.id as string))));
       setHours(newItems);
-
-
-
-
-      // fetchData().then(setHours);
     }
   }
   return (

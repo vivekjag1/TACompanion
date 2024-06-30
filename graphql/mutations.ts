@@ -121,7 +121,6 @@ export const todoMutations= {
     }
   },
   changeStartAndEnd: async (_:any, {id, start, end}:{id:number,  start:string, end:string}) =>{
-    console.log(id, start, end);
     return await hours.findOneAndUpdate({id:id}, {start:start, end:end}, {new:true}) ;
   },
   updateHourByID: async(_:any,{ id, title, courseCode, description, start, end, name} :hoursInterface ) =>{
