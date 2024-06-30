@@ -130,6 +130,7 @@ export const UpdateEventForm = (props:formProps) =>{
     props.setHours(newHours, 'add');
     props.handleClose();
     toast.success("Your hours were updated!");
+
   };
 
   const handleDelete = () => {

@@ -63,6 +63,7 @@ const Hours = () => {
     });
     setHours(newItems);
     console.log("hours set");
+    return newItems;
   }
 
   //code related to ADDING another hour
@@ -225,16 +226,10 @@ const Hours = () => {
       console.log("pushing", addToState);
       newHours.push(addToState);
       setHours(newHours);
-
-
     }
     else{
-      fetchData().then();
-
-
+      fetchData().then(setHours);
     }
-
-
   }
   return (
     <>
