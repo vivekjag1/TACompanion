@@ -50,6 +50,7 @@ export const typeDefs = gql`
       fetchTodosByCourse: [Todo]
       fetchAllHours:[Hours]
       fetchHoursByName(name:String):[Hours]
+      fetchHoursByID(ID:Int):Hours
       
   }
   type Mutation{
@@ -60,5 +61,7 @@ export const typeDefs = gql`
       addManyTodos(toAdd:[TodoInput!]):Boolean
       addHour(title:String, courseCode:String, description:String, start:String, end:String, name:String):Hours
       changeStartAndEnd(id:Int, start:String, end:String):Hours
+      updateHourByID(id:Int,title:String, courseCode:String, description:String, start:String, end:String, name:String):Hours
+      deleteHourByID(id:Int):Hours
   }
 `;
