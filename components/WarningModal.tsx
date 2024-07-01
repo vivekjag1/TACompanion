@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button"
 
 interface warningProps{
   open:boolean;
+  acknowledged:boolean;
+  setAcknowledged: () => void;
   onClose: () => void;
 }
 export function WarningModal(props:warningProps) {
@@ -28,7 +30,10 @@ export function WarningModal(props:warningProps) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogAction onClick={props.onClose}>I understand</AlertDialogAction>
+          <AlertDialogAction onClick={() =>{
+            props.setAcknowledged();
+            props.onClose();
+          }}>I understand</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
