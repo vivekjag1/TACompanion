@@ -163,7 +163,9 @@ const Hours = () => {
     return data;
   }
   const handleEventClick = async(arg:EventClickArg) =>{
-    const title = arg.event.title;
+
+
+
     const eventID = +arg.event.title.substring(arg.event.title.indexOf('(') + 4, arg.event.title.indexOf(')'));
       const getHourByID = gql `
         query getHourByID($ID:Int){
@@ -178,15 +180,26 @@ const Hours = () => {
             }
         }
       `;
+
       const data = await client.query({
         query:getHourByID,
         variables:{
           ID: eventID
-        }
+        },
+        fetchPolicy:'network-only',
       });
     const fetchedHour = data['data']['fetchHoursByID'];
     setUpdateModalOpen(true);
     setClickedHour(fetchedHour);
+
+
+
+
+
+
+
+
+
   }
 
   const changeEvent = (hour:HoursType, action:string) =>{
