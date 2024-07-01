@@ -25,6 +25,7 @@ const Hours = () => {
   const [clickedHour, setClickedHour] = useState<HoursType>(hours[0]);
   const [totalHours, setTotalHours] = useState<number>(0);
   const [warningModalOpen, setWarningModalOpen] = useState<boolean>(false);
+  const [acknowledged, setAcknowledged] = useState<boolean>(false);
   //all the code related to getting the hours on an initial page reload
   const getHours = gql`
       query getHoursByName($name:String){
@@ -244,7 +245,7 @@ const Hours = () => {
     <>
       <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours}
                    userName={user?.name}/>
-      <WarningModal open={warningModalOpen} onClose={() => setWarningModalOpen(false)}/>
+      <WarningModal open={warningModalOpen && !acknowledged} onClose={() => setWarningModalOpen(false)} acknowledged={acknowledged} setAcknowledged={() => setAcknowledged(true)}/>
 
       <div className="text-center text-mono text-4xl">
         Your Hours
