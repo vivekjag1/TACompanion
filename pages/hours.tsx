@@ -160,9 +160,18 @@ const Hours = () => {
   }
   const handleEventResize = (arg: EventResizeDoneArg) => {
     const eventID: number = +arg.event.title.substring(arg.event.title.length - 3, arg.event.title.length - 1);
+    const eventIDAsString = arg.event.title.substring(arg.event.title.length - 3, arg.event.title.length - 1);
+
+
     const eventStart = moment(arg.event.start!).format();
     const eventEnd = moment(arg.event.end!).format();
     updateHours(eventID, eventStart, eventEnd).then();
+    const newHours = hours.map((item) =>{
+      if(((item.title as string).includes(eventIDAsString))){
+        item.start = eventStart;
+        item.end = eventEnd;
+      }
+    })
     setTotalHours(totalHours + ((((new Date( eventEnd as string).getTime() - new Date(eventStart as string).getTime())) /(1000 * 60 * 60))))
   }
   const updateHours = async (id: number, start: string, end: string) => {
