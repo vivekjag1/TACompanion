@@ -53,7 +53,7 @@ export const UpdateEventForm = (props:formProps) =>{
     const end =  new Date(date.concat("T").concat(endTime).concat(':00-04:00'));
     const start = new Date(date.concat("T").concat(startTime).concat(':00-04:00'));
     const newHours:HoursType = {
-      title: `Type: ${title}, Description: ${description},  (ID:${props.event.id})`,
+      title: `Type: ${title}, Description: ${description},  (ID: ${props.event.id})`,
       courseCode:course,
       description:description,
       start:moment(start).format(),
