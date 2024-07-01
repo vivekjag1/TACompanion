@@ -236,11 +236,15 @@ const Hours = () => {
     for(let i = 0; i < hours.length; i++){
       acc += (((new Date( hours[i].end as string).getTime() - new Date(hours[i].start as string).getTime())) /(1000 * 60 * 60));
     }
+    if(acc > 10 && totalHours<10){
+      setAcknowledged(false);
+    }
     console.log(totalHours);
     setTotalHours(acc);
   }
   useEffect(() =>{
     countHours();
+
   }, [hours]);
 
   const changeEvent = (hour:HoursType, action:string) =>{
