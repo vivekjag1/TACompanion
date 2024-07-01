@@ -144,12 +144,15 @@ const Hours = () => {
       }
   `;
 
-  let handleEventDrop = (info: EventDropArg) => {
+  let handleEventDrop = async (info: EventDropArg) => {
     const {event} = info;
-    const eventID: number = +event.title.substring(event.title.length - 3, event.title.length - 1);
+    //Type:meeting Description: a (ID: 4)
+    const eventID: number = +event.title.substring(event.title.length - 3, event.title.length - 1).trim();
+
+
     const eventStart: string = moment(event.start).format();
     const eventEnd: string = moment(event.end).format();
-    updateHours(eventID, eventStart, eventEnd).then(); //update actual item
+    await updateHours(eventID, eventStart, eventEnd); //update actual item
     //update state
     const newData = hours.filter(hour =>{
       return (hour.title != event.title)
@@ -206,7 +209,8 @@ const Hours = () => {
         id: id,
         start: start,
         end: end
-      }
+      },
+      fetchPolicy:'network-only'
     });
     return data;
   }
