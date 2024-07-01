@@ -25,6 +25,7 @@ const Hours = () => {
   const [clickedHour, setClickedHour] = useState<HoursType>(hours[0]);
   const [totalHours, setTotalHours] = useState<number>(0);
   const [warningModalOpen, setWarningModalOpen] = useState<boolean>(false);
+  const [acknowledged, setAcknowledged] = useState<boolean>(false);
   //all the code related to getting the hours on an initial page reload
   const getHours = gql`
       query getHoursByName($name:String){
@@ -159,9 +160,33 @@ const Hours = () => {
   }
   const handleEventResize = (arg: EventResizeDoneArg) => {
     const eventID: number = +arg.event.title.substring(arg.event.title.length - 3, arg.event.title.length - 1);
+    const eventIDAsString = arg.event.title.substring(arg.event.title.length - 3, arg.event.title.length - 1);
     const eventStart = moment(arg.event.start!).format();
     const eventEnd = moment(arg.event.end!).format();
     updateHours(eventID, eventStart, eventEnd).then();
+    let acc = 0;
+    acc += (((new Date( eventEnd as string).getTime() - new Date(eventStart as string).getTime())) /(1000 * 60 * 60));
+    console.log("th is", totalHours);
+    if(acc > 10){
+      setAcknowledged(false);
+      setWarningModalOpen(true);
+    }
+    setTotalHours(totalHours + acc);
+
+
+
+
+
+
+
+
+
+    const newHours = hours.map((item) =>{
+      if(((item.title as string).includes(eventIDAsString))){
+        item.start = eventStart;
+        item.end = eventEnd;
+      }
+    })
     setTotalHours(totalHours + ((((new Date( eventEnd as string).getTime() - new Date(eventStart as string).getTime())) /(1000 * 60 * 60))))
   }
   const updateHours = async (id: number, start: string, end: string) => {
@@ -211,10 +236,15 @@ const Hours = () => {
     for(let i = 0; i < hours.length; i++){
       acc += (((new Date( hours[i].end as string).getTime() - new Date(hours[i].start as string).getTime())) /(1000 * 60 * 60));
     }
+    if(acc > 10 && totalHours<10){
+      setAcknowledged(false);
+    }
+    console.log(totalHours);
     setTotalHours(acc);
   }
   useEffect(() =>{
     countHours();
+
   }, [hours]);
 
   const changeEvent = (hour:HoursType, action:string) =>{
@@ -244,7 +274,7 @@ const Hours = () => {
     <>
       <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours}
                    userName={user?.name}/>
-      <WarningModal open={warningModalOpen} onClose={() => setWarningModalOpen(false)}/>
+      <WarningModal open={warningModalOpen && !acknowledged} onClose={() => setWarningModalOpen(false)} acknowledged={acknowledged} setAcknowledged={() => setAcknowledged(true)}/>
 
       <div className="text-center text-mono text-4xl">
         Your Hours
