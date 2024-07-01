@@ -12,6 +12,7 @@ import client from "../graphql/client";
 import {useRouter} from "next/router";
 import {EventClickArg, EventDropArg} from "@fullcalendar/core";
 import EditEventModal from "@/components/EditEventModal";
+import {WarningModal} from "@/components/WarningModal";
 moment.tz.setDefault('America/New_York');
 const Hours = () => {
   let {user, error, isLoading} = useUser(); //hold auth0 hooks
@@ -22,6 +23,8 @@ const Hours = () => {
   const [date, setDate] = useState<string>(""); //data clicked
   const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
   const [clickedHour, setClickedHour] = useState<HoursType>(hours[0]);
+  const [totalHours, setTotalHours] = useState<number>(0);
+  const [warningModalOpen, setWarningModalOpen] = useState<boolean>(false);
   //all the code related to getting the hours on an initial page reload
   const getHours = gql`
       query getHoursByName($name:String){
@@ -111,11 +114,20 @@ const Hours = () => {
       }
 
       setHours(prev => [...prev, addToCalendar]);
+      countHours();
+
       return addToCalendar;
     }
     executeMutation().then();
   }
 
+  useEffect(() => {
+    if(totalHours > 10){
+      //open modal
+      setWarningModalOpen(true);
+    }
+
+  }, [totalHours]);
   const updateHoursMutation = gql`
       mutation updateHours($id:Int, $start:String, $end:String){
           changeStartAndEnd(id:$id, start: $start, end: $end){
@@ -150,6 +162,7 @@ const Hours = () => {
     const eventStart = moment(arg.event.start!).format();
     const eventEnd = moment(arg.event.end!).format();
     updateHours(eventID, eventStart, eventEnd).then();
+    setTotalHours(totalHours + ((((new Date( eventEnd as string).getTime() - new Date(eventStart as string).getTime())) /(1000 * 60 * 60))))
   }
   const updateHours = async (id: number, start: string, end: string) => {
     const data = await client.mutate({
@@ -191,19 +204,20 @@ const Hours = () => {
     const fetchedHour = data['data']['fetchHoursByID'];
     setUpdateModalOpen(true);
     setClickedHour(fetchedHour);
-
-
-
-
-
-
-
-
-
   }
 
-  const changeEvent = (hour:HoursType, action:string) =>{
+  const countHours = () => {
+    let acc = 0;
+    for(let i = 0; i < hours.length; i++){
+      acc += (((new Date( hours[i].end as string).getTime() - new Date(hours[i].start as string).getTime())) /(1000 * 60 * 60));
+    }
+    setTotalHours(acc);
+  }
+  useEffect(() =>{
+    countHours();
+  }, [hours]);
 
+  const changeEvent = (hour:HoursType, action:string) =>{
     if(action === "add"){
       const eventID =  (hour.title as string).substring((hour.title as string).indexOf('(') + 4, (hour.title as string).indexOf(')'));
       const newHours = hours.filter((item) => !((item.title as string).includes(eventID)));
@@ -216,23 +230,26 @@ const Hours = () => {
       };
       newHours.push(addToState);
       setHours(newHours);
+
+      //in this case we need to recount ALL the hours
+      setTotalHours(0);
     }
     else{
       const newItems = hours.filter((item) => !((item.title as string).includes(String(clickedHour.id as string))));
       setHours(newItems);
+      //update total hours to remove the hour
     }
   }
   return (
     <>
       <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours}
                    userName={user?.name}/>
+      <WarningModal open={warningModalOpen} onClose={() => setWarningModalOpen(false)}/>
 
       <div className="text-center text-mono text-4xl">
         Your Hours
       </div>
-      <div className="text-center text-mono text-lg">
-        Reminder: The CS department limits students to 10 hours per week during the academic year to ensure academic success
-      </div>
+
       <div className=" items-center justify-center ml-[17rem] mr-[8rem]">
         <EditEventModal open={updateModalOpen} handleClose={() => setUpdateModalOpen(false)} event={clickedHour}
                         setHours={changeEvent}/>
