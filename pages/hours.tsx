@@ -226,8 +226,16 @@ const Hours = () => {
     <>
       <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours}
                    userName={user?.name}/>
-      <div className=" items-center justify-center ml-[8rem] mr-[8rem]">
-        <EditEventModal open={updateModalOpen} handleClose={() => setUpdateModalOpen(false)} event={clickedHour} setHours={changeEvent}/>
+
+      <div className="text-center text-mono text-4xl">
+        Your Hours
+      </div>
+      <div className="text-center text-mono text-lg">
+        Reminder: The CS department limits students to 10 hours per week during the academic year to ensure academic success
+      </div>
+      <div className=" items-center justify-center ml-[17rem] mr-[8rem]">
+        <EditEventModal open={updateModalOpen} handleClose={() => setUpdateModalOpen(false)} event={clickedHour}
+                        setHours={changeEvent}/>
         <Fullcalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="timeGridWeek"
