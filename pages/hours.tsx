@@ -161,11 +161,26 @@ const Hours = () => {
   const handleEventResize = (arg: EventResizeDoneArg) => {
     const eventID: number = +arg.event.title.substring(arg.event.title.length - 3, arg.event.title.length - 1);
     const eventIDAsString = arg.event.title.substring(arg.event.title.length - 3, arg.event.title.length - 1);
-
-
     const eventStart = moment(arg.event.start!).format();
     const eventEnd = moment(arg.event.end!).format();
     updateHours(eventID, eventStart, eventEnd).then();
+    let acc = 0;
+    acc += (((new Date( eventEnd as string).getTime() - new Date(eventStart as string).getTime())) /(1000 * 60 * 60));
+    console.log("th is", totalHours);
+    if(acc > 10){
+      setAcknowledged(false);
+      setWarningModalOpen(true);
+    }
+    setTotalHours(totalHours + acc);
+
+
+
+
+
+
+
+
+
     const newHours = hours.map((item) =>{
       if(((item.title as string).includes(eventIDAsString))){
         item.start = eventStart;
@@ -221,6 +236,7 @@ const Hours = () => {
     for(let i = 0; i < hours.length; i++){
       acc += (((new Date( hours[i].end as string).getTime() - new Date(hours[i].start as string).getTime())) /(1000 * 60 * 60));
     }
+    console.log(totalHours);
     setTotalHours(acc);
   }
   useEffect(() =>{
