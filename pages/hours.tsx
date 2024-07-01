@@ -129,6 +129,11 @@ const Hours = () => {
     }
 
   }, [totalHours]);
+
+
+
+
+
   const updateHoursMutation = gql`
       mutation updateHours($id:Int, $start:String, $end:String){
           changeStartAndEnd(id:$id, start: $start, end: $end){
@@ -166,28 +171,33 @@ const Hours = () => {
     updateHours(eventID, eventStart, eventEnd).then();
     let acc = 0;
     acc += (((new Date( eventEnd as string).getTime() - new Date(eventStart as string).getTime())) /(1000 * 60 * 60));
-    console.log("th is", totalHours);
-    if(acc > 10){
-      setAcknowledged(false);
-      setWarningModalOpen(true);
-    }
-    setTotalHours(totalHours + acc);
-
-
-
-
-
-
-
-
-
     const newHours = hours.map((item) =>{
       if(((item.title as string).includes(eventIDAsString))){
         item.start = eventStart;
         item.end = eventEnd;
       }
-    })
-    setTotalHours(totalHours + ((((new Date( eventEnd as string).getTime() - new Date(eventStart as string).getTime())) /(1000 * 60 * 60))))
+      return item;
+    });
+    setHours(newHours);
+
+    //
+    //
+    // if(acc > 10){
+    //   setAcknowledged(false);
+    //   setWarningModalOpen(true);
+    // }
+    // setTotalHours(totalHours + acc);
+    // console.log("new total hours", acc);
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    // setTotalHours(totalHours + ((((new Date( eventEnd as string).getTime() - new Date(eventStart as string).getTime())) /(1000 * 60 * 60))))
   }
   const updateHours = async (id: number, start: string, end: string) => {
     const data = await client.mutate({
@@ -239,7 +249,6 @@ const Hours = () => {
     if(acc > 10 && totalHours<10){
       setAcknowledged(false);
     }
-    console.log(totalHours);
     setTotalHours(acc);
   }
   useEffect(() =>{
