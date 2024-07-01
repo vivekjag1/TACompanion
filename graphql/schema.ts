@@ -10,7 +10,7 @@ export const typeDefs = gql`
       status:String
       description:String
   } 
-  type Hours @cacheControl(maxAge: 86400){
+  type Hours{
       id:Int
       title:String
       courseCode:String

@@ -44,20 +44,8 @@ export const UpdateEventForm = (props:formProps) =>{
   const [endTime, setEndTime] = useState<string>((props.event.end as string).substring(indexT + 1, indexDash));
   const [course, setCourse] = useState<string>(props.event.courseCode as string);
 
-
-  // @ts-ignore
-  const resetToDefault = (e:MouseEvent<HTMLButtonElement, MouseEvent>) =>{
-    e.preventDefault();
-    setTitle(getType());
-    setDescription(props.event.description as string);
-    setStartTime((props.event.start as string).substring(indexT + 1, indexDash));
-    setEndTime((props.event.end as string).substring(indexT + 1, indexDash));
-    setCourse(props.event.courseCode as string);
-  }
-
   const handleSubmit  = (e: React.SyntheticEvent) =>{
     e.preventDefault();
-    //2024-06-27T10:55:00-04:00
 
     const indexT = (props.event.start as string).indexOf("T");
     const indexDash = (props.event.start as string).length -  9;
@@ -154,18 +142,13 @@ export const UpdateEventForm = (props:formProps) =>{
 
 
   }
-
-
-
-
-
-
   return (
     <form onSubmit={handleSubmit} style = {{
       display:"flex",
       flexDirection:"column",
       justifyContent:"center",
       alignItems:"center",
+
 
     }}>
       <Select value={title} onValueChange={(value) => setTitle(value)}>
@@ -201,7 +184,7 @@ export const UpdateEventForm = (props:formProps) =>{
       </Label>
       <div className = "flex flex-row px-5">
         <Button  variant="destructive" className="m-[2rem] w-[7rem]" type="button" onClick = {handleDelete}>Delete </Button>
-        <Button  variant="default" className="m-[2rem] w-[7rem] "  type = "submit" >Submit</Button>
+        <Button  variant="default" className="m-[2rem] w-[7rem] "  type = "submit">Submit</Button>
       </div>
     </form>
   )
