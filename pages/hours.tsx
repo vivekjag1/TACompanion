@@ -323,7 +323,7 @@ const Hours = () => {
       <WarningModal open={warningModalOpen && !acknowledged} onClose={() => setWarningModalOpen(false)} acknowledged={acknowledged} setAcknowledged={() => setAcknowledged(true)}/>
       <WageModal open={wageModalOpen} handleClose={() => setWageModalOpen(false)} currentWage={wage} setWage={(wage:string) => setWage(wage)}/>
 
-      <div className="text-left ml-[44rem] text-mono text-4xl">
+      <div className="text-left ml-[43rem] text-mono text-4xl">
         Your Hours
       </div>
 
