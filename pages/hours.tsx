@@ -14,7 +14,18 @@ import {DatesSetArg, EventClickArg, EventDropArg} from "@fullcalendar/core";
 import EditEventModal from "@/components/EditEventModal";
 import {WarningModal} from "@/components/WarningModal";
 import {isWithinInterval} from "date-fns";
+import { Button } from "@/components/ui/button"
+
 moment.tz.setDefault('America/New_York');
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import WageModal from "@/components/WageModal";
 const Hours = () => {
 
   let {user, error, isLoading} = useUser(); //hold auth0 hooks
@@ -31,7 +42,8 @@ const Hours = () => {
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(new Date());
   const [currentWeekEnd, setCurrentWeekEnd] = useState<Date>(new Date());
   const [totalHoursCurrentWeek, setTotalHoursCurrentWeek] = useState<number>(0);
-
+  const [wageModalOpen, setWageModalOpen] = useState<boolean>(false);
+  const [wage, setWage] = useState<string>("16.50");
   /**
    * function to calculate total hours in a WEEK
    * @param arg
@@ -49,13 +61,13 @@ const Hours = () => {
 
 
 
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
 
   //all the code related to getting the hours on an initial page reload
   const getHours = gql`
@@ -279,19 +291,7 @@ const Hours = () => {
     //go through the week
     countHours();
 
-  }, [currentWeekStart, currentWeekEnd, hours]);
-
-
-
-
-
-
-
-
-
-
-
-
+  }, [currentWeekStart, currentWeekEnd, hours, totalHoursCurrentWeek]);
 
   const changeEvent = (hour:HoursType, action:string) =>{
     if(action === "add"){
@@ -321,12 +321,13 @@ const Hours = () => {
       <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours}
                    userName={user?.name}/>
       <WarningModal open={warningModalOpen && !acknowledged} onClose={() => setWarningModalOpen(false)} acknowledged={acknowledged} setAcknowledged={() => setAcknowledged(true)}/>
+      <WageModal open={wageModalOpen} handleClose={() => setWageModalOpen(false)} currentWage={wage} setWage={(wage:string) => setWage(wage)}/>
 
       <div className="text-left ml-[44rem] text-mono text-4xl">
         Your Hours
       </div>
 
-      <div className=" items-center justify-center ml-[7rem] mr-[8rem] w-[95rem]">
+      <div className=" items-center justify-center ml-[6rem] mr-[8rem] w-[95rem]">
         <EditEventModal open={updateModalOpen} handleClose={() => setUpdateModalOpen(false)} event={clickedHour}
                         setHours={changeEvent}/>
         <Fullcalendar
@@ -347,8 +348,18 @@ const Hours = () => {
 
         />
       </div>
-      <div className = "absolute top-0 right-0 text-black  text-4xl mr-[2.5rem]">
-        This week: {totalHoursCurrentWeek}
+      <div className = " fixed  top-0 right-0 text-black text-center text-md ml-1 mr-1 tabular-nums overflow-x-hidden ">
+        <Card className = "mt-[6.5rem]">
+          <CardHeader>
+            <CardTitle className = "text-center">This Week:</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>Total Hours: {parseFloat(totalHoursCurrentWeek.toFixed(2))}</p>
+            <p> Hourly Wage: {wage}</p>
+            <p> Expected gross pay: ${((parseInt(wage)) *totalHoursCurrentWeek).toFixed(2)}</p>
+            <Button type="button" className="mt-3" onClick={() => setWageModalOpen(true)}>Change Hourly Wage</Button>
+          </CardContent>
+        </Card>
       </div>
 
     </>
