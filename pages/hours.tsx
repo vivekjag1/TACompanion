@@ -323,18 +323,19 @@ const Hours = () => {
       <WarningModal open={warningModalOpen && !acknowledged} onClose={() => setWarningModalOpen(false)} acknowledged={acknowledged} setAcknowledged={() => setAcknowledged(true)}/>
       <WageModal open={wageModalOpen} handleClose={() => setWageModalOpen(false)} currentWage={wage} setWage={(wage:string) => setWage(wage)}/>
 
-      <div className="text-left ml-[43rem] text-mono text-4xl">
+      <div className="text-center text-mono text-4xl">
         Your Hours
       </div>
 
-      <div className=" items-center justify-center ml-[6rem] mr-[8rem] w-[95rem] ">
+      <div>
+      <div className=" items-center justify-center ml-[6rem] mr-[8rem] w-4/5 ">
         <EditEventModal open={updateModalOpen} handleClose={() => setUpdateModalOpen(false)} event={clickedHour}
                         setHours={changeEvent}/>
         <Fullcalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="timeGridWeek"
           headerToolbar={{
-            center: "title",
+            left: "title",
             start: ''
           }}
           dateClick={handleClick}
@@ -348,19 +349,20 @@ const Hours = () => {
 
         />
       </div>
-      <div className = " fixed  items-center justify-center top-0 right-0 text-black text-center text-md  mr-3 tabular-nums overflow-x-hidden w-[15rem] z-10">
+      <div className = " fixed   top-0 right-0 text-black text-center text-md  mr-7 tabular-nums overflow-x-hidden  z-10" style={{width:'11%'}}>
         <Card className = "mt-[6.5rem]">
           <CardHeader>
-            <CardTitle className = "text-center text-xl">{currentWeekStart.toLocaleString().substring(0, (currentWeekStart.toLocaleString()).indexOf(','))}-{currentWeekEnd.toLocaleString().substring(0, (currentWeekEnd.toLocaleString()).indexOf(','))}</CardTitle>
+            <CardTitle className = "text-center text-lg">{currentWeekStart.toLocaleString().substring(0, (currentWeekStart.toLocaleString()).indexOf(','))}-{currentWeekEnd.toLocaleString().substring(0, (currentWeekEnd.toLocaleString()).indexOf(','))}</CardTitle>
           </CardHeader>
           <CardContent>
             {/*<p className="text-sm text-center">{currentWeekStart.toLocaleString().substring(0, (currentWeekStart.toLocaleString()).indexOf(','))}-{currentWeekEnd.toLocaleString().substring(0, (currentWeekEnd.toLocaleString()).indexOf(','))}</p>*/}
             <p>Total Hours: {parseFloat(totalHoursCurrentWeek.toFixed(2))}</p>
             <p> Hourly Wage: {wage}</p>
             <p> Expected gross pay: ${((parseInt(wage)) *totalHoursCurrentWeek).toFixed(2)}</p>
-            <Button type="button" className="mt-3" onClick={() => setWageModalOpen(true)}>Change Hourly Wage</Button>
+            <Button type="button" className="mt-3 h-full"  onClick={() => setWageModalOpen(true)}>Change  Wage</Button>
           </CardContent>
         </Card>
+      </div>
       </div>
 
     </>
