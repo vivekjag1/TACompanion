@@ -56,7 +56,6 @@ const Hours = () => {
     //set the states for start and end dates of the week
     setCurrentWeekStart(start);
     setCurrentWeekEnd(end);
-    console.log("start and end set", currentWeekStart, currentWeekEnd);
   }
 
 
@@ -276,7 +275,6 @@ const Hours = () => {
     const countHours = () => {
       let acc = 0;
       hours.forEach(item => {
-        console.log("current hour is", item);
         const startDate:Date = new Date(item.start as string);
         const endDate:Date = new Date(item.end as string);
         if(isWithinInterval(startDate, {start:currentWeekStart, end:currentWeekEnd})){
@@ -327,39 +325,37 @@ const Hours = () => {
         Your Hours
       </div>
 
-      <div>
-      <div className=" items-center justify-center ml-[6rem] mr-[8rem] w-4/5 ">
-        <EditEventModal open={updateModalOpen} handleClose={() => setUpdateModalOpen(false)} event={clickedHour}
-                        setHours={changeEvent}/>
-        <Fullcalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="timeGridWeek"
-          headerToolbar={{
-            left: "title",
-            start: ''
-          }}
-          dateClick={handleClick}
-          editable={true}
-          events={hours}
-          eventDrop={handleEventDrop}
-          eventResizableFromStart={true}
-          eventResize={handleEventResize}
-          eventClick={handleEventClick}
-          datesSet={handleDateSet}
-
-        />
-      </div>
-      <div className = " fixed   top-0 right-0 text-black text-center text-md  mr-7 tabular-nums overflow-x-hidden  z-10 " style={{width:'11%'}}>
-        <Card className = "mt-[6.5rem]">
+      <div className = "flex items-start justify-center ml-[6rem] mr-8 mt-6 ">
+        <div className = "w-4/5">
+            <EditEventModal open={updateModalOpen} handleClose={() => setUpdateModalOpen(false)} event={clickedHour}
+                            setHours={changeEvent}/>
+            <Fullcalendar
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              initialView="timeGridWeek"
+              headerToolbar={{
+                left: "title",
+                start: ''
+              }}
+              dateClick={handleClick}
+              editable={true}
+              events={hours}
+              eventDrop={handleEventDrop}
+              eventResizableFromStart={true}
+              eventResize={handleEventResize}
+              eventClick={handleEventClick}
+              datesSet={handleDateSet}
+            />
+        </div>
+         <div className = " flex-1 ml-4 w-2/5 max-h-[75vh] ">
+        <Card >
           <CardHeader>
             <CardTitle className = "text-center text-lg">{currentWeekStart.toLocaleString().substring(0, (currentWeekStart.toLocaleString()).indexOf(','))}-{currentWeekEnd.toLocaleString().substring(0, (currentWeekEnd.toLocaleString()).indexOf(','))}</CardTitle>
           </CardHeader>
           <CardContent>
-            {/*<p className="text-sm text-center">{currentWeekStart.toLocaleString().substring(0, (currentWeekStart.toLocaleString()).indexOf(','))}-{currentWeekEnd.toLocaleString().substring(0, (currentWeekEnd.toLocaleString()).indexOf(','))}</p>*/}
             <p>Total Hours: {parseFloat(totalHoursCurrentWeek.toFixed(2))}</p>
-            <p> Hourly Wage: {wage}</p>
+            <p> Hourly Wage: ${wage}</p>
             <p> Expected gross pay: ${((parseInt(wage)) *totalHoursCurrentWeek).toFixed(2)}</p>
-            <Button type="button" className="mt-3 h-full"  onClick={() => setWageModalOpen(true)}>Change  Wage</Button>
+            <Button type="button" className="mt-3 h-full"  onClick={() => setWageModalOpen(true)}>Change Wage</Button>
           </CardContent>
         </Card>
       </div>
