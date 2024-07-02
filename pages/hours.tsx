@@ -348,7 +348,7 @@ const Hours = () => {
 
         />
       </div>
-      <div className = " fixed  items-center justify-center top-0 right-0 text-black text-center text-md  mr-3 tabular-nums overflow-x-hidden ">
+      <div className = " fixed  items-center justify-center top-0 right-0 text-black text-center text-md  mr-3 tabular-nums overflow-x-hidden w-[15rem] z-10">
         <Card className = "mt-[6.5rem]">
           <CardHeader>
             <CardTitle className = "text-center text-xl">{currentWeekStart.toLocaleString().substring(0, (currentWeekStart.toLocaleString()).indexOf(','))}-{currentWeekEnd.toLocaleString().substring(0, (currentWeekEnd.toLocaleString()).indexOf(','))}</CardTitle>
