@@ -327,7 +327,7 @@ const Hours = () => {
         Your Hours
       </div>
 
-      <div className=" items-center justify-center ml-[6rem] mr-[8rem] w-[95rem]">
+      <div className=" items-center justify-center ml-[6rem] mr-[8rem] w-[95rem] ">
         <EditEventModal open={updateModalOpen} handleClose={() => setUpdateModalOpen(false)} event={clickedHour}
                         setHours={changeEvent}/>
         <Fullcalendar
@@ -348,12 +348,13 @@ const Hours = () => {
 
         />
       </div>
-      <div className = " fixed  top-0 right-0 text-black text-center text-md ml-1 mr-1 tabular-nums overflow-x-hidden ">
+      <div className = " fixed  items-center justify-center top-0 right-0 text-black text-center text-md  mr-3 tabular-nums overflow-x-hidden ">
         <Card className = "mt-[6.5rem]">
           <CardHeader>
-            <CardTitle className = "text-center">This Week:</CardTitle>
+            <CardTitle className = "text-center text-xl">{currentWeekStart.toLocaleString().substring(0, (currentWeekStart.toLocaleString()).indexOf(','))}-{currentWeekEnd.toLocaleString().substring(0, (currentWeekEnd.toLocaleString()).indexOf(','))}</CardTitle>
           </CardHeader>
           <CardContent>
+            {/*<p className="text-sm text-center">{currentWeekStart.toLocaleString().substring(0, (currentWeekStart.toLocaleString()).indexOf(','))}-{currentWeekEnd.toLocaleString().substring(0, (currentWeekEnd.toLocaleString()).indexOf(','))}</p>*/}
             <p>Total Hours: {parseFloat(totalHoursCurrentWeek.toFixed(2))}</p>
             <p> Hourly Wage: {wage}</p>
             <p> Expected gross pay: ${((parseInt(wage)) *totalHoursCurrentWeek).toFixed(2)}</p>
