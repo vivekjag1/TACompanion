@@ -10,11 +10,24 @@ import {useUser} from "@auth0/nextjs-auth0/client";
 import {gql} from "graphql-tag";
 import client from "../graphql/client";
 import {useRouter} from "next/router";
-import {EventClickArg, EventDropArg} from "@fullcalendar/core";
+import {DatesSetArg, EventClickArg, EventDropArg} from "@fullcalendar/core";
 import EditEventModal from "@/components/EditEventModal";
 import {WarningModal} from "@/components/WarningModal";
+import {isWithinInterval} from "date-fns";
+import { Button } from "@/components/ui/button"
+
 moment.tz.setDefault('America/New_York');
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import WageModal from "@/components/WageModal";
 const Hours = () => {
+
   let {user, error, isLoading} = useUser(); //hold auth0 hooks
   const router = useRouter(); //router for redirecting if not logged in
   const [open, setOpen] = useState<boolean>(false); //modal open state
@@ -26,6 +39,36 @@ const Hours = () => {
   const [totalHours, setTotalHours] = useState<number>(0);
   const [warningModalOpen, setWarningModalOpen] = useState<boolean>(false);
   const [acknowledged, setAcknowledged] = useState<boolean>(false);
+  const [currentWeekStart, setCurrentWeekStart] = useState<Date>(new Date());
+  const [currentWeekEnd, setCurrentWeekEnd] = useState<Date>(new Date());
+  const [totalHoursCurrentWeek, setTotalHoursCurrentWeek] = useState<number>(0);
+  const [wageModalOpen, setWageModalOpen] = useState<boolean>(false);
+  const [wage, setWage] = useState<string>("16.50");
+  /**
+   * function to calculate total hours in a WEEK
+   * @param arg
+   */
+  const handleDateSet = (arg:DatesSetArg) =>{
+    const { start, end } = arg;
+
+    //everytime the week is changed this counter needs to change, so set to 0 initially
+    setTotalHoursCurrentWeek(0);
+    //set the states for start and end dates of the week
+    setCurrentWeekStart(start);
+    setCurrentWeekEnd(end);
+    console.log("start and end set", currentWeekStart, currentWeekEnd);
+  }
+
+
+
+
+
+
+
+
+
+
+
   //all the code related to getting the hours on an initial page reload
   const getHours = gql`
       query getHoursByName($name:String){
@@ -115,7 +158,6 @@ const Hours = () => {
       }
 
       setHours(prev => [...prev, addToCalendar]);
-      countHours();
 
       return addToCalendar;
     }
@@ -123,12 +165,13 @@ const Hours = () => {
   }
 
   useEffect(() => {
-    if(totalHours > 10){
+
+    if(totalHoursCurrentWeek > 10){
       //open modal
       setWarningModalOpen(true);
     }
 
-  }, [totalHours]);
+  }, [ totalHoursCurrentWeek]);
 
 
 
@@ -182,25 +225,6 @@ const Hours = () => {
       return item;
     });
     setHours(newHours);
-
-    //
-    //
-    // if(acc > 10){
-    //   setAcknowledged(false);
-    //   setWarningModalOpen(true);
-    // }
-    // setTotalHours(totalHours + acc);
-    // console.log("new total hours", acc);
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    // setTotalHours(totalHours + ((((new Date( eventEnd as string).getTime() - new Date(eventStart as string).getTime())) /(1000 * 60 * 60))))
   }
   const updateHours = async (id: number, start: string, end: string) => {
     const data = await client.mutate({
@@ -245,20 +269,29 @@ const Hours = () => {
     setClickedHour(fetchedHour);
   }
 
-  const countHours = () => {
-    let acc = 0;
-    for(let i = 0; i < hours.length; i++){
-      acc += (((new Date( hours[i].end as string).getTime() - new Date(hours[i].start as string).getTime())) /(1000 * 60 * 60));
-    }
-    if(acc > 10 && totalHours<10){
-      setAcknowledged(false);
-    }
-    setTotalHours(acc);
-  }
+
+
+
   useEffect(() =>{
+    const countHours = () => {
+      let acc = 0;
+      hours.forEach(item => {
+        console.log("current hour is", item);
+        const startDate:Date = new Date(item.start as string);
+        const endDate:Date = new Date(item.end as string);
+        if(isWithinInterval(startDate, {start:currentWeekStart, end:currentWeekEnd})){
+          acc += (((endDate.getTime() - startDate.getTime())) /(1000 * 60 * 60));
+        }
+      });
+      if(acc > 10 && totalHoursCurrentWeek<10){
+        setAcknowledged(false);
+      }
+      setTotalHoursCurrentWeek(acc);
+    }
+    //go through the week
     countHours();
 
-  }, [hours]);
+  }, [currentWeekStart, currentWeekEnd, hours, totalHoursCurrentWeek]);
 
   const changeEvent = (hour:HoursType, action:string) =>{
     if(action === "add"){
@@ -288,12 +321,13 @@ const Hours = () => {
       <CustomModal open={open} handleClose={() => setOpen(false)} startTime={startTime} setHours={addHours}
                    userName={user?.name}/>
       <WarningModal open={warningModalOpen && !acknowledged} onClose={() => setWarningModalOpen(false)} acknowledged={acknowledged} setAcknowledged={() => setAcknowledged(true)}/>
+      <WageModal open={wageModalOpen} handleClose={() => setWageModalOpen(false)} currentWage={wage} setWage={(wage:string) => setWage(wage)}/>
 
-      <div className="text-center text-mono text-4xl">
+      <div className="text-left ml-[43rem] text-mono text-4xl">
         Your Hours
       </div>
 
-      <div className=" items-center justify-center ml-[17rem] mr-[8rem]">
+      <div className=" items-center justify-center ml-[6rem] mr-[8rem] w-[95rem] ">
         <EditEventModal open={updateModalOpen} handleClose={() => setUpdateModalOpen(false)} event={clickedHour}
                         setHours={changeEvent}/>
         <Fullcalendar
@@ -310,8 +344,25 @@ const Hours = () => {
           eventResizableFromStart={true}
           eventResize={handleEventResize}
           eventClick={handleEventClick}
+          datesSet={handleDateSet}
+
         />
       </div>
+      <div className = " fixed  items-center justify-center top-0 right-0 text-black text-center text-md  mr-3 tabular-nums overflow-x-hidden ">
+        <Card className = "mt-[6.5rem]">
+          <CardHeader>
+            <CardTitle className = "text-center text-xl">{currentWeekStart.toLocaleString().substring(0, (currentWeekStart.toLocaleString()).indexOf(','))}-{currentWeekEnd.toLocaleString().substring(0, (currentWeekEnd.toLocaleString()).indexOf(','))}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {/*<p className="text-sm text-center">{currentWeekStart.toLocaleString().substring(0, (currentWeekStart.toLocaleString()).indexOf(','))}-{currentWeekEnd.toLocaleString().substring(0, (currentWeekEnd.toLocaleString()).indexOf(','))}</p>*/}
+            <p>Total Hours: {parseFloat(totalHoursCurrentWeek.toFixed(2))}</p>
+            <p> Hourly Wage: {wage}</p>
+            <p> Expected gross pay: ${((parseInt(wage)) *totalHoursCurrentWeek).toFixed(2)}</p>
+            <Button type="button" className="mt-3" onClick={() => setWageModalOpen(true)}>Change Hourly Wage</Button>
+          </CardContent>
+        </Card>
+      </div>
+
     </>
   )
 }
