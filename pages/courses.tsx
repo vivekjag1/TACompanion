@@ -6,7 +6,7 @@ import {useUser} from "@auth0/nextjs-auth0/client";
 import CourseCard from "@/components/CourseCard";
 import {DataTable} from "@/components/dataTable";
 import {columns} from "@/components/Columns";
-
+import type {Course} from "../components/Columns"
 
 const Courses:NextPage = () =>{
   const [courses, setCourses] = useState<CourseItem[]>();
@@ -22,24 +22,26 @@ const Courses:NextPage = () =>{
   });
 
 
+  const coursesTemp:Course[] = [
+    {
+      courseName:'CS 3013',
+      title: 'Operating Systems',
+      term: 'A23',
+      role: 'Student'
+    }
+  ]
 
 
 
-
-
-  return(
-    <div className = "flex flex-row  justify-center mb-4">
-       <h1 className="font-bold md:text-5xl font-mono"> Your Courses</h1>
-      <DataTable columns={columns} data={[]}/>
-    </div>
-
-
-
-
-    // <div className = "items-center text-center font-bold  text-3xl font-mono">
-    //   <CourseCard courseName={"CS 3013"} term={"A23"} imageSrc={""} role={"SA"}/>
-    // </div>
-
+  return (
+    <>
+      <div className="flex flex-row  justify-center mb-4">
+        <h1 className="font-bold md:text-5xl font-mono"> Your Courses</h1>
+      </div>
+      <div className="flex flex-row  justify-center mb-4">
+         <DataTable columns={columns} data={coursesTemp}/>
+      </div>
+    </>
   );
 }
 export default Courses;
