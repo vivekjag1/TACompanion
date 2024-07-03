@@ -354,7 +354,7 @@ const Hours = () => {
           <CardContent>
             <p>Total Hours: {parseFloat(totalHoursCurrentWeek.toFixed(2))}</p>
             <p> Hourly Wage: ${wage}</p>
-            <p> Expected gross pay: ${((parseInt(wage)) *totalHoursCurrentWeek).toFixed(2)}</p>
+            <p> Expected gross pay: ${((parseFloat(wage)) * parseFloat(totalHoursCurrentWeek.toFixed(2))).toFixed(2)}</p>
             <Button type="button" className="mt-3 h-full"  onClick={() => setWageModalOpen(true)}>Change Wage</Button>
           </CardContent>
         </Card>

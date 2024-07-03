@@ -36,6 +36,19 @@ export const typeDefs = gql`
       status:String
       description:String
   }
+  type Course{
+      courseCode:String
+      title:String 
+      term:String 
+      role:String,
+      examWeights:[Int], 
+      assignmentWeight:Int, 
+      quizWeights:[Int], 
+      requirements:[String]
+  }
+  
+  
+  
   input updateInterface{
       id:Int
       newAttribute:String
