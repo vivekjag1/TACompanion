@@ -51,7 +51,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter By Course Code"
           value={(table.getColumn("courseName")?.getFilterValue() as string) ?? ""}
@@ -60,6 +60,7 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        <Button>New Course</Button>
       </div>
 
       <div className="flex flex-row mb-4 justify-center rounded-md border">
@@ -107,24 +108,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table}/>
-      {/*<div className="flex items-center justify-end space-x-2 py-4">*/}
-      {/*  <Button*/}
-      {/*    variant="outline"*/}
-      {/*    size="sm"*/}
-      {/*    onClick={() => table.previousPage()}*/}
-      {/*    disabled={!table.getCanPreviousPage()}*/}
-      {/*  >*/}
-      {/*    Previous*/}
-      {/*  </Button>*/}
-      {/*  <Button*/}
-      {/*    variant="outline"*/}
-      {/*    size="sm"*/}
-      {/*    onClick={() => table.nextPage()}*/}
-      {/*    disabled={!table.getCanNextPage()}*/}
-      {/*  >*/}
-      {/*    Next*/}
-      {/*  </Button>*/}
-      {/*</div>*/}
+
     </div>
 
 
