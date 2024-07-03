@@ -4,6 +4,8 @@ import {CourseItem} from "@/mongoose/course/schema";
 import {useRouter} from "next/router";
 import {useUser} from "@auth0/nextjs-auth0/client";
 import CourseCard from "@/components/CourseCard";
+import {DataTable} from "@/components/dataTable";
+import {columns} from "@/components/Columns";
 
 
 const Courses:NextPage = () =>{
@@ -28,6 +30,7 @@ const Courses:NextPage = () =>{
   return(
     <div className = "flex flex-row  justify-center mb-4">
        <h1 className="font-bold md:text-5xl font-mono"> Your Courses</h1>
+      <DataTable columns={columns} data={[]}/>
     </div>
 
 
