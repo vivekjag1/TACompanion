@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/table"
 import {useState} from "react";
 import {DataTablePagination} from "@/components/DataTablePagination";
+import CreateCourseModal from "@/components/CreateCourseModal";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -33,7 +34,7 @@ export function DataTable<TData, TValue>({
                                          }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
+  const [courseModalOpen, setCourseModalOpen ] = useState<boolean>(false);
   const table = useReactTable({
     data,
     columns,
@@ -51,6 +52,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
+      <CreateCourseModal open={courseModalOpen} handleClose={() => setCourseModalOpen(false)} />
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter By Course Code"
@@ -60,7 +62,7 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <Button>New Course</Button>
+        <Button onClick={() => setCourseModalOpen(true)}>New Course</Button>
       </div>
 
       <div className="flex flex-row mb-4 justify-center rounded-md border">

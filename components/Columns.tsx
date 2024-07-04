@@ -1,6 +1,6 @@
 import type {CourseItem} from "../mongoose/course/schema";
 import { Button } from "@/components/ui/button"
-
+import {Checkbox} from "@/components/ui/checkbox"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal, ArrowUpDown } from "lucide-react"
 
@@ -24,6 +24,28 @@ export type Course = {
 }
 
 export const columns: ColumnDef<Course>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "courseName",
     header: ({ column }) => {
@@ -60,10 +82,6 @@ export const columns: ColumnDef<Course>[] = [
       const course = row.original
 
       return (
-        // <>
-        //   <Link href={"/idkYet"}/>
-        //     <Button type="button" variant="ghost" >View {course.courseName} Details</Button>
-        // </>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -79,8 +97,7 @@ export const columns: ColumnDef<Course>[] = [
               View Canvas Page
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View course details</DropdownMenuItem>
-            <DropdownMenuItem> Email course staff</DropdownMenuItem>
+            <DropdownMenuItem>Edit Course Details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

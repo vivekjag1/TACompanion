@@ -28,7 +28,7 @@ const Courses:NextPage = () =>{
       title: 'Operating Systems',
       term: 'A23',
       role: 'Student'
-    }
+    },
   ]
 
 

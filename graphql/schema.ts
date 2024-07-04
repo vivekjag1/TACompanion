@@ -40,10 +40,8 @@ export const typeDefs = gql`
       courseCode:String
       title:String 
       term:String 
-      role:String,
-      examWeights:[Int], 
-      assignmentWeight:Int, 
-      quizWeights:[Int], 
+      role:String
+      credits:Int
       requirements:[String]
   }
   
