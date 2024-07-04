@@ -12,14 +12,17 @@ export const courseSchema:Schema = new Schema<CourseItem>({
     type: String,
     required:true
   },
-  meetingDays:{
+  role:{
     type:String,
-    required:true
+    required: true,
   },
-  meetingTime:{
-    type:String,
+  credits:{
+    type:Number,
+    required:true,
+  },
+  requirements:{
+    type:[String],
     required:true
   }
-
 });
 export declare type CourseItem = InferSchemaType<typeof courseSchema>
