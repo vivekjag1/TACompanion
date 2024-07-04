@@ -21,9 +21,10 @@ export type Course = {
   title:string;
   term:string;
   role:string;
+  credits:number;
 }
 
-export const columns: ColumnDef<Course>[] = [
+export const columns: ColumnDef<CourseItem>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -77,6 +78,13 @@ export const columns: ColumnDef<Course>[] = [
     header: "Role",
   },
   {
+    accessorKey:"credits",
+    header:"credits",
+    cell: ({row}) => <div className = "text-center">{row.getValue("credits")}</div>
+
+  },
+
+  {
     id: "actions",
     cell: ({ row }) => {
       const course = row.original
@@ -92,7 +100,7 @@ export const columns: ColumnDef<Course>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(course.courseName)}
+              onClick={() => navigator.clipboard.writeText(course.courseCode as string)}
             >
               View Canvas Page
             </DropdownMenuItem>

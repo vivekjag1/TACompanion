@@ -18,8 +18,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import type {HoursType} from "@/mongoose/timeWorked/schema";
+import {useUser} from "@auth0/nextjs-auth0/client";
+import gql from "graphql-tag";
+import client from "../graphql/client"
+
 interface formProps{
   handleClose: () => void;
+  addCourse: (course:CourseItem) => void;
   // setCourses:(course: CourseItem) => void;
   // userName: string | null | undefined;
 }
@@ -28,14 +33,61 @@ export const requirementsTypes = ['HUA', 'PE', 'Social Science', 'IQP', 'Free El
 
 
 export const AddCourseForm = (props: formProps) =>{
+  let {user, error, isLoading} = useUser(); //hold auth0 hooks
+
   const [courseCode, setCourseCode] = useState<string>('');
   const [courseTitle, setCourseTitle] = useState<string>('');
   const [courseTerm, setCourseTerm] = useState<string>("");
   const [requirements, setRequirements] = useState<string[]>([]);
   const [credits, setCredits] = useState<number>(0);
+  const [role, setRole] = useState<string>('');
   //onSubmit={handleSubmit}
+
+  const handleSubmit = (e: React.SyntheticEvent) =>{
+    e.preventDefault();
+
+
+    const executeMutation  = async () => {
+      const createMutation = gql `
+        mutation createCourse($courseCode:String, $title:String, $term:String, $role:String, $credits:Int, $requirements:[String], $name:String){
+            addCourse(courseCode: $courseCode, title: $title, term: $term, role: $role, credits:$credits, requirements: $requirements, name: $name ){
+                courseCode,
+                title, 
+                term, 
+                requirements, 
+                role
+            }
+        }
+      `;
+      const data = await client.mutate({
+        mutation: createMutation,
+        variables:{
+          courseCode: courseCode,
+          title: courseTitle,
+          term: courseTerm,
+          role: role,
+          credits: credits,
+          requirements: requirements,
+          name: user?.name,
+        }
+      });
+      return data;
+    }
+    executeMutation().then();
+    const addToState:CourseItem = {
+      courseCode: courseCode,
+      title: courseTitle,
+      term: courseTerm,
+      role: role,
+      credits: credits,
+      requirements: requirements,
+      name: user?.name,
+    }
+    props.addCourse(addToState);
+    props.handleClose();
+  }
   return(
-    <form  style = {{
+    <form onSubmit={handleSubmit} style = {{
       display:"flex",
       flexDirection:"column",
       justifyContent:"center",
@@ -43,6 +95,22 @@ export const AddCourseForm = (props: formProps) =>{
     }}>
       <Input value={courseCode} className="mt-5" placeholder="Enter Course Code" onChange={(e)=>setCourseCode(e.target.value)}/>
       <Input value={courseTitle} className="mt-5" placeholder="Enter Course Title" onChange={(e)=>setCourseTitle(e.target.value)}/>
+
+      <Select value={role}  onValueChange={(value) => setRole(value)}>
+        <SelectTrigger className="mt-5 w-full">
+          <SelectValue placeholder="Select your role"/>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value = "Student">Student</SelectItem>
+            <SelectItem value = "TA">TA</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+
+
+
       <Select value={courseTerm}  onValueChange={(value) => setCourseTerm(value)}>
         <SelectTrigger className="mt-5 w-full">
           <SelectValue placeholder="Select the term"/>
@@ -60,6 +128,11 @@ export const AddCourseForm = (props: formProps) =>{
           </SelectGroup>
         </SelectContent>
       </Select>
+
+
+
+
+
 
       <MultiSelector values={requirements} onValuesChange={setRequirements} className=" mt-2 bg-gray text-black">
         <MultiSelectorTrigger>

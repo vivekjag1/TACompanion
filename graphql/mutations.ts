@@ -2,7 +2,7 @@ import todoItems from "../mongoose/todo/model";
 import {TodoItem} from "../mongoose/todo/schema";
 import hours from "../mongoose/timeWorked/model";
 import {HoursType} from "@/mongoose/timeWorked/schema";
-
+import course from "../mongoose/course/model";
 interface todoInterface{
   id:number;
   name:string;
@@ -136,5 +136,17 @@ export const todoMutations= {
   },
   deleteHourByID: async(_:any, {id}:{id:number}) =>{
     return await hours.deleteMany({id: id});
+  },
+  addCourse: async(_:any, params:{courseCode:string, title:string, term:string, role:string, credits:number, requirements:string[], name:string}) =>{
+    const newCourse = {
+      courseCode:params.courseCode,
+      title: params.title,
+      term: params.term,
+      role: params.role,
+      credits: params.credits,
+      requirements: params.requirements,
+      name: params.name,
+    };
+    return await course.create(newCourse);
   }
 }

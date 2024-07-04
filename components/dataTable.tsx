@@ -22,15 +22,25 @@ import {
 import {useState} from "react";
 import {DataTablePagination} from "@/components/DataTablePagination";
 import CreateCourseModal from "@/components/CreateCourseModal";
+import {CourseItem} from "@/mongoose/course/schema";
+
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  addCourse: (course:CourseItem) => void;
+}
+
+interface tableProps{
+  addCourse: (course: CourseItem) => void;
+
+
 }
 
 export function DataTable<TData, TValue>({
                                            columns,
                                            data,
+                                           addCourse
                                          }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -52,7 +62,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <CreateCourseModal open={courseModalOpen} handleClose={() => setCourseModalOpen(false)} />
+      <CreateCourseModal open={courseModalOpen} handleClose={() => setCourseModalOpen(false)} addCourse = {addCourse}/>
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter By Course Code"

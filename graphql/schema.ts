@@ -63,7 +63,7 @@ export const typeDefs = gql`
       fetchAllHours:[Hours]
       fetchHoursByName(name:String):[Hours]
       fetchHoursByID(ID:Int):Hours
-      fetchAllCoursesByName(name:String):[Course]
+      fetchCoursesByName(name:String):[Course]
       
   }
   type Mutation{
@@ -76,5 +76,6 @@ export const typeDefs = gql`
       changeStartAndEnd(id:Int, start:String, end:String):Hours
       updateHourByID(id:Int,title:String, courseCode:String, description:String, start:String, end:String, name:String):Hours
       deleteHourByID(id:Int):Hours
+      addCourse(courseCode:String, title:String, term:String, role:String, credits:Int, requirements:[String], name:String):Course
   }
 `;

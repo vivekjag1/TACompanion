@@ -9,9 +9,8 @@ import {columns} from "@/components/Columns";
 import type {Course} from "../components/Columns"
 import {gql} from "graphql-tag";
 import client from "../graphql/client";
-
 const Courses:NextPage = () =>{
-  const [courses, setCourses] = useState<CourseItem[]>();
+  const [courses, setCourses] = useState<CourseItem[]>([]);
   const router = useRouter(); //router for redirecting if not logged in
   let {user, error, isLoading} = useUser(); //hold auth0 hooks
   useEffect(() =>{
@@ -25,9 +24,30 @@ const Courses:NextPage = () =>{
 
 
   const fetchData = async () => {
+    const getAllCourses = gql `
+      query getCoursesForUser($name:String){
+          fetchCoursesByName(name:$name){
+              courseCode
+              title 
+              term 
+              role
+              credits
+              requirements 
+              name
+          }
+      }
+    `;
+    const data = await client.query({
+      query:getAllCourses,
+      variables:{
+        name: user?.name
+      }
+    });
+    return data;
+  };
 
 
-  }
+
 
 
   const coursesTemp:Course[] = [
@@ -35,7 +55,8 @@ const Courses:NextPage = () =>{
       courseName:'CS 3013',
       title: 'Operating Systems',
       term: 'A23',
-      role: 'Student'
+      role: 'Student',
+      credits: 3
     },
   ]
 
@@ -47,7 +68,7 @@ const Courses:NextPage = () =>{
         <h1 className="font-bold md:text-5xl font-mono"> Your Courses</h1>
       </div>
       <div className="flex flex-row  justify-center mb-4">
-         <DataTable columns={columns} data={coursesTemp}/>
+         <DataTable columns={columns} data={courses} addCourse = {(course:CourseItem) => setCourses((prev) => [...prev, course])}/>
       </div>
     </>
   );
