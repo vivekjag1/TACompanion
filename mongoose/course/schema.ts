@@ -23,6 +23,10 @@ export const courseSchema:Schema = new Schema<CourseItem>({
   requirements:{
     type:[String],
     required:true
+  },
+  name:{
+    type:String,
+    required:true
   }
 });
 export declare type CourseItem = InferSchemaType<typeof courseSchema>

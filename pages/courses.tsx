@@ -7,6 +7,8 @@ import CourseCard from "@/components/CourseCard";
 import {DataTable} from "@/components/dataTable";
 import {columns} from "@/components/Columns";
 import type {Course} from "../components/Columns"
+import {gql} from "graphql-tag";
+import client from "../graphql/client";
 
 const Courses:NextPage = () =>{
   const [courses, setCourses] = useState<CourseItem[]>();
@@ -20,6 +22,11 @@ const Courses:NextPage = () =>{
      //fetch data function goes here
     }
   });
+
+
+  const fetchData = async () => {
+
+  }
 
 
   const coursesTemp:Course[] = [
