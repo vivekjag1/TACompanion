@@ -43,6 +43,7 @@ export const typeDefs = gql`
       role:String
       credits:Int
       requirements:[String]
+      name:String
   }
   
   
@@ -62,6 +63,7 @@ export const typeDefs = gql`
       fetchAllHours:[Hours]
       fetchHoursByName(name:String):[Hours]
       fetchHoursByID(ID:Int):Hours
+      fetchAllCoursesByName(name:String):[Course]
       
   }
   type Mutation{

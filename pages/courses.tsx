@@ -26,6 +26,7 @@ const Courses:NextPage = () =>{
 
   const fetchData = async () => {
 
+
   }
 
 
