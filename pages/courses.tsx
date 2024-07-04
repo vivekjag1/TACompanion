@@ -50,16 +50,6 @@ const Courses:NextPage = () =>{
 
 
 
-  const coursesTemp:Course[] = [
-    {
-      courseName:'CS 3013',
-      title: 'Operating Systems',
-      term: 'A23',
-      role: 'Student',
-      credits: 3
-    },
-  ]
-
 
 
   return (

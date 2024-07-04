@@ -48,7 +48,7 @@ export const columns: ColumnDef<CourseItem>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "courseName",
+    accessorKey: "courseCode",
     header: ({ column }) => {
       return (
         <Button
@@ -62,7 +62,7 @@ export const columns: ColumnDef<CourseItem>[] = [
         </Button>
       )
     },
-   cell: ({row}) => <div className = "text-center">{row.getValue("courseName")}</div>
+   cell: ({row}) => <div className = "text-center">{row.getValue("courseCode")}</div>
 
   },
   {
