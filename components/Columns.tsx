@@ -15,6 +15,7 @@ import {
 
 
 import Link from "next/link";
+import {useState} from "react";
 
 export type Course = {
   courseName: string;
@@ -88,7 +89,6 @@ export const columns: ColumnDef<CourseItem>[] = [
     id: "actions",
     cell: ({ row }) => {
       const course = row.original
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -102,10 +102,9 @@ export const columns: ColumnDef<CourseItem>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(course.courseCode as string)}
             >
-              View Canvas Page
+              Edit course details
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit Course Details</DropdownMenuItem>
+            <DropdownMenuItem>Remove Course</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

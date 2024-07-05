@@ -28,8 +28,6 @@ const Courses:NextPage = () =>{
       }
     }
   });
-
-
   const fetchData = async () => {
     const getAllCourses = gql `
       query getCoursesForUser($name:String){
@@ -50,18 +48,10 @@ const Courses:NextPage = () =>{
         name: user?.name
       }
     });
-    console.log('data is', data);
     setCourses(data['data']['fetchCoursesByName']);
     setFetched(true);
     return data;
   };
-
-
-
-
-
-
-
   return (
     <>
       <div className="flex flex-row  justify-center mb-4">

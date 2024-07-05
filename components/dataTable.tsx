@@ -30,13 +30,6 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   addCourse: (course:CourseItem) => void;
 }
-
-interface tableProps{
-  addCourse: (course: CourseItem) => void;
-
-
-}
-
 export function DataTable<TData, TValue>({
                                            columns,
                                            data,
@@ -66,9 +59,9 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter By Course Code"
-          value={(table.getColumn("courseName")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("courseCode")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("courseName")?.setFilterValue(event.target.value)
+            table.getColumn("courseCode")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
