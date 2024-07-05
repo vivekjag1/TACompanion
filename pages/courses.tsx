@@ -11,6 +11,7 @@ import {gql} from "graphql-tag";
 import client from "../graphql/client";
 const Courses:NextPage = () =>{
   const [courses, setCourses] = useState<CourseItem[]>([]);
+  const [fetched, setFetched] = useState<boolean>(false);
   const router = useRouter(); //router for redirecting if not logged in
   let {user, error, isLoading} = useUser(); //hold auth0 hooks
   useEffect(() =>{
@@ -18,7 +19,13 @@ const Courses:NextPage = () =>{
       router.push('/api/auth/login').then();
     }
     else{
+      if(!fetched){
+        fetchData().then();
+      }
      //fetch data function goes here
+      else{
+        return;
+      }
     }
   });
 
@@ -43,6 +50,9 @@ const Courses:NextPage = () =>{
         name: user?.name
       }
     });
+    console.log('data is', data);
+    setCourses(data['data']['fetchCoursesByName']);
+    setFetched(true);
     return data;
   };
 
