@@ -5,11 +5,11 @@ import {useRouter} from "next/router";
 import {useUser} from "@auth0/nextjs-auth0/client";
 import CourseCard from "@/components/CourseCard";
 import {DataTable} from "@/components/dataTable";
-import {columns} from "@/components/Columns";
-import type {Course} from "../components/Columns"
-
+import {gql} from "graphql-tag";
+import client from "../graphql/client";
 const Courses:NextPage = () =>{
-  const [courses, setCourses] = useState<CourseItem[]>();
+  const [courses, setCourses] = useState<CourseItem[]>([]);
+  const [fetched, setFetched] = useState<boolean>(false);
   const router = useRouter(); //router for redirecting if not logged in
   let {user, error, isLoading} = useUser(); //hold auth0 hooks
   useEffect(() =>{
@@ -17,19 +17,69 @@ const Courses:NextPage = () =>{
       router.push('/api/auth/login').then();
     }
     else{
+      if(!fetched){
+        fetchData().then();
+      }
      //fetch data function goes here
+      else{
+        return;
+      }
     }
   });
+  const fetchData = async () => {
+    const getAllCourses = gql `
+      query getCoursesForUser($name:String){
+          fetchCoursesByName(name:$name){
+              courseCode
+              title 
+              term 
+              role
+              credits
+              requirements 
+              name
+          }
+      }
+    `;
+    const data = await client.query({
+      query:getAllCourses,
+      variables:{
+        name: user?.name
+      }
+    });
+    setCourses(data['data']['fetchCoursesByName']);
+    setFetched(true);
+    return data;
+  };
 
 
-  const coursesTemp:Course[] = [
-    {
-      courseName:'CS 3013',
-      title: 'Operating Systems',
-      term: 'A23',
-      role: 'Student'
-    },
-  ]
+  const changeCourse = (course:CourseItem, toReplace:string, action:string) => {
+    const newArr: CourseItem[] = [];
+    for(let i = 0; i < courses.length; i++){
+      if((courses[i].courseCode as string).trim() !== toReplace.trim()){
+        newArr.push(courses[i]);
+
+      }
+      else{
+        if(action === 'update'){
+          newArr.push(course);
+        }
+        else{
+          continue;
+        }
+
+      }
+    }
+
+
+
+
+
+    // const newArr:CourseItem[] = courses.filter((item) => item.courseCode != toReplace);
+    // newArr.push(course);
+
+    setCourses(newArr);
+
+  }
 
 
 
@@ -39,7 +89,7 @@ const Courses:NextPage = () =>{
         <h1 className="font-bold md:text-5xl font-mono"> Your Courses</h1>
       </div>
       <div className="flex flex-row  justify-center mb-4">
-         <DataTable columns={columns} data={coursesTemp}/>
+         <DataTable  changeCourse={changeCourse} data={courses} addCourse = {(course:CourseItem) => setCourses((prev) => [...prev, course])}/>
       </div>
     </>
   );
