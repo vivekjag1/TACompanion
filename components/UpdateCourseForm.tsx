@@ -53,6 +53,35 @@ export const UpdateCourseForm = (props:formProps) =>{
     };
 
     props.changeCourse(newItem, (props.course.courseCode as string), 'update');
+
+    const updateTodo = gql `
+      mutation updateCourse($oldCourseCode:String, $courseCode:String, $title:String, $term:String, $role:String, $credits:Int, $requirements:[String], $name:String ){
+          updateCourse(oldCourseCode: $oldCourseCode, courseCode: $courseCode, title: $title, term:$term, role:$role, credits: $credits, requirements: $requirements, name: $name){
+              courseCode
+              name
+          }
+      }
+    `;
+
+    const executeMutation = async () =>{
+      const data = await client.mutate({
+        mutation:updateTodo,
+        variables:{
+          oldCourseCode:props.course.courseCode as string,
+          courseCode: courseCode,
+          title: courseTitle,
+          term: term,
+          role: role,
+          credits: credits,
+          requirements: requirements,
+          name: user?.name
+        }
+      });
+      return data;
+    }
+
+    executeMutation().then();
+
     props.handleClose();
 
 

@@ -78,5 +78,6 @@ export const typeDefs = gql`
       deleteHourByID(id:Int):Hours
       addCourse(courseCode:String, title:String, term:String, role:String, credits:Int, requirements:[String], name:String):Course
       deleteCourse(courseCode:String, userName:String):Course
+      updateCourse(oldCourseCode:String, courseCode:String, title:String, term:String, role:String, credits:Int, requirements:[String], name:String):Course
   }
 `;

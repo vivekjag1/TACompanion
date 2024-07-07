@@ -151,5 +151,19 @@ export const todoMutations= {
   },
   deleteCourse: async(_:any, params:{courseCode:string, userName:string}) => {
     return await course.deleteOne({courseCode: params.courseCode, name: params.userName});
+  },
+  //      updateCourse(oldCourseCode:String, courseCode:String, title:String, term:String, role:String, credits:Int, requirements:[String], name:String):Course
+  updateCourse: async(_:any, params:{oldCourseCode:string, courseCode:string, title:string, term:string, role:string, credits:number, requirements:string[], name:string}) =>{
+    return  await course.findOneAndUpdate({courseCode: params.oldCourseCode, name:params.name}, {
+      courseCode: params.courseCode,
+      title: params.title,
+      term: params.term,
+      role: params.role,
+      credits: params.credits,
+      requirements: params.requirements,
+      name: params.name,
+    });
+
+
   }
 }
