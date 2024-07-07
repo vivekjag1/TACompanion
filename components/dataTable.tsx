@@ -36,6 +36,7 @@ import EditCourseModal from "../components/EditCourseModal";
 import gql from "graphql-tag";
 import client from "@/graphql/client";
 import {useUser} from "@auth0/nextjs-auth0/client";
+import {toast} from "sonner";
 
 interface DataTableProps<TData, TValue> {
   data: TData[]
@@ -140,6 +141,7 @@ export function DataTable<TData extends CourseItem, TValue>({
                   setClickedCourse(item[0]);
 
 
+
                 }}
               >
                 Edit course details
@@ -165,6 +167,7 @@ export function DataTable<TData extends CourseItem, TValue>({
                   return data;
                 }
                 runDeletion().then();
+                toast.success("Course Deleted Successfully!")
 
 
               }}>Remove Course</DropdownMenuItem>

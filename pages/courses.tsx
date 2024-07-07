@@ -25,7 +25,7 @@ const Courses:NextPage = () =>{
         return;
       }
     }
-  });
+  }, [fetched, user, isLoading]);
   const fetchData = async () => {
     const getAllCourses = gql `
       query getCoursesForUser($name:String){
