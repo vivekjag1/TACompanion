@@ -5,8 +5,6 @@ import {useRouter} from "next/router";
 import {useUser} from "@auth0/nextjs-auth0/client";
 import CourseCard from "@/components/CourseCard";
 import {DataTable} from "@/components/dataTable";
-import {columns} from "@/components/Columns";
-import type {Course} from "../components/Columns"
 import {gql} from "graphql-tag";
 import client from "../graphql/client";
 const Courses:NextPage = () =>{
@@ -58,7 +56,7 @@ const Courses:NextPage = () =>{
         <h1 className="font-bold md:text-5xl font-mono"> Your Courses</h1>
       </div>
       <div className="flex flex-row  justify-center mb-4">
-         <DataTable columns={columns} data={courses} addCourse = {(course:CourseItem) => setCourses((prev) => [...prev, course])}/>
+         <DataTable  data={courses} addCourse = {(course:CourseItem) => setCourses((prev) => [...prev, course])}/>
       </div>
     </>
   );
