@@ -23,6 +23,7 @@ import {
   MultiSelectorTrigger
 } from "@/components/MultiSelect";
 import {requirementsTypes} from "@/components/AddCourseForm";
+import {useUser} from "@auth0/nextjs-auth0/client";
 interface formProps{
   handleClose: () => void;
   course:CourseItem;
@@ -30,6 +31,8 @@ interface formProps{
 
 }
 export const UpdateCourseForm = (props:formProps) =>{
+  let {user, error, isLoading} = useUser(); //hold auth0 hooks
+
   const [courseCode, setCourseCode] = useState<string>(props.course.courseCode as string);
   const [courseTitle, setCourseTitle] = useState<string>(props.course.title as string);
   const [term, setTerm] = useState<string>(props.course.term as string);
@@ -156,7 +159,31 @@ export const UpdateCourseForm = (props:formProps) =>{
   // }
 
   const handleDelete = () => {
-    props.changeCourse(props.course, props.course.courseCode as string,  'delete')
+    props.changeCourse(props.course, props.course.courseCode as string,  'delete');
+    const deleteMutation = gql `
+      mutation deleteMutation($courseCode:String, $userName:String ){
+          deleteCourse(courseCode: $courseCode, userName: $userName){
+              courseCode
+              name
+          }
+      }
+    `;
+
+    const runDeletion = async() =>{
+      const data = await client.mutate({
+        mutation:deleteMutation,
+        variables:{
+          courseCode: (props.course.courseCode as string),
+          userName: user?.name
+        }
+      });
+      return data;
+    }
+    runDeletion().then();
+
+
+    
+
     props.handleClose();
 
   }

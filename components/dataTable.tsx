@@ -9,7 +9,7 @@ import {
   useReactTable,
   getPaginationRowModel,
 } from "@tanstack/react-table"
-import { Button } from "@/components/ui/button"
+import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input";
 import {
   Table,
@@ -33,31 +33,35 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import EditCourseModal from "../components/EditCourseModal";
+import gql from "graphql-tag";
+import client from "@/graphql/client";
+import {useUser} from "@auth0/nextjs-auth0/client";
 
 interface DataTableProps<TData, TValue> {
   data: TData[]
-  addCourse: (course:CourseItem) => void;
-  changeCourse:(course:CourseItem, toReplace:string, action:string ) => void;
+  addCourse: (course: CourseItem) => void;
+  changeCourse: (course: CourseItem, toReplace: string, action: string) => void;
 
 }
+
 export function DataTable<TData extends CourseItem, TValue>({
-                                           data,
-                                           addCourse,
-                                            changeCourse
-                                         }: DataTableProps<TData, TValue>) {
+                                                              data,
+                                                              addCourse,
+                                                              changeCourse
+                                                            }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [courseModalOpen, setCourseModalOpen ] = useState<boolean>(false);
+  const [courseModalOpen, setCourseModalOpen] = useState<boolean>(false);
   const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
   const [clickedCourse, setClickedCourse] = useState<CourseItem>({});
+  let {user, error, isLoading} = useUser(); //hold auth0 hooks
 
 
 
-
-   const columns: ColumnDef<TData>[]  = [
+  const columns: ColumnDef<TData>[] = [
     {
       id: "select",
-      header: ({ table }) => (
+      header: ({table}) => (
         <Checkbox
           checked={
             table.getIsAllPageRowsSelected() ||
@@ -67,7 +71,7 @@ export function DataTable<TData extends CourseItem, TValue>({
           aria-label="Select all"
         />
       ),
-      cell: ({ row }) => (
+      cell: ({row}) => (
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -79,7 +83,7 @@ export function DataTable<TData extends CourseItem, TValue>({
     },
     {
       accessorKey: "courseCode",
-      header: ({ column }) => {
+      header: ({column}) => {
         return (
           <Button
             variant="ghost"
@@ -88,11 +92,11 @@ export function DataTable<TData extends CourseItem, TValue>({
 
           >
             Code
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="ml-2 h-4 w-4"/>
           </Button>
         )
       },
-      cell: ({row}) => <div className = "text-center">{row.getValue("courseCode")}</div>
+      cell: ({row}) => <div className="text-center">{row.getValue("courseCode")}</div>
 
     },
     {
@@ -108,39 +112,61 @@ export function DataTable<TData extends CourseItem, TValue>({
       header: "Role",
     },
     {
-      accessorKey:"credits",
-      header:"credits",
-      cell: ({row}) => <div className = "text-center">{row.getValue("credits")}</div>
+      accessorKey: "credits",
+      header: "credits",
+      cell: ({row}) => <div className="text-center">{row.getValue("credits")}</div>
 
     },
 
     {
       id: "actions",
-      cell: ({ row }) => {
+      cell: ({row}) => {
         const course = row.original
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreHorizontal className="h-4 w-4"/>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() =>{
+                onClick={() => {
                   setUpdateModalOpen(true);
                   const clickedCourseCode = row.getValue('courseCode');
                   const item = data.filter((item) => item.courseCode === clickedCourseCode);
                   setClickedCourse(item[0]);
 
+
                 }}
               >
                 Edit course details
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() =>{
+              <DropdownMenuItem onClick={() => {
                 changeCourse(clickedCourse, row.getValue('courseCode'), 'delete');
+                const deleteMutation = gql`
+                     mutation deleteMutation($courseCode:String, $userName:String ){
+                          deleteCourse(courseCode: $courseCode, userName: $userName){
+                                  courseCode
+                               name
+                           }
+                      }
+                `;
+                const runDeletion = async () => {
+                  const data = await client.mutate({
+                    mutation: deleteMutation,
+                    variables: {
+                      courseCode: (row.getValue('courseCode')),
+                      userName: user?.name
+                    }
+                  });
+                  return data;
+                }
+                runDeletion().then();
+
+
               }}>Remove Course</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -152,13 +178,13 @@ export function DataTable<TData extends CourseItem, TValue>({
   ]
   const table = useReactTable({
     data,
-     columns,
-    state:{
+    columns,
+    state: {
       sorting,
       columnFilters
     },
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel:getFilteredRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -166,12 +192,12 @@ export function DataTable<TData extends CourseItem, TValue>({
   })
 
 
-
   return (
     <div>
-      <EditCourseModal open={updateModalOpen} changeCourse={changeCourse} handleClose={() =>  setUpdateModalOpen(false)} course={clickedCourse}/>
+      <EditCourseModal open={updateModalOpen} changeCourse={changeCourse} handleClose={() => setUpdateModalOpen(false)}
+                       course={clickedCourse}/>
 
-      <CreateCourseModal open={courseModalOpen} handleClose={() => setCourseModalOpen(false)} addCourse = {addCourse}/>
+      <CreateCourseModal open={courseModalOpen} handleClose={() => setCourseModalOpen(false)} addCourse={addCourse}/>
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter By Course Code"

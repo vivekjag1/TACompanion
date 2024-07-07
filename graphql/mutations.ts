@@ -148,5 +148,8 @@ export const todoMutations= {
       name: params.name,
     };
     return await course.create(newCourse);
+  },
+  deleteCourse: async(_:any, params:{courseCode:string, userName:string}) => {
+    return await course.deleteOne({courseCode: params.courseCode, name: params.userName});
   }
 }
