@@ -32,7 +32,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-
+import EditCourseModal from "../components/EditCourseModal";
 
 interface DataTableProps<TData, TValue> {
   data: TData[]
@@ -45,6 +45,11 @@ export function DataTable<TData extends CourseItem, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [courseModalOpen, setCourseModalOpen ] = useState<boolean>(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
+  const [clickedCourse, setClickedCourse] = useState<CourseItem>({});
+
+
+
 
    const columns: ColumnDef<TData>[]  = [
     {
@@ -121,7 +126,13 @@ export function DataTable<TData extends CourseItem, TValue>({
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(course.courseCode as string)}
+                onClick={() =>{
+                  setUpdateModalOpen(true);
+                  const clickedCourseCode = row.getValue('courseCode');
+                  const item = data.filter((item) => item.courseCode === clickedCourseCode);
+                  setClickedCourse(item[0]);
+
+                }}
               >
                 Edit course details
               </DropdownMenuItem>
@@ -153,6 +164,8 @@ export function DataTable<TData extends CourseItem, TValue>({
 
   return (
     <div>
+      <EditCourseModal open={updateModalOpen} handleClose={() =>  setUpdateModalOpen(false)} course={clickedCourse}/>
+
       <CreateCourseModal open={courseModalOpen} handleClose={() => setCourseModalOpen(false)} addCourse = {addCourse}/>
       <div className="flex items-center justify-between py-4">
         <Input
