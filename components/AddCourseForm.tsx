@@ -18,6 +18,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import type {HoursType} from "@/mongoose/timeWorked/schema";
+import {toast} from "sonner";
+
 import {useUser} from "@auth0/nextjs-auth0/client";
 import gql from "graphql-tag";
 import client from "../graphql/client"
@@ -84,6 +86,7 @@ export const AddCourseForm = (props: formProps) =>{
       name: user?.name,
     }
     props.addCourse(addToState);
+    toast.success("Course Added Successfully!")
     props.handleClose();
   }
   return(

@@ -81,6 +81,7 @@ export const UpdateCourseForm = (props:formProps) =>{
     }
 
     executeMutation().then();
+    toast.success("Course Edited Successfully!")
 
     props.handleClose();
 
@@ -88,104 +89,6 @@ export const UpdateCourseForm = (props:formProps) =>{
   }
 
 
-  // const handleSubmit  = (e: React.SyntheticEvent) =>{
-  //   e.preventDefault();
-  //
-  //   const indexT = (props.event.start as string).indexOf("T");
-  //   const indexDash = (props.event.start as string).length -  9;
-  //   const date = (props.event.start as string).substring(0, indexT);
-  //   const end =  new Date(date.concat("T").concat(endTime).concat(':00-04:00'));
-  //   const start = new Date(date.concat("T").concat(startTime).concat(':00-04:00'));
-  //   const newHours:HoursType = {
-  //     title: `Type: ${title}, Description: ${description},  (ID: ${props.event.id})`,
-  //     courseCode:course,
-  //     description:description,
-  //     start:moment(start).format(),
-  //     end:moment(end).format(),
-  //     name: props.event.name as string
-  //   }
-  //   const changedHour:HoursType = {
-  //     title: `${title} (ID: ${props.event.id as string})`,
-  //     courseCode: course,
-  //     description: description,
-  //     start:  moment(start).format(),
-  //     end:moment(end).format(),
-  //     name: props.event.name as string
-  //   };
-  //   const updateMutation = gql `
-  //       mutation updateMutation($id:Int, $title:String, $courseCode:String, $description:String, $start:String, $end:String, $name:String){
-  //           updateHourByID(id: $id, title: $title, courseCode: $courseCode, description: $description, start: $start, end: $end, name: $name){
-  //               id
-  //               title
-  //               courseCode
-  //               description
-  //               start
-  //               end
-  //           }
-  //       }
-  //   `;
-  //   const executeMutation = async () => {
-  //     const data = await client.mutate({
-  //       mutation: updateMutation,
-  //       variables: {
-  //         id: +(props.event.id as string),
-  //         title: changedHour.title,
-  //         description: changedHour.description,
-  //         courseCode: changedHour.courseCode,
-  //         start: changedHour.start,
-  //         end: changedHour.end,
-  //         name: props.event.name as string
-  //       }
-  //     });
-  //     return data;
-  //   }
-  //   executeMutation().then();
-  //
-  //
-  //   props.setHours(newHours, 'add');
-  //   props.handleClose();
-  //   toast.success("Your hours were updated!");
-  //
-  // };
-
-
-
-
-
-
-
-  // const handleDelete = () => {
-  //
-  //
-  //
-  //   //just delete the item from the backend
-  //   const deleteMutation = gql `
-  //       mutation deleteMutation($id:Int){
-  //           deleteHourByID(id:$id){
-  //               id
-  //           }
-  //       }
-  //   `;
-  //   const runMutation = async () =>{
-  //     return await client.mutate({
-  //       mutation:deleteMutation,
-  //       variables:{
-  //         id: (props.event.id as number),
-  //       }
-  //     });
-  //   }
-  //   runMutation().then();
-  //   props.setHours({}, 'remove');
-  //   toast.success("Deleted Event!");
-  //   props.handleClose();
-  //   return;
-  //
-  //
-  //
-  //
-  //
-  //
-  // }
 
   const handleDelete = () => {
     props.changeCourse(props.course, props.course.courseCode as string,  'delete');
