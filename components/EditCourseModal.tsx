@@ -19,11 +19,13 @@ interface ModalProps{
   handleClose: () => void;
   //the event itself that was clicked, and a function to update the state
   course: CourseItem;
+  changeCourse:(course:CourseItem, toReplace:string, action:string) => void;
+
+
   // setCourse: (aCourse: CourseItem) => void;
 }
 
 const EditCourseModal = (props:ModalProps):JSX.Element =>{
-  console.log("props is a funny word", props.course);
   return(
     <>
       <Dialog open={props.open} onOpenChange={(isOpen) => { if (!isOpen) props.handleClose(); else props.open = true }}>
@@ -32,8 +34,7 @@ const EditCourseModal = (props:ModalProps):JSX.Element =>{
             <DialogTitle className="text-3xl" >Edit a course </DialogTitle>
             <DialogDescription className = "text-lg text-center font-black">Update your academic and SA work</DialogDescription>
           </DialogHeader>
-          <UpdateCourseForm handleClose={props.handleClose} course={props.course}/>
-          {/*<UpdateEventForm handleClose={props.handleClose} setHours={props.setHours} event={props.event}/>*/}
+          <UpdateCourseForm handleClose={props.handleClose} changeCourse={props.changeCourse} course={props.course}/>
           <DialogFooter>
             <button onClick={props.handleClose}>Close</button>
           </DialogFooter>

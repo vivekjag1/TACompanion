@@ -50,13 +50,46 @@ const Courses:NextPage = () =>{
     setFetched(true);
     return data;
   };
+
+
+  const changeCourse = (course:CourseItem, toReplace:string, action:string) => {
+    const newArr: CourseItem[] = [];
+    for(let i = 0; i < courses.length; i++){
+      if((courses[i].courseCode as string).trim() !== toReplace.trim()){
+        newArr.push(courses[i]);
+
+      }
+      else{
+        if(action === 'update'){
+          newArr.push(course);
+        }
+        else{
+          continue;
+        }
+
+      }
+    }
+
+
+
+
+
+    // const newArr:CourseItem[] = courses.filter((item) => item.courseCode != toReplace);
+    // newArr.push(course);
+
+    setCourses(newArr);
+
+  }
+
+
+
   return (
     <>
       <div className="flex flex-row  justify-center mb-4">
         <h1 className="font-bold md:text-5xl font-mono"> Your Courses</h1>
       </div>
       <div className="flex flex-row  justify-center mb-4">
-         <DataTable  data={courses} addCourse = {(course:CourseItem) => setCourses((prev) => [...prev, course])}/>
+         <DataTable  changeCourse={changeCourse} data={courses} addCourse = {(course:CourseItem) => setCourses((prev) => [...prev, course])}/>
       </div>
     </>
   );

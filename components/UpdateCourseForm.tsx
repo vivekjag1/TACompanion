@@ -25,8 +25,9 @@ import {
 import {requirementsTypes} from "@/components/AddCourseForm";
 interface formProps{
   handleClose: () => void;
-  // setHours:(hour: HoursType, action:string) => void;
   course:CourseItem;
+  changeCourse:(course:CourseItem, toReplace:string, action:string) => void;
+
 }
 export const UpdateCourseForm = (props:formProps) =>{
   const [courseCode, setCourseCode] = useState<string>(props.course.courseCode as string);
@@ -36,8 +37,23 @@ export const UpdateCourseForm = (props:formProps) =>{
   const [credits, setCredits] = useState<number>(props.course.credits as number);
   const [requirements, setRequirements] = useState<string[]>(props.course.requirements as string[]);
 
+  const handleSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    const newItem:CourseItem = {
+      courseCode: courseCode,
+      title: courseTitle,
+      term: term,
+      role: role,
+      credits: credits,
+      requirements: requirements,
+    };
+
+    props.changeCourse(newItem, (props.course.courseCode as string), 'update');
+    props.handleClose();
 
 
+  }
 
 
   // const handleSubmit  = (e: React.SyntheticEvent) =>{
@@ -139,9 +155,16 @@ export const UpdateCourseForm = (props:formProps) =>{
   //
   // }
 
+  const handleDelete = () => {
+    props.changeCourse(props.course, props.course.courseCode as string,  'delete')
+    props.handleClose();
+
+  }
+
   //onSubmit={handleSubmit}
   return (
-    <form  style = {{
+    <form       onSubmit={handleSubmit}
+                style = {{
       display:"flex",
       flexDirection:"column",
       justifyContent:"center",
@@ -195,7 +218,7 @@ export const UpdateCourseForm = (props:formProps) =>{
       </MultiSelector>
       <Input type = "number" value={credits}  placeholder="Enter the number of credits for this course" className = "  w-full" onChange={(e) => setCredits(parseInt(e.target.value))}/>
       <div className="flex flex-row px-5">
-        <Button variant="destructive" className="m-[2rem] w-[7rem]" type="button">Clear </Button>
+        <Button variant="destructive" className="m-[2rem] w-[7rem]" type="button" onClick = {handleDelete}>Delete </Button>
         <Button variant="default" className="m-[2rem] w-[7rem] " type="submit">Submit</Button>
       </div>
     </form>

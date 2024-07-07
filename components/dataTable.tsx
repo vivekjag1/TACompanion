@@ -37,10 +37,13 @@ import EditCourseModal from "../components/EditCourseModal";
 interface DataTableProps<TData, TValue> {
   data: TData[]
   addCourse: (course:CourseItem) => void;
+  changeCourse:(course:CourseItem, toReplace:string, action:string ) => void;
+
 }
 export function DataTable<TData extends CourseItem, TValue>({
                                            data,
-                                           addCourse
+                                           addCourse,
+                                            changeCourse
                                          }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -136,7 +139,9 @@ export function DataTable<TData extends CourseItem, TValue>({
               >
                 Edit course details
               </DropdownMenuItem>
-              <DropdownMenuItem>Remove Course</DropdownMenuItem>
+              <DropdownMenuItem onClick={() =>{
+                changeCourse(clickedCourse, row.getValue('courseCode'), 'delete');
+              }}>Remove Course</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -164,7 +169,7 @@ export function DataTable<TData extends CourseItem, TValue>({
 
   return (
     <div>
-      <EditCourseModal open={updateModalOpen} handleClose={() =>  setUpdateModalOpen(false)} course={clickedCourse}/>
+      <EditCourseModal open={updateModalOpen} changeCourse={changeCourse} handleClose={() =>  setUpdateModalOpen(false)} course={clickedCourse}/>
 
       <CreateCourseModal open={courseModalOpen} handleClose={() => setCourseModalOpen(false)} addCourse = {addCourse}/>
       <div className="flex items-center justify-between py-4">
