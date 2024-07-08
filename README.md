@@ -1,4 +1,4 @@
-## TA Companion - An Application for Student Assistants at Worcester Polytechnic Institute, designed by Vivek Jagadeesh 
+## TA Companion - An Application for Student Assistants at Worcester Polytechnic Institute, developed by Vivek Jagadeesh 
 <img src="./public/final-hero.png">
 Note - Full documentation on the technology stack, and my experience developing this website can be found on my portfolio website at <a href="https://vivekjagadeesh.com">https://vivekjagadeesh.com</a>. The following documentation will cover how to use this software, rather than the process of developing this project.
 
@@ -31,7 +31,7 @@ Each of these features were motivated by my experience as an SA and similar expe
 
 <h2>Logging your hours</h2>
 <img src="./public/hours.png">
-To begin logging hours using TA Companion, click on the cell where your event begins. For example, if you have an event which starts on Wednesday, July 3rd at 10AM, you can begin logging this hour by clicking in the cell marked 10AM in the 7/3 column. At this point you will be greated with the following form:
+To begin logging hours using TA Companion, click on the cell where your event begins. For example, if you have an event which starts on Wednesday, July 3rd at 10AM, you can begin logging this hour by clicking in the cell marked 10AM in the 7/3 column. At this point you will be created with the following form:
 <img src="./public/create-hour-modal.png">
 
 After you add the information to this form, your new hour will appear on the calendar.
@@ -42,3 +42,31 @@ Hours can be edited in the following ways
 2. The start and end time of an event can be changed by dragging/shrinking the top and bottom of the item on the calendar. This will alter the start/end time accordingly and persist the changes in the MongoDB database. 
 3. To change the day of an event, simply drag and drop the calendar event to a different day. Like the last feature, this change will also exist in the database, and thus, the data will be persisted. 
 4. An event can be deleted (permanently) by opening its edit modal (click on the event) and then clicking delete(see earlier picture)
+
+In addition to creating, reading, updating, and deleting hours, this page may also be used to calculate a pre-tax income from each week. To change the hourly wage, click on the "change wage" button on the right hand size, and another modal (See below) will appear with the opportunity to enter a new wage
+<img src="./public/change-wage.png">
+
+<h2>Creating, Reading, Updating, and Deleting Courses</h2>
+<img src="./public/courses-page.png">
+
+TA Companion allows you to keep records of the courses you've taken and taught, and stores records in the MongoDB backend. 
+To get create a course, click on the 'New Course' button in the top right hand corner. This will open the below form: 
+<img src = "./public/add-course-modal.png"/>
+
+After creating a course, a record can be updated by clicking the three dots to the right of any row in the table, and then clicking 'Edit Course Details'. At this point, another form will appear, allowing the user to change the details of their new course. 
+Additionally, users can delete a course in one of two ways 
+1. By using the 'remove course' option in the menu to the side of each row. 
+2. By using the 'edit course' option in the menu to the side of each row and then clicking delete course on the popup. 
+
+Finally, courses can be searched by <strong>course code</strong> using the paginated table
+
+<h2>Viewing your degree progress</h2>
+<img src="./public/trackingSheet.png">
+
+The final feature of the website allows you to view your progress in completing a CS degree at WPI (as of July 2024). Since WPI does not have a public API for getting courses or degree requirements, this feature only works for CS majors, but can be adapted to different majors if need be. 
+Each row has the following information
+1. The name of the requirement 
+2. The status of the requirement 
+3. The percentage completed 
+4. An extended description (view by unfolding accordion)
+5. The courses which are being applied to a particular requirement (view by unfolding accordion)
