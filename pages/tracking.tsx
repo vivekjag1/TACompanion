@@ -15,48 +15,27 @@ const Tracking = ():JSX.Element =>{
   const [userCourseProgress, setUserCourseProgress] = useState<Map<string, CourseItem[]>>(new Map());
   let {user, error, isLoading} = useUser(); //hold auth0 hooks
 
+  const reqs = new Map<string, CourseItem[]>();
 
-   const reqs = new Map<string, CourseItem[]>();
   const filterByRequirement = () =>{
-    /*
-  CSRequirements.set('Free Electives', 3);
-  //more specific requirements
-
-
-  //HU 3900 requirement
-
-  //CS requirements
-  //core CS courses that can be whatever
-  CSRequirements.set('CS', 8);
-
-
-  //specific concentration requirements for CS
-  CSRequirements.set('Systems', 1);
-  CSRequirements.set('Theory', 1);
-  CSRequirements.set('Design', 1);
-  CSRequirements.set('Social Implications', 1);
-  CSRequirements.set('MQP', 1);
-  CSRequirements.set('CS-4000', 5);
-
-  //basic science requirements
-  CSRequirements.set('Basic Science', 3);
-  CSRequirements.set('Engineering Science/Basic Science', 2);
-
-
-
-
-
-
-     */
-
+    const PE:CourseItem[] = [];
+    const IQP:CourseItem[] = [];
+    const Stats:CourseItem[] = [];
+    const MA:CourseItem[] = [];
+    const SocialScience:CourseItem[] = [];
+    const HU:CourseItem[] = [];
+    const HUA:CourseItem[] = [];
+    const Systems:CourseItem[] = [];
+    const Design:CourseItem[] = [];
+    const Theory:CourseItem[] = [];
+    const CS:CourseItem[] = [];
+    const MQP:CourseItem[] = [];
+    const FourThousand:CourseItem[] = [];
+    const basicScience:CourseItem[] = [];
+    const engineeringScience:CourseItem[] = [];
+    const freeElectives:CourseItem[] = [];
     courses.map((course:CourseItem) =>{
-      const PE:CourseItem[] = [];
-      const IQP:CourseItem[] = [];
-      const Stats:CourseItem[] = [];
-      const MA:CourseItem[] = [];
-      const SocialScience:CourseItem[] = [];
-      const HU:CourseItem[] = [];
-      const HUA:CourseItem[] = [];
+
 
       if((course.courseCode as string ).substring(0, 3) == 'PE'){
         PE.push(course);
@@ -75,20 +54,82 @@ const Tracking = ():JSX.Element =>{
       }
       else if((course.courseCode as string).includes('HUA')){
         HUA.push(course)
-
       }
-
       else if((course.courseCode as string ).includes('AB') || (course.courseCode as string ).includes('AR') || (course.courseCode as string ).includes('CN') ||  (course.courseCode as string ).includes('EN') || (course.courseCode as string ).includes('GN') || (course.courseCode as string ).includes('HI') || (course.courseCode as string ).includes('HU') || (course.courseCode as string ).includes('ID') || (course.courseCode as string ).includes('MU') || (course.courseCode as string ).includes('PY') || (course.courseCode as string ).includes('RE') || (course.courseCode as string ).includes('SP') || (course.courseCode as string ).includes('TH') || (course.courseCode as string ).includes('WR')){
 
         HU.push(course);
       }
+      else if((course.courseCode as string ) == 'CS 3013' || (course.courseCode as string ) == 'CS 4516' || (course.courseCode as string ) == 'CS 4513' ||  (course.courseCode as string ) == 'CS 4515'){
+        Systems.push(course);
+      }
+      else if((course.courseCode as string ) == 'CS 3733' || (course.courseCode as string ) == 'CS 3431' || (course.courseCode as string ) == 'CS 3041' ||  (course.courseCode as string ) == 'CS 4233'){
+        Design.push(course);
+      }
+      else if((course.courseCode as string ) == 'CS 3133' || (course.courseCode as string ) == 'CS 4123' || (course.courseCode as string ) == 'CS 4533' ||  (course.courseCode as string ) == 'CS 4120' ||  (course.courseCode as string ) == 'CS 4536'){
+        Theory.push(course);
+      }
+      else if((course.courseCode as string ).includes('CS')){
+       CS.push(course);
+      }
+      else if((course.courseCode as string ).includes('MQP')){
+       MQP.push(course);
+      }
+      if((course.courseCode as string ).includes('CS 4')){
+       FourThousand.push(course);
+      }
+      else if((course.courseCode as string ).includes('CS 4')){
+       FourThousand.push(course);
+      }
+      else if ((course.courseCode as string ).includes('BB') || (course.courseCode as string ).includes('CH') || (course.courseCode as string ).includes('GE')|| (course.courseCode as string ).includes('PH')){
+        basicScience.push(course);
+      }
+      else if ((course.courseCode as string ).includes('BME') || (course.courseCode as string ).includes('CE') || (course.courseCode as string ).includes('CHE')|| (course.courseCode as string ).includes('ECE') || (course.courseCode as string ).includes('ES') || (course.courseCode as string ).includes('ME') || (course.courseCode as string ).includes('RBE')){
+        engineeringScience.push(course);
+      }
+      else{
+        freeElectives.push(course);
+      }
+    });
+    /*
+      const PE:CourseItem[] = [];
+    const IQP:CourseItem[] = [];
+    const Stats:CourseItem[] = [];
+    const MA:CourseItem[] = [];
+    const SocialScience:CourseItem[] = [];
+    const HU:CourseItem[] = [];
+    const HUA:CourseItem[] = [];
+    const Systems:CourseItem[] = [];
+    const Design:CourseItem[] = [];
+    const Theory:CourseItem[] = [];
+    const CS:CourseItem[] = [];
+    const MQP:CourseItem[] = [];
+    const FourThousand:CourseItem[] = [];
+    const basicScience:CourseItem[] = [];
+    const engineeringScience:CourseItem[] = [];
+    const freeElectives:CourseItem[] = [];
+     */
+    reqs.set('PE', PE);
+    reqs.set('IQP', IQP);
+    reqs.set('statistics', Stats);
+    reqs.set('MA', MA);
+    reqs.set('Social Science', SocialScience);
+    reqs.set('HUA', HUA);
+    reqs.set('HU', HU);
+    reqs.set('Systems', Systems);
+    reqs.set('Design', Design);
+    reqs.set('Theory', Theory);
+    reqs.set('CS', CS);
+    reqs.set('MQP', MQP);
+    reqs.set('Four Thousand', FourThousand);
+    reqs.set('Basic Science', basicScience);
+    reqs.set('Engineering Science', engineeringScience);
+    reqs.set('Free Electives', freeElectives);
 
 
 
 
 
 
-    })
 
 
 
@@ -190,7 +231,16 @@ const Tracking = ():JSX.Element =>{
 
 
   return(
-    <div className = "ml-[6rem]"><RequirementComponent/></div>
+    <div className = "ml-[6rem]">
+      {Array.from(reqs.keys()).map((item) =>{
+        return(
+          <RequirementComponent key = {Array.from(reqs.keys()).indexOf(item)} requirementTile = {item} requirementsMap={CSRequirements} requirementsProgress={} />
+
+        )
+
+      })}
+
+    </div>
   );
 }
 

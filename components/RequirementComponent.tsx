@@ -12,13 +12,12 @@
 
   interface RequirementProps{
     requirementTile:string;
-    courses:CourseItem[];
     requirementsMap:Map<string, number>;
+    requirementsProgress: Map<string, CourseItem[]>;
   }
 
-  export  const RequirementComponent = () => {
+  export  const RequirementComponent = (props:RequirementProps) => {
     const [completionPercentage, setCompletionPercentage] = useState<number>(0);
-
 
 
 
