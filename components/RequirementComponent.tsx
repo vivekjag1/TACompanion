@@ -32,9 +32,11 @@
           <AccordionItem value="item-1">
             <AccordionTrigger>
               <div className="flex items-center justify-between w-full">
-                <p>{props.requirementTitle}</p>
+                <p>{`${props.requirementTitle}: Status - ${props.requiredNumber === props.coursesCompleted.length ? 'Completed' : props.coursesCompleted.length === 0 ? 'Not Started' : 'In Progress'}`}</p>
+
                 <div className="flex items-center space-x-2">
-                  <Progress className="relative right-0 w-32 mr-3" value={(((props.coursesCompleted.length)/props.requiredNumber) * 100)}/>
+                  <Progress className="relative right-0 w-32 mr-3"
+                            value={(((props.coursesCompleted.length) / props.requiredNumber) * 100)}/>
                 </div>
               </div>
 
@@ -43,7 +45,7 @@
               <h1> Description: {props.requirementDescription}</h1>
               <h1> Eligible Courses </h1>
               <ul>
-              {props.coursesCompleted.map((item) =>{
+                {props.coursesCompleted.map((item) =>{
                 const itemNum = props.coursesCompleted.indexOf(item);
                 return(
                 <li key = {itemNum}> {item.courseCode as string} - {item.title as string}</li>
