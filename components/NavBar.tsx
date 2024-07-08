@@ -8,6 +8,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import SchoolIcon from '@mui/icons-material/School';
 import LinkIcon from '@mui/icons-material/Link';
 import LogoutIcon from '@mui/icons-material/Logout';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 const animation = {
   close : {
     width: "5rem",
@@ -80,10 +81,9 @@ const NavBar = () =>{
         <NavItem name="Courses" page="/courses" open = {open}>
           <SchoolIcon  sx ={{color:'white'}} />
         </NavItem>
-        <NavItem name="Links" page="/links" open = {open}>
-          <LinkIcon  sx ={{color:'white'}}/>
+        <NavItem name="Tracking Sheet" page="/tracking" open = {open}>
+          <DocumentScannerIcon  sx ={{color:'white'}}/>
         </NavItem>
-        {/*This is a placeholder that will eventually have sign out/sign in when i get around to it!*/}
         <div className="absolute bottom-0 items-center justify-center cursor-pointer mt-auto mb-5">
           <NavItem page={"/api/auth/logout"} name={"Logout"} open={open}>
             <LogoutIcon sx = {{color:'white'}}/>
