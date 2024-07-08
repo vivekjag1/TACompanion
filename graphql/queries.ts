@@ -29,7 +29,8 @@ export const todoQueries ={
     return await hours.findOne({id:params.ID});
   },
   fetchCoursesByName: async(_:any, params:{name:string}) =>{
-    return await course.find({name:params.name});
+    console.log(params);
+    return  course.find({name:params.name});
   }
 
 }

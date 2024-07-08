@@ -86,7 +86,7 @@ const Courses:NextPage = () =>{
   return (
     <>
       <div className="flex flex-row  justify-center mb-4">
-        <h1 className="font-bold md:text-5xl font-mono"> Your Courses</h1>
+        <h1 className=" md:text-4xl font-mono"> Your Courses</h1>
       </div>
       <div className="flex flex-row  justify-center mb-4">
          <DataTable  changeCourse={changeCourse} data={courses} addCourse = {(course:CourseItem) => setCourses((prev) => [...prev, course])}/>
