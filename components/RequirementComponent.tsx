@@ -11,9 +11,11 @@
 
 
   interface RequirementProps{
-    requirementTile:string;
-    requirementsMap:Map<string, number>;
-    requirementsProgress: Map<string, CourseItem[]>;
+    requirementTitle:string;
+    requirementDescription:string;
+    coursesCompleted:CourseItem[];
+    requiredNumber: number;
+
   }
 
   export  const RequirementComponent = (props:RequirementProps) => {
@@ -24,23 +26,30 @@
 
 
 
-
-
     return(
       <div className = "items-center justify-center">
-        <Accordion type="single" collapsible>
+        <Accordion type="single" collapsible className="mr-5">
           <AccordionItem value="item-1">
             <AccordionTrigger>
               <div className="flex items-center justify-between w-full">
-                <p>Humanities and Arts (HUA)</p>
+                <p>{props.requirementTitle}</p>
                 <div className="flex items-center space-x-2">
-                  <Progress className="relative right-0 w-32 mr-3" value={33}/>
+                  <Progress className="relative right-0 w-32 mr-3" value={(((props.coursesCompleted.length)/props.requiredNumber) * 100)}/>
                 </div>
               </div>
 
             </AccordionTrigger>
             <AccordionContent>
-              Yes. It adheres to the WAI-ARIA design pattern.
+              <h1> Description: {props.requirementDescription}</h1>
+              <h1> Eligible Courses </h1>
+              <ul>
+              {props.coursesCompleted.map((item) =>{
+                const itemNum = props.coursesCompleted.indexOf(item);
+                return(
+                <li key = {itemNum}> {item.courseCode as string} - {item.title as string}</li>
+                )
+              })}
+              </ul>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
