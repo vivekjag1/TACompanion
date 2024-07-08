@@ -64,25 +64,9 @@ const Tracking = ():JSX.Element =>{
 
 
   //get all courses for the current user
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return(
     <div className = "ml-[6rem]">
-      <h1 className = "font-mono text-center text-3xl">Your Tracking Sheet</h1>
+      <h1 className = "font-mono text-center text-4xl">Your Tracking Sheet</h1>
       <RequirementComponent requirementTitle={"Completion of all requirements"} requirementDescription={"This requirement shows the student's completion of the CS degree degree requirements"} requiredNumber={48} coursesCompleted={courses}/>
       <RequirementComponent requirementTitle={"Humanities and Arts - Depth, Breath, and Elective"} requirementDescription={"This requirement covers the HUA depth, breadth, and elective. Students must complete 5 courses in this area, with 3 courses being thematically related"} requiredNumber={5} coursesCompleted={courses.filter((course) => (course.requirements as string[]).includes('HUA') && ((course.courseCode as string) !== 'HU 3900') &&  (course.courseCode as string) !== 'HU 3910')}/>
       <RequirementComponent requirementTitle={"Humanities and Arts - Inquiry Seminar/Practicum"} requirementDescription={"This requirement covers HUA Capstone Project"} requiredNumber={1} coursesCompleted={courses.filter((course) =>   (((course.courseCode as string) === 'HU 3900') || (course.courseCode as string) === 'HU 3910'))}/>
