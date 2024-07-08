@@ -1,9 +1,151 @@
 import {RequirementComponent} from "@/components/RequirementComponent";
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {JSX} from 'react'
+import {CourseItem} from "@/mongoose/course/schema";
+import {useRouter} from "next/router";
+import {useUser} from "@auth0/nextjs-auth0/client";
+import {gql} from "graphql-tag";
+import client from "@/graphql/client";
 const Tracking = ():JSX.Element =>{
   const [requirements, setRequirements] = useState<Map<string, number>>(new Map());
   const [degree, setDegree] = useState<string>('Computer Science');
+  const [courses, setCourses] = useState<CourseItem[]>([]);
+  const [fetched, setFetched] = useState<boolean>(false);
+  const router = useRouter();
+  const [userCourseProgress, setUserCourseProgress] = useState<Map<string, CourseItem[]>>(new Map());
+  let {user, error, isLoading} = useUser(); //hold auth0 hooks
+
+
+   const reqs = new Map<string, CourseItem[]>();
+  const filterByRequirement = () =>{
+    /*
+  CSRequirements.set('Free Electives', 3);
+  //more specific requirements
+
+
+  //HU 3900 requirement
+
+  //CS requirements
+  //core CS courses that can be whatever
+  CSRequirements.set('CS', 8);
+
+
+  //specific concentration requirements for CS
+  CSRequirements.set('Systems', 1);
+  CSRequirements.set('Theory', 1);
+  CSRequirements.set('Design', 1);
+  CSRequirements.set('Social Implications', 1);
+  CSRequirements.set('MQP', 1);
+  CSRequirements.set('CS-4000', 5);
+
+  //basic science requirements
+  CSRequirements.set('Basic Science', 3);
+  CSRequirements.set('Engineering Science/Basic Science', 2);
+
+
+
+
+
+
+     */
+
+    courses.map((course:CourseItem) =>{
+      const PE:CourseItem[] = [];
+      const IQP:CourseItem[] = [];
+      const Stats:CourseItem[] = [];
+      const MA:CourseItem[] = [];
+      const SocialScience:CourseItem[] = [];
+      const HU:CourseItem[] = [];
+      const HUA:CourseItem[] = [];
+
+      if((course.courseCode as string ).substring(0, 3) == 'PE'){
+        PE.push(course);
+      }
+      else if((course.courseCode as string ).includes('IQP')){
+        IQP.push(course);
+      }
+      else if((course.courseCode as string ) === 'MA 2621' || (course.courseCode as string ) === 'MA 2611' || (course.courseCode as string ) === 'MA 2612' || (course.courseCode as string ) === 'MA 2631'){
+        Stats.push(course);
+      }
+      else if((course.courseCode as string ).includes('MA')){
+        MA.push(course);
+      }
+      else if((course.courseCode as string ).includes('DEV') || (course.courseCode as string ).includes('ECON') || (course.courseCode as string ).includes('ENV') ||  (course.courseCode as string ).includes('GOV') || (course.courseCode as string ).includes('SD') || (course.courseCode as string ).includes('SOC') || (course.courseCode as string ).includes('SS') || (course.courseCode as string ).includes('STS') ){
+        SocialScience.push(course);
+      }
+      else if((course.courseCode as string).includes('HUA')){
+        HUA.push(course)
+
+      }
+
+      else if((course.courseCode as string ).includes('AB') || (course.courseCode as string ).includes('AR') || (course.courseCode as string ).includes('CN') ||  (course.courseCode as string ).includes('EN') || (course.courseCode as string ).includes('GN') || (course.courseCode as string ).includes('HI') || (course.courseCode as string ).includes('HU') || (course.courseCode as string ).includes('ID') || (course.courseCode as string ).includes('MU') || (course.courseCode as string ).includes('PY') || (course.courseCode as string ).includes('RE') || (course.courseCode as string ).includes('SP') || (course.courseCode as string ).includes('TH') || (course.courseCode as string ).includes('WR')){
+
+        HU.push(course);
+      }
+
+
+
+
+
+
+    })
+
+
+
+
+
+
+  }
+
+
+
+  useEffect(() =>{
+    if(!user && !isLoading){
+      router.push('/api/auth/login').then();
+    }
+    else{
+      if(!fetched){
+        fetchData().then();
+        filterByRequirement();
+      }
+      //fetch data function goes here
+      else{
+        return;
+      }
+    }
+  }, [fetched, user, isLoading]);
+  const fetchData = async () => {
+    const getAllCourses = gql `
+        query getCoursesForUser($name:String){
+            fetchCoursesByName(name:$name){
+                courseCode
+                title
+                term
+                role
+                credits
+                requirements
+                name
+            }
+        }
+    `;
+    const data = await client.query({
+      query:getAllCourses,
+      variables:{
+        name: user?.name
+      }
+    });
+    setCourses(data['data']['fetchCoursesByName']);
+    setFetched(true);
+    return data;
+  };
+
+
+  //get all courses for the current user
+
+
+
+
+
 
   const CSRequirements = new Map<string, number>();
   //basic requirements where the types of courses don't really matter
@@ -22,8 +164,6 @@ const Tracking = ():JSX.Element =>{
   CSRequirements.set('INQ-SEM', 1);
 
   //CS requirements
-
-
   //core CS courses that can be whatever
   CSRequirements.set('CS', 8);
 
@@ -36,9 +176,10 @@ const Tracking = ():JSX.Element =>{
   CSRequirements.set('MQP', 1);
   CSRequirements.set('CS-4000', 5);
 
-  //basic science
+  //basic science requirements
   CSRequirements.set('Basic Science', 3);
-  CSRequirements.set('Engineering Science/Basic Sci', 2);
+  CSRequirements.set('Engineering Science/Basic Science', 2);
+
 
 
 

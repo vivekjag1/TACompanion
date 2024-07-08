@@ -81,7 +81,7 @@ const NavBar = () =>{
         <NavItem name="Courses" page="/courses" open = {open}>
           <SchoolIcon  sx ={{color:'white'}} />
         </NavItem>
-        <NavItem name="Tracking Sheet" page="/Tracking" open = {open}>
+        <NavItem name="Tracking Sheet" page="/tracking" open = {open}>
           <DocumentScannerIcon  sx ={{color:'white'}}/>
         </NavItem>
         <div className="absolute bottom-0 items-center justify-center cursor-pointer mt-auto mb-5">
