@@ -18,20 +18,7 @@ const Tracking = ():JSX.Element =>{
 
 
 
-  useEffect(() =>{
-    if(!user && !isLoading){
-      router.push('/api/auth/login').then();
-    }
-    else{
-      if(!fetched){
-        fetchData().then();
-      }
-      //fetch data function goes here
-      else{
-        return;
-      }
-    }
-  }, [fetched, user, isLoading]);
+
 
 
 
@@ -61,6 +48,20 @@ const Tracking = ():JSX.Element =>{
     setFetched(true);
     return data;
   };
+  useEffect(() =>{
+    if(!user && !isLoading){
+      router.push('/api/auth/login').then();
+    }
+    else{
+      if(!fetched && !isLoading){
+        fetchData().then();
+      }
+      //fetch data function goes here
+      else{
+        return;
+      }
+    }
+  }, [fetched, user, isLoading, fetchData]);
 
 
   //get all courses for the current user
