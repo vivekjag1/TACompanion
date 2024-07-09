@@ -12,33 +12,19 @@ const Courses:NextPage = () =>{
   const [fetched, setFetched] = useState<boolean>(false);
   const router = useRouter(); //router for redirecting if not logged in
   let {user, error, isLoading} = useUser(); //hold auth0 hooks
-  useEffect(() =>{
-    if(!user && !isLoading){
-      router.push('/api/auth/login').then();
-    }
-    else{
-      if(!fetched){
-        fetchData().then();
-      }
-     //fetch data function goes here
-      else{
-        return;
-      }
-    }
-  }, [fetched, user, isLoading]);
   const fetchData = async () => {
     const getAllCourses = gql `
-      query getCoursesForUser($name:String){
-          fetchCoursesByName(name:$name){
-              courseCode
-              title 
-              term 
-              role
-              credits
-              requirements 
-              name
-          }
-      }
+        query getCoursesForUser($name:String){
+            fetchCoursesByName(name:$name){
+                courseCode
+                title
+                term
+                role
+                credits
+                requirements
+                name
+            }
+        }
     `;
     const data = await client.query({
       query:getAllCourses,
@@ -81,6 +67,21 @@ const Courses:NextPage = () =>{
 
   }
 
+
+  useEffect(() =>{
+    if(!user && !isLoading){
+      router.push('/api/auth/login').then();
+    }
+    else{
+      if(!fetched){
+        fetchData().then();
+      }
+     //fetch data function goes here
+      else{
+        return;
+      }
+    }
+  }, [fetched, user, isLoading, router, fetchData]);
 
 
   return (
