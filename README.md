@@ -70,3 +70,8 @@ Each row has the following information
 3. The percentage completed 
 4. An extended description (view by unfolding accordion)
 5. The courses which are being applied to a particular requirement (view by unfolding accordion)
+
+Finally, TA Companion uses vercel CRON jobs to send an email reminder to log their ours to its users every friday at 12:00 AM. Users are fetched via Auth0 and all users will receive reminders 
+
+<h2>Appendix - Running this project</h2>
+To run this project, use the command <code>npm run dev</code> and navigate to https://localhost:3000/ to view the result. Please contact me with any questions you may have. 
