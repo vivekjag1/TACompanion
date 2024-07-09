@@ -20,8 +20,6 @@ export const todoQueries ={
     return await todoItems.find({course:params.course});
   },
   fetchAllHours: async(_:any) =>{
-
-
     return await hours.find({});
   },
   fetchHoursByName: async (_:any, params:{name:string}) =>{
