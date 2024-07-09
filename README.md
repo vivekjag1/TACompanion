@@ -1,6 +1,6 @@
 ## TA Companion - An Application for Student Assistants at Worcester Polytechnic Institute, developed by Vivek Jagadeesh 
 <img src="./public/final-hero.png">
-Note - Full documentation on the technology stack, and my experience developing this website can be found on my portfolio website at <a href="https://vivekjagadeesh.com">https://vivekjagadeesh.com</a>. The following documentation will cover how to use this software, rather than the process of developing this project.
+Note - Full documentation on the technology stack, and my experience developing this website can be found on my portfolio website at <a href="https://www.vivekjagadeesh.com/tacompanion">https://vivekjagadeesh.com</a>. The following documentation will cover how to use this software, rather than the process of developing this project.
 
 <h2>Overview and Motivation</h2>
 <p>
