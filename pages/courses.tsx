@@ -77,7 +77,7 @@ const Courses:NextPage = () =>{
       router.push('/api/auth/login').then();
     }
     else{
-      if(!fetched){
+      if(!fetched && !isLoading){
         fetchData().then();
       }
      //fetch data function goes here
