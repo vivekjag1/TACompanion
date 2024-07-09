@@ -31,8 +31,10 @@ const Courses:NextPage = () =>{
       query:getAllCourses,
       variables:{
         name: user?.name
-      }
+      },
+      fetchPolicy:'network-only'
     });
+    console.log('fetched data', data['data']['fetchCoursesByName']);
 
     setCourses(data['data']['fetchCoursesByName']);
     setFetched(true);
