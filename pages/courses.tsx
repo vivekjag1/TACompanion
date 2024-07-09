@@ -13,6 +13,7 @@ const Courses:NextPage = () =>{
   const router = useRouter(); //router for redirecting if not logged in
   let {user, error, isLoading} = useUser(); //hold auth0 hooks
   const fetchData = async () => {
+    setFetched(false);
     const getAllCourses = gql `
         query getCoursesForUser($name:String){
             fetchCoursesByName(name:$name){
@@ -32,6 +33,7 @@ const Courses:NextPage = () =>{
         name: user?.name
       }
     });
+
     setCourses(data['data']['fetchCoursesByName']);
     setFetched(true);
     return data;
