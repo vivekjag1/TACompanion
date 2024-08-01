@@ -10,6 +10,9 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
   const users  = await getUsers(token);
   const emails:string[] = [];
 
+
+
+
   for(let i = 0; i < users['data'].length; i++){
     emails.push(users['data'][i].email);
   }
